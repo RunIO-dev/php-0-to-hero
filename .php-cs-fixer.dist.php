@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 // Code style: PER Coding Style, the latest release (docs/standards.md §4).
 $finder = (new PhpCsFixer\Finder())
-    ->in(['code', 'exercises', 'solutions', 'shelf', 'tools', 'tests'])
+    // only folders that exist yet: git keeps no empty folders
+    ->in(array_values(array_filter(['code', 'exercises', 'solutions', 'shelf', 'tools', 'tests'], 'is_dir')))
     ->append(['tools/verify', 'tools/exercise', 'tools/book'])
     ->exclude('vendor')
     ->notName('check.php'); // old-style on purpose, so it runs on old PHP and can say: upgrade

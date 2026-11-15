@@ -82,7 +82,7 @@ $checks = [
     'code style (PER)' => static function () use ($root, $bin): array {
         $run = Run::capture([PHP_BINARY, $bin . 'php-cs-fixer', 'check', '--diff', '--no-ansi'], $root);
 
-        return $run['code'] === 0 ? [] : [trim($run['out']) . "\nFix with: vendor/bin/php-cs-fixer fix"];
+        return $run['code'] === 0 ? [] : [trim($run['out'] . "\n" . $run['err']) . "\nFix with: vendor/bin/php-cs-fixer fix"];
     },
     'the book builds' => static function () use ($root): array {
         $run = Run::capture([PHP_BINARY, $root . '/tools/book'], $root);
