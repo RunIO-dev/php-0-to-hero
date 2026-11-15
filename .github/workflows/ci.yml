@@ -1,0 +1,47 @@
+# Every check of docs/standards.md §7, on PHP 8.5 and 8.6, in the same Docker
+# images that learners use (compose.yaml). Links are checked weekly.
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays: also check every link in the book
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [php, php85]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: echo "HOST_UID=$(id -u)" >> "$GITHUB_ENV" && echo "HOST_GID=$(id -g)" >> "$GITHUB_ENV"
+      - run: docker compose build ${{ matrix.service }}
+      - run: docker compose run --rm ${{ matrix.service }} composer install --no-interaction --no-progress
+      - name: verify
+        run: |
+          if [ "${{ github.event_name }}" = schedule ]; then links=--links; else links=; fi
+          docker compose run --rm ${{ matrix.service }} composer verify -- $links
+
+  book:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: echo "HOST_UID=$(id -u)" >> "$GITHUB_ENV" && echo "HOST_GID=$(id -g)" >> "$GITHUB_ENV"
+      - run: docker compose build php
+      - run: docker compose run --rm php composer install --no-interaction --no-progress
+      - run: docker compose run --rm php composer book
+      - run: tools/pdf # Chrome is preinstalled on GitHub's Ubuntu runners

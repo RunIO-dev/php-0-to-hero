@@ -1,0 +1,8 @@
+# Static analysis (docs/standards.md §4). tools/verify picks the level per folder
+# and chapter; this file holds only what every run shares.
+parameters:
+    bootstrapFiles:
+        - tools/bootstrap.php
+    tmpDir: .phpunit.cache/phpstan
+    excludePaths:
+        - tools/check.php   # old-style on purpose, so it runs on old PHP

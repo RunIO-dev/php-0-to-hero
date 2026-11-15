@@ -1,0 +1,47 @@
+/* The book's look: readable, quiet, prints well. */
+:root {
+    --ink: #1d1d1f;
+    --muted: #5f6368;
+    --line: #e3e3e6;
+    --code-bg: #f6f7f9;
+    --accent: #4f5b93; /* PHP's own blue-violet */
+}
+
+body {
+    margin: 0;
+    background: #fff;
+    color: var(--ink);
+    font: 17px/1.65 system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Arabic", sans-serif;
+}
+
+main {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+}
+
+h1, h2, h3 { line-height: 1.25; }
+h2 { margin-top: 2.5rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
+a { color: var(--accent); }
+
+pre, code { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; font-size: .9em; }
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: .8rem 1rem;
+    overflow-x: auto;
+    direction: ltr; /* code reads left to right in every edition */
+    text-align: left;
+}
+:not(pre) > code { background: var(--code-bg); padding: .1em .3em; border-radius: 4px; }
+
+table { border-collapse: collapse; }
+th, td { border: 1px solid var(--line); padding: .3rem .6rem; }
+
+@media print {
+    body { font-size: 11pt; }
+    main { max-width: none; padding: 0; }
+    .chapter { break-before: page; }
+    pre { white-space: pre-wrap; break-inside: avoid; }
+}

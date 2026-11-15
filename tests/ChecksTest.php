@@ -1,0 +1,188 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests;
+
+use PHPUnit\Framework\TestCase;
+use Tools\Chapters;
+use Tools\Examples;
+use Tools\Exercises;
+use Tools\Glossary;
+
+/** Each test builds a tiny repo in a temp folder and runs one check on it. */
+final class ChecksTest extends TestCase
+{
+    private string $root;
+
+    protected function setUp(): void
+    {
+        $this->root = sys_get_temp_dir() . '/p0h-' . bin2hex(random_bytes(4));
+        mkdir($this->root);
+        symlink(dirname(__DIR__) . '/vendor', $this->root . '/vendor');
+        copy(dirname(__DIR__) . '/phpunit.xml.dist', $this->root . '/phpunit.xml.dist');
+        $this->put('tools/bootstrap.php', (string) file_get_contents(dirname(__DIR__) . '/tools/bootstrap.php'));
+    }
+
+    protected function tearDown(): void
+    {
+        unlink($this->root . '/vendor');
+        $items = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->root, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST,
+        );
+        foreach ($items as $item) {
+            $item->isDir() ? rmdir((string) $item) : unlink((string) $item);
+        }
+        rmdir($this->root);
+    }
+
+    private function put(string $path, string $content): void
+    {
+        $dir = dirname($this->root . '/' . $path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        file_put_contents($this->root . '/' . $path, $content);
+    }
+
+    /** @param list<string> $headings */
+    private function chapter(array $headings, string $body = ''): string
+    {
+        return "# Title\n\n" . implode('', array_map(static fn(string $h): string => "## $h\n\ntext\n\n", $headings)) . $body;
+    }
+
+    public function testChapterWithTemplateHeadingsPasses(): void
+    {
+        $this->put('code/06-variables/a.php', '<?php');
+        $this->put('book/en/06-variables.md', $this->chapter(Chapters::HEADINGS['en'], "<!-- include: code/06-variables/a.php -->\n"));
+        self::assertSame([], Chapters::check($this->root));
+    }
+
+    public function testChapterMissingHeadingFails(): void
+    {
+        $this->put('book/en/06-variables.md', $this->chapter(array_slice(Chapters::HEADINGS['en'], 1)));
+        self::assertSame(['book/en/06-variables.md: the ## headings must be exactly the template (missing: Goals)'], Chapters::check($this->root));
+    }
+
+    public function testChapterHeadingsOutOfOrderFail(): void
+    {
+        $this->put('book/en/06-variables.md', $this->chapter(array_reverse(Chapters::HEADINGS['en'])));
+        self::assertStringContainsString('wrong order', Chapters::check($this->root)[0]);
+    }
+
+    public function testMissingIncludeAndBadNameFail(): void
+    {
+        $this->put('book/en/variables.md', $this->chapter(Chapters::HEADINGS['en'], "<!-- include: code/nope.php -->\n<!-- include: ../secret -->\n"));
+        self::assertSame([
+            'book/en/variables.md: name must be NN-slug.md',
+            'book/en/variables.md: include not found in code/: code/nope.php',
+            'book/en/variables.md: include not found in code/: ../secret',
+        ], Chapters::check($this->root));
+    }
+
+    public function testExampleMatchingItsOutputPasses(): void
+    {
+        $this->put('code/05-first/hello.php', "<?php\necho \"Hello, Amira!\\n\";\n");
+        $this->put('code/05-first/hello.out', "Hello, Amira!\n");
+        self::assertSame([], Examples::check($this->root));
+    }
+
+    public function testExampleOutputShowsWarningsWithoutLocalPaths(): void
+    {
+        $this->put('code/07-types/undefined.php', "<?php\necho \$name;\n");
+        self::assertSame(
+            "\nWarning: Undefined variable \$name in undefined.php on line 2\n",
+            Examples::output($this->root, $this->root . '/code/07-types/undefined.php'),
+        );
+    }
+
+    public function testExampleWithDifferentOutputOrNoOutFileFails(): void
+    {
+        $this->put('code/05-first/hello.php', "<?php\necho \"Hi\\n\";\n");
+        $this->put('code/05-first/hello.out', "Hello\n");
+        $this->put('code/05-first/other.php', "<?php\n");
+        $problems = Examples::check($this->root);
+        self::assertCount(2, $problems);
+        self::assertStringContainsString("want: Hello\n    got:  Hi", $problems[0]);
+        self::assertSame('code/05-first/other.php: no .out file next to it', $problems[1]);
+    }
+
+    public function testBadExampleIsOnlySyntaxChecked(): void
+    {
+        $this->put('code/46-web/echo.bad.php', "<?php\necho \$_GET['name'];\n");
+        $this->put('code/46-web/broken.bad.php', "<?php\necho 'x'\n");
+        $problems = Examples::check($this->root);
+        self::assertCount(1, $problems);
+        self::assertStringStartsWith('code/46-web/broken.bad.php: syntax error', $problems[0]);
+    }
+
+    private function exercise(string $starter, string $solution): void
+    {
+        $test = <<<'PHP'
+            <?php
+            declare(strict_types=1);
+            use PHPUnit\Framework\TestCase;
+            final class DoubleTest extends TestCase
+            {
+                public function testDoubles(): void
+                {
+                    require_once subject(__DIR__, 'double.php');
+                    self::assertSame(8, double(4));
+                }
+            }
+            PHP;
+        $this->put('exercises/15-functions/beginner/DoubleTest.php', $test);
+        $this->put('exercises/15-functions/beginner/double.php', $starter);
+        $this->put('solutions/15-functions/beginner/double.php', $solution);
+    }
+
+    public function testRealExercisePasses(): void
+    {
+        $this->exercise(
+            "<?php\nfunction double(int \$n): int\n{\n    return 0; // your code here\n}\n",
+            "<?php\nfunction double(int \$n): int\n{\n    return \$n * 2;\n}\n",
+        );
+        self::assertSame([], Exercises::check($this->root));
+    }
+
+    public function testExerciseThatAsksNothingOrHasWrongSolutionFails(): void
+    {
+        $this->exercise(
+            "<?php\nfunction double(int \$n): int\n{\n    return \$n * 2;\n}\n",
+            "<?php\nfunction double(int \$n): int\n{\n    return \$n + 2;\n}\n",
+        );
+        $problems = Exercises::check($this->root);
+        self::assertCount(2, $problems);
+        self::assertStringContainsString('pass on the starter', $problems[0]);
+        self::assertStringContainsString('fail on the solution', $problems[1]);
+    }
+
+    public function testSlowCommandIsStopped(): void
+    {
+        $run = \Tools\Run::capture([PHP_BINARY, '-r', 'fgets(STDIN); sleep(5);'], null, [], 1);
+        self::assertSame(124, $run['code']);
+        self::assertStringContainsString('Stopped after 1 seconds', $run['err']);
+    }
+
+    public function testSubjectMapsOnlyTheExerciseFolder(): void
+    {
+        putenv('EXERCISE_SOLUTION=1');
+        $path = subject('/home/ana/exercises/php-0-to-hero/exercises/15-functions/beginner', 'due.php');
+        putenv('EXERCISE_SOLUTION');
+        self::assertSame('/home/ana/exercises/php-0-to-hero/solutions/15-functions/beginner/due.php', $path);
+    }
+
+    public function testArabicChapterWithRejectedTermFails(): void
+    {
+        $this->put('glossary/ar.json', json_encode(['terms' => [
+            ['en' => 'array', 'ar' => 'مصفوفة', 'rejected' => ['صفيف']],
+            ['en' => 'code', 'ar' => 'شيفرة', 'rejected' => ['كود']],
+        ]], JSON_THROW_ON_ERROR));
+        $this->put('book/ar/13-arrays.md', "المصفوفة مثل قائمة.\nنكتب الصَّفِيف هنا.\nالكودات\nوالكود\n");
+        self::assertSame([
+            'book/ar/13-arrays.md:2: "صفيف" is rejected; use مصفوفة (array)',
+            'book/ar/13-arrays.md:4: "كود" is rejected; use شيفرة (code)',
+        ], Glossary::check($this->root));
+    }
+}

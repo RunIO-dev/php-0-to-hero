@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Prints each edition's site/<lang>/book.html to site/<lang>/php-0-to-hero.pdf.
+# Run after `composer book`, on a computer with Chrome (the Docker image has none).
+# Set CHROME=/path/to/chrome if it is not found.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+chrome="${CHROME:-$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)}"
+if [ -z "$chrome" ]; then echo "No Chrome found. Set CHROME=/path/to/chrome." >&2; exit 1; fi
+for html in site/*/book.html; do
+  [ -e "$html" ] || { echo "No book built yet: run composer book first." >&2; exit 1; }
+  pdf="$(dirname "$html")/php-0-to-hero.pdf"
+  rm -f "$pdf"
+  "$chrome" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="$pdf" "$(realpath "$html")" 2>/dev/null || true
+  [ -s "$pdf" ] || { echo "Chrome made no PDF from $html" >&2; exit 1; }
+  echo "$pdf"
+done

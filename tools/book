@@ -1,0 +1,49 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Builds the book into site/: one HTML page per chapter, a contents page, and
+// book.html with every chapter for printing.
+//   composer book    the HTML; then tools/pdf prints book.html to a PDF with Chrome
+
+use Tools\Book;
+use Tools\Run;
+
+require __DIR__ . '/bootstrap.php';
+
+$root = dirname(__DIR__);
+$site = $root . '/site';
+
+// Start from an empty site/, so a removed chapter or edition does not linger.
+Run::remove($site);
+mkdir($site);
+copy($root . '/tools/book.css', $site . '/book.css');
+file_put_contents($site . '/book.css', "\n" . file_get_contents($root . '/vendor/tempest/highlight/src/Themes/Css/highlight-light-lite.css'), FILE_APPEND);
+
+$built = [];
+foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
+    $lang = basename($dir);
+    $out = "$site/$lang";
+    if (!is_dir($out)) {
+        mkdir($out);
+    }
+    $contents = [];
+    $all = '';
+    foreach (glob($dir . '/*.md') ?: [] as $file) {
+        $source = (string) file_get_contents($file);
+        $title = preg_match('/^# (.+)$/m', $source, $m) === 1 ? trim($m[1]) : basename($file, '.md');
+        $markdown = Book::expand($root, $source, $lang);
+        $html = Book::html($markdown);
+        $page = basename($file, '.md') . '.html';
+        file_put_contents("$out/$page", Book::page("$title · " . Book::TITLE, $html, $lang));
+        $contents[] = sprintf('<li><a href="%s">%s</a></li>', $page, htmlspecialchars($title, ENT_QUOTES));
+        $all .= "<section class=\"chapter\">\n$html</section>\n";
+    }
+    file_put_contents("$out/index.html", Book::page(Book::TITLE, '<h1>' . Book::TITLE . "</h1>\n<ol>\n" . implode("\n", $contents) . "\n</ol>", $lang));
+    file_put_contents("$out/book.html", Book::page(Book::TITLE, $all, $lang));
+    $built[] = "$lang: " . count($contents) . ' chapter(s)';
+
+}
+
+echo 'Book built in site/ (' . ($built === [] ? 'no chapters yet' : implode('; ', $built)) . ")\n";

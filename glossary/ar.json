@@ -1,0 +1,2562 @@
+{
+ "about": "Arabic terms of the PHP course. Rule: 1 sources agree; 2 sources disagree, developer form with formal backing (or our recorded decision); 3 kept in English (spoken in English), explained in Arabic at first use. On first use in a chapter the English stands next to the Arabic.",
+ "sources": {
+  "M": "Microsoft Terminology Collection, Arabic TBX (2024)",
+  "W": "Arabic Wikipedia, title of the article linked from the English one (2026-11-15)",
+  "H": "Hsoub Wiki, Arabic PHP guide (wiki.hsoub.com/PHP, CC BY-NC-SA 4.0; single terms as usage evidence)",
+  "D44": "ALECSO unified dictionary No. 44, Curricula and Teaching Methods (2020), for teaching words"
+ },
+ "terms": [
+  {
+   "en": "abstract class",
+   "ar": "صنف مجرد",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "follows class = صنف; W says نمط مجرد",
+   "sources": {
+    "W": "نمط مجرد"
+   }
+  },
+  {
+   "en": "anonymous function",
+   "ar": "دالة مجهولة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and H (الدوال المجهولة)",
+   "sources": {
+    "W": "دالة مجهولة",
+    "H": [
+     "المجهولة الدوال المجهولة"
+    ]
+   }
+  },
+  {
+   "en": "API",
+   "ar": "API",
+   "keepEnglish": false,
+   "also": [
+    "واجهة برمجة التطبيقات"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W agree on واجهة برمجة التطبيقات, but the long form is said once and then API (engine/lexicon/ar.json)",
+   "sources": {
+    "M": [
+     "واجهة برنامج تطبيقي",
+     "واجهة برمجة التطبيقات"
+    ],
+    "W": "واجهة برمجة التطبيقات"
+   }
+  },
+  {
+   "en": "argument",
+   "ar": "وسيط",
+   "keepEnglish": false,
+   "also": [
+    "وسيطة"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (وسيطة) and W (وسيط for parameter); وسيط is the common developer form",
+   "sources": {
+    "M": [
+     "وسيطة"
+    ]
+   }
+  },
+  {
+   "en": "array",
+   "ar": "مصفوفة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "صفيف"
+   ],
+   "rule": 1,
+   "why": "sources agree (W, H)",
+   "sources": {
+    "M": [
+     "صفيف"
+    ],
+    "W": "مصفوفة",
+    "H": [
+     "المصفوفات",
+     "مصفوفة"
+    ]
+   }
+  },
+  {
+   "en": "arrow function",
+   "ar": "دالة سهمية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no reference: a literal form; the syntax fn is shown with it",
+   "sources": {}
+  },
+  {
+   "en": "assertion",
+   "ar": "تأكيد",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W",
+   "sources": {
+    "W": "تأكيد"
+   }
+  },
+  {
+   "en": "authentication",
+   "ar": "مصادقة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "مصادقة"
+    ],
+    "W": "مصادقة"
+   }
+  },
+  {
+   "en": "authorization",
+   "ar": "التفويض",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W; M says تخويل",
+   "sources": {
+    "M": [
+     "تخويل"
+    ],
+    "W": "تفويض",
+    "H": [
+     "تصريح"
+    ]
+   }
+  },
+  {
+   "en": "autoloading",
+   "ar": "التحميل التلقائي",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H",
+   "sources": {
+    "H": [
+     "التحميل التلقائي"
+    ]
+   }
+  },
+  {
+   "en": "boolean",
+   "ar": "قيمة منطقية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H (القيم المنطقية); M has منطقي",
+   "sources": {
+    "M": [
+     "منطقي"
+    ],
+    "W": "نوع البيانات المنطقية",
+    "H": [
+     "القيم المنطقية",
+     "منطقي"
+    ]
+   }
+  },
+  {
+   "en": "branch",
+   "ar": "فرع",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "فرع",
+     "الإصدار الفرعي",
+     "تفرع شرطي"
+    ]
+   }
+  },
+  {
+   "en": "browser",
+   "ar": "متصفح",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "مستعرض ويب",
+     "مستعرض SQL Server",
+     "مستعرض SQL"
+    ],
+    "W": "متصفح ويب",
+    "H": [
+     "متصفح"
+    ]
+   }
+  },
+  {
+   "en": "bug",
+   "ar": "خطأ برمجي",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W",
+   "sources": {
+    "M": [
+     "خطأ",
+     "حشرة"
+    ],
+    "W": "خطأ برمجي"
+   }
+  },
+  {
+   "en": "cache",
+   "ar": "التخزين المؤقت",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "ذاكرة تخزين مؤقت",
+     "يخزن مؤقتا"
+    ],
+    "W": "ذاكرة مخبئية"
+   }
+  },
+  {
+   "en": "callback",
+   "ar": "دالة رد نداء",
+   "keepEnglish": false,
+   "also": [
+    "رد نداء"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "H (ردود النداء)",
+   "sources": {
+    "M": [
+     "رد الاتصال"
+    ],
+    "H": [
+     "إلى رد النداء"
+    ]
+   }
+  },
+  {
+   "en": "character",
+   "ar": "حرف",
+   "keepEnglish": false,
+   "also": [
+    "محرف"
+   ],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "حرف"
+    ],
+    "W": "محرف",
+    "H": [
+     "حرف"
+    ]
+   }
+  },
+  {
+   "en": "class",
+   "ar": "صنف",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (W, H)",
+   "sources": {
+    "M": [
+     "فئة العناصر",
+     "صف تدريبي",
+     "درجة"
+    ],
+    "W": "صنف",
+    "H": [
+     "بتهيئة صنف",
+     "صنف"
+    ]
+   }
+  },
+  {
+   "en": "client",
+   "ar": "عميل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "عميل",
+     "العميل",
+     "كمبيوتر عميل"
+    ],
+    "W": "عميل",
+    "H": [
+     "عميل"
+    ]
+   }
+  },
+  {
+   "en": "closure",
+   "ar": "closure",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "no reference; H itself keeps \"closures\"",
+   "sources": {
+    "H": [
+     "تُعرَف أيضًا بالمصطلح"
+    ]
+   }
+  },
+  {
+   "en": "code",
+   "ar": "شيفرة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "كود"
+   ],
+   "rule": 2,
+   "why": "already the rule of engine/lexicon/ar.json (2026-10): never كود",
+   "sources": {
+    "M": [
+     "رمز",
+     "تعليمة برمجية",
+     "كتابة كود"
+    ],
+    "W": "نص برمجي مصدري",
+    "H": [
+     "شيفرة"
+    ]
+   }
+  },
+  {
+   "en": "code style",
+   "ar": "أسلوب كتابة الشيفرة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (أسلوب البرمجة), with code = شيفرة",
+   "sources": {
+    "W": "أسلوب البرمجة"
+   }
+  },
+  {
+   "en": "column",
+   "ar": "عمود",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "عمود"
+    ],
+    "W": "عمود"
+   }
+  },
+  {
+   "en": "command line",
+   "ar": "سطر الأوامر",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "سطر الأوامر"
+    ],
+    "W": "واجهة سطر الأوامر",
+    "H": [
+     "سطر الأوامر"
+    ]
+   }
+  },
+  {
+   "en": "comment",
+   "ar": "تعليق",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "تعليق",
+     "التعليق"
+    ],
+    "W": "تعليق",
+    "H": [
+     "تعليق"
+    ]
+   }
+  },
+  {
+   "en": "commit",
+   "ar": "commit",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "a Git command; M's تثبيت is install",
+   "sources": {
+    "M": [
+     "تثبيت",
+     "التزام"
+    ]
+   }
+  },
+  {
+   "en": "comparison",
+   "ar": "مقارنة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "مقارنة"
+    ],
+    "H": [
+     "مقارنة"
+    ]
+   }
+  },
+  {
+   "en": "composition",
+   "ar": "التركيب",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "تركيب"
+    ]
+   }
+  },
+  {
+   "en": "condition",
+   "ar": "شرط",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "شرط",
+     "حالة مرضية"
+    ],
+    "H": [
+     "شرط"
+    ]
+   }
+  },
+  {
+   "en": "configuration",
+   "ar": "الإعدادات",
+   "keepEnglish": false,
+   "also": [
+    "التهيئة"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "sources split (M تكوين, H تهيئة); الإعدادات is the plain word users already see",
+   "sources": {
+    "M": [
+     "تكوين"
+    ],
+    "H": [
+     "تهيئة"
+    ]
+   }
+  },
+  {
+   "en": "constant",
+   "ar": "ثابت",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "ثابت"
+    ],
+    "H": [
+     "ثابت"
+    ]
+   }
+  },
+  {
+   "en": "constructor",
+   "ar": "الدالة البانية",
+   "keepEnglish": false,
+   "also": [
+    "دالة البناء"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (دالة البناء) and M (الدالة الإنشائية) disagree; this is the common developer form, and close to W",
+   "sources": {
+    "M": [
+     "الدالة الإنشائية"
+    ],
+    "W": "دالة البناء"
+   }
+  },
+  {
+   "en": "container",
+   "ar": "حاوية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "حاوية",
+     "برنامج الحاوية"
+    ],
+    "W": "حاوية"
+   }
+  },
+  {
+   "en": "continuous integration",
+   "ar": "التكامل المستمر",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W says إدماج مستمر; التكامل is the common developer form",
+   "sources": {
+    "W": "إدماج مستمر"
+   }
+  },
+  {
+   "en": "controller",
+   "ar": "المتحكم",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (وحدة التحكم); the MVC term in developer use",
+   "sources": {
+    "M": [
+     "وحدة التحكم",
+     "جهاز التحكم",
+     "وحدة تحكم بالألعاب"
+    ]
+   }
+  },
+  {
+   "en": "cookie",
+   "ar": "ملف تعريف الارتباط",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W agree; the English cookie stands next to it, since developers often say it",
+   "sources": {
+    "M": [
+     "ملف تعريف الارتباط",
+     "ملف تعريف ارتباط"
+    ],
+    "W": "ملف تعريف ارتباط",
+    "H": [
+     "وإرسال واستقبل الكعكات"
+    ]
+   }
+  },
+  {
+   "en": "data type",
+   "ar": "نوع بيانات",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "نوع البيانات",
+     "نوع بيانات الحقل"
+    ],
+    "W": "نوع بيانات",
+    "H": [
+     "نوع البيانات",
+     "نوع بيانات"
+    ]
+   }
+  },
+  {
+   "en": "database",
+   "ar": "قاعدة بيانات",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "قاعدة بيانات"
+    ],
+    "W": "قاعدة بيانات",
+    "H": [
+     "قاعدة بيانات"
+    ]
+   }
+  },
+  {
+   "en": "date",
+   "ar": "تاريخ",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "التاريخ"
+    ],
+    "H": [
+     "تاريخ"
+    ]
+   }
+  },
+  {
+   "en": "debugging",
+   "ar": "تنقيح الأخطاء",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H and W (تنقيح)",
+   "sources": {
+    "M": [
+     "تصحيح الأخطاء"
+    ],
+    "W": "تنقيح",
+    "H": [
+     "تنقيح الأخطاء",
+     "عملية تنقيح الأخطاء"
+    ]
+   }
+  },
+  {
+   "en": "default value",
+   "ar": "قيمة افتراضية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "قيمة افتراضية"
+    ]
+   }
+  },
+  {
+   "en": "dependency",
+   "ar": "تبعية",
+   "keepEnglish": false,
+   "also": [
+    "اعتمادية"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "تبعية"
+    ],
+    "W": "اقتران"
+   }
+  },
+  {
+   "en": "deployment",
+   "ar": "النشر",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and developer use; M's توزيع is distribution (not lint-checked: an ordinary word)",
+   "sources": {
+    "M": [
+     "توزيع"
+    ],
+    "W": "نشر البرمجيات"
+   }
+  },
+  {
+   "en": "design pattern",
+   "ar": "نمط تصميم",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (نماذج التصميم)",
+   "sources": {
+    "W": "نماذج التصميم"
+   }
+  },
+  {
+   "en": "directory",
+   "ar": "مجلد",
+   "keepEnglish": false,
+   "also": [
+    "دليل"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and the usual word in Arabic systems; M and H say دليل, which also means a guide",
+   "sources": {
+    "M": [
+     "دليل"
+    ],
+    "W": "مجلد",
+    "H": [
+     "دليل"
+    ]
+   }
+  },
+  {
+   "en": "editor",
+   "ar": "محرر الشيفرة",
+   "keepEnglish": false,
+   "also": [
+    "محرر"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W say محرر; \"of code\" added for clarity",
+   "sources": {
+    "M": [
+     "محرر",
+     "محرر نص",
+     "مساعد الكتابة"
+    ],
+    "W": "محرر النصوص البرمجية"
+   }
+  },
+  {
+   "en": "element",
+   "ar": "عنصر",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "عنصر"
+    ]
+   }
+  },
+  {
+   "en": "encapsulation",
+   "ar": "تغليف",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "تغليف"
+    ],
+    "W": "تغليف"
+   }
+  },
+  {
+   "en": "endpoint",
+   "ar": "نقطة نهاية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "نقطة النهاية",
+     "النقطة النهائية",
+     "المشارك"
+    ]
+   }
+  },
+  {
+   "en": "entity",
+   "ar": "كيان",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "كيان",
+     "وحدة",
+     "نوع محتويات خارجية"
+    ]
+   }
+  },
+  {
+   "en": "enum",
+   "ar": "تعداد",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (قائمة تعداد); the keyword enum is shown with it",
+   "sources": {
+    "M": [
+     "قائمة تعداد"
+    ]
+   }
+  },
+  {
+   "en": "environment variable",
+   "ar": "متغير بيئة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no reference: built from agreed words",
+   "sources": {}
+  },
+  {
+   "en": "error",
+   "ar": "خطأ",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "خطأ"
+    ],
+    "H": [
+     "خطأ"
+    ]
+   }
+  },
+  {
+   "en": "error message",
+   "ar": "رسالة خطأ",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "رسالة خطأ"
+    ],
+    "W": "رسالة خطأ"
+   }
+  },
+  {
+   "en": "escaping",
+   "ar": "escaping",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "no reference; explained as making text safe to show",
+   "sources": {}
+  },
+  {
+   "en": "exception",
+   "ar": "استثناء",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "استثناء",
+     "‏‏ استثناء"
+    ],
+    "W": "تدبير الحالات الاستثنائية",
+    "H": [
+     "استثناء"
+    ]
+   }
+  },
+  {
+   "en": "expression",
+   "ar": "تعبير",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "تعبير"
+    ],
+    "H": [
+     "التعابير",
+     "تعبير"
+    ]
+   }
+  },
+  {
+   "en": "extension",
+   "ar": "إضافة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H (developer use) for PHP extensions; M says ملحق (browser add-on sense)",
+   "sources": {
+    "M": [
+     "ملحق",
+     "ملحق المستعرض",
+     "ملحق البرنامج"
+    ],
+    "H": [
+     "إضافة"
+    ]
+   }
+  },
+  {
+   "en": "file",
+   "ar": "ملف",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "ملف"
+    ],
+    "W": "ملف حاسوب",
+    "H": [
+     "ملف"
+    ]
+   }
+  },
+  {
+   "en": "float",
+   "ar": "عدد عشري",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H (الأعداد العشرية); M has no usable form, and W names the arithmetic",
+   "sources": {
+    "M": [
+     "حُر"
+    ],
+    "W": "حسابات الفاصلة المتحركة",
+    "H": [
+     "الأعداد العشرية"
+    ]
+   }
+  },
+  {
+   "en": "foreign key",
+   "ar": "مفتاح أجنبي",
+   "keepEnglish": false,
+   "also": [
+    "مفتاح خارجي"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and common developer use; M says خارجي",
+   "sources": {
+    "M": [
+     "مفتاح خارجي"
+    ],
+    "W": "مفتاح أجنبي"
+   }
+  },
+  {
+   "en": "form",
+   "ar": "نموذج",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "نموذج"
+    ],
+    "W": "استمارة",
+    "H": [
+     "نموذج"
+    ]
+   }
+  },
+  {
+   "en": "framework",
+   "ar": "إطار عمل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "إطار العمل",
+     "إطار عمل",
+     "إطار عمل النهج"
+    ],
+    "W": "إطار عمل"
+   }
+  },
+  {
+   "en": "function",
+   "ar": "دالة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "دالة",
+     "وظيفة"
+    ],
+    "W": "دالة",
+    "H": [
+     "تابع",
+     "دالة",
+     "وظيفة"
+    ]
+   }
+  },
+  {
+   "en": "global variable",
+   "ar": "متغير عمومي",
+   "keepEnglish": false,
+   "also": [
+    "متغير عام"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "متغيّر عمومي"
+    ]
+   }
+  },
+  {
+   "en": "hash",
+   "ar": "تجزئة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "تشفير الرسالة",
+     "تجزئة",
+     "شفرة التجزئة"
+    ],
+    "W": "دالة تلبيد تعموية"
+   }
+  },
+  {
+   "en": "header",
+   "ar": "ترويسة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W; M's رأس is a page or table header",
+   "sources": {
+    "M": [
+     "رأس الصفحة",
+     "عنوان",
+     "رأس الجدول"
+    ],
+    "W": "قائمة حقول ترويسة بروتوكول نقل النص الفائق"
+   }
+  },
+  {
+   "en": "image",
+   "ar": "صورة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M; in the Docker sense, explained once",
+   "sources": {
+    "M": [
+     "صورة رقمية",
+     "صورة",
+     "نسخة"
+    ]
+   }
+  },
+  {
+   "en": "index",
+   "ar": "فهرس",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "فهرس",
+     "فهرسة",
+     "مؤشر"
+    ]
+   }
+  },
+  {
+   "en": "inheritance",
+   "ar": "وراثة",
+   "keepEnglish": false,
+   "also": [
+    "توريث"
+   ],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (W, H)",
+   "sources": {
+    "M": [
+     "توريث",
+     "اكتساب خصائص"
+    ],
+    "W": "وراثة",
+    "H": [
+     "وراثة"
+    ]
+   }
+  },
+  {
+   "en": "injection",
+   "ar": "حقن",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W",
+   "sources": {
+    "W": "حقن النصوص البرمجية للغة الاستعلامات المهيكلة"
+   }
+  },
+  {
+   "en": "input",
+   "ar": "إدخال",
+   "keepEnglish": false,
+   "also": [
+    "مدخلات"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M; paired with output = إخراج",
+   "sources": {
+    "M": [
+     "إدخال"
+    ]
+   }
+  },
+  {
+   "en": "install",
+   "ar": "تثبيت",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "تثبيت",
+     "يثّبت",
+     "يُثبّت"
+    ]
+   }
+  },
+  {
+   "en": "instance",
+   "ar": "مثيل",
+   "keepEnglish": false,
+   "also": [
+    "نسخة"
+   ],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "مثيل"
+    ],
+    "W": "مثيل",
+    "H": [
+     "نسخة"
+    ]
+   }
+  },
+  {
+   "en": "integer",
+   "ar": "عدد صحيح",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "عدد صحيح"
+    ],
+    "W": "عدد صحيح",
+    "H": [
+     "الأعداد الصحيحة"
+    ]
+   }
+  },
+  {
+   "en": "interface",
+   "ar": "واجهة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "واجهة",
+     "موصل"
+    ],
+    "H": [
+     "واجهة"
+    ]
+   }
+  },
+  {
+   "en": "iteration",
+   "ar": "تكرار",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "تكرار",
+     "دورة متكررة"
+    ],
+    "W": "تكرار"
+   }
+  },
+  {
+   "en": "key",
+   "ar": "مفتاح",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "مفتاح",
+     "المفتاح"
+    ]
+   }
+  },
+  {
+   "en": "library",
+   "ar": "مكتبة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "مكتبة",
+     "مكتبة التعليمات البرمجية",
+     "مكتبة Windows"
+    ],
+    "W": "مكتبة برمجية"
+   }
+  },
+  {
+   "en": "license",
+   "ar": "رخصة",
+   "keepEnglish": false,
+   "also": [
+    "ترخيص"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W",
+   "sources": {
+    "M": [
+     "ترخيص",
+     "يرخّص"
+    ],
+    "W": "رخصة البرمجيات"
+   }
+  },
+  {
+   "en": "list",
+   "ar": "قائمة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "قائمة"
+    ],
+    "W": "قائمة",
+    "H": [
+     "قائمة"
+    ]
+   }
+  },
+  {
+   "en": "log",
+   "ar": "سجل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "سجل",
+     "يسجل",
+     "تسجيل"
+    ],
+    "H": [
+     "سجل"
+    ]
+   }
+  },
+  {
+   "en": "loop",
+   "ar": "حلقة",
+   "keepEnglish": false,
+   "also": [
+    "حلقة تكرارية"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "H and developer use; W's article is control flow, not loop",
+   "sources": {
+    "M": [
+     "تكرار حلقي",
+     "يكرر",
+     "ينفذ بتكرار"
+    ],
+    "W": "انسياب التحكم",
+    "H": [
+     "حلقة"
+    ]
+   }
+  },
+  {
+   "en": "method",
+   "ar": "طريقة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and H; M's أسلوب is not used by developers for this term (not lint-checked: أسلوب is also style)",
+   "sources": {
+    "M": [
+     "أسلوب"
+    ],
+    "W": "طريقة",
+    "H": [
+     "تابع",
+     "دالة",
+     "طريقة"
+    ]
+   }
+  },
+  {
+   "en": "migration",
+   "ar": "ترحيل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "ترحيل"
+    ]
+   }
+  },
+  {
+   "en": "named argument",
+   "ar": "وسيط مسمّى",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (وسيطات مسمّاة)",
+   "sources": {
+    "M": [
+     "وسيطات مسمّاة"
+    ]
+   }
+  },
+  {
+   "en": "namespace",
+   "ar": "namespace",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "three sources, three forms (مساحة الاسم, نطاق, مجال الأسماء); a PHP keyword",
+   "sources": {
+    "M": [
+     "مساحة الاسم",
+     "مساحة اسم الخدمة",
+     "مساحة اسم XML"
+    ],
+    "W": "نطاق"
+   }
+  },
+  {
+   "en": "null",
+   "ar": "null",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "a PHP keyword with no agreed Arabic form; explained as \"لا قيمة\"",
+   "sources": {
+    "M": [
+     "خال"
+    ],
+    "H": [
+     "null",
+     "عدم"
+    ]
+   }
+  },
+  {
+   "en": "object",
+   "ar": "كائن",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "user decision (2026-11-15): كائن, as in H and nearly all Arabic developer writing; no formal source has it (W uses غرض, M uses عنصر, which is element here). غرض is not on the rejected list, because it also means purpose in ordinary Arabic",
+   "sources": {
+    "M": [
+     "عنصر",
+     "عنصر SQL Server"
+    ],
+    "W": "غرض",
+    "H": [
+     "الكائنات",
+     "كائن"
+    ]
+   }
+  },
+  {
+   "en": "object-oriented programming",
+   "ar": "البرمجة كائنية التوجه",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "البرمجة غرضية التوجه",
+    "برمجة غرضية التوجه"
+   ],
+   "rule": 2,
+   "why": "user decision (2026-11-15), follows object = كائن; W says برمجة غرضية التوجه",
+   "sources": {}
+  },
+  {
+   "en": "open source",
+   "ar": "مفتوح المصدر",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W (مصدر مفتوح)",
+   "sources": {
+    "M": [
+     "مصدر مفتوح"
+    ],
+    "W": "مصدر مفتوح"
+   }
+  },
+  {
+   "en": "operator",
+   "ar": "عامل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "مؤثر"
+   ],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "عامل",
+     "عامل تشغيل"
+    ],
+    "W": "مؤثر",
+    "H": [
+     "عامل",
+     "معامل",
+     "يأخذ العامل"
+    ]
+   }
+  },
+  {
+   "en": "output",
+   "ar": "إخراج",
+   "keepEnglish": false,
+   "also": [
+    "مخرجات"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "H; M's الناتج is the result, not output",
+   "sources": {
+    "M": [
+     "الناتج"
+    ],
+    "H": [
+     "إخراج"
+    ]
+   }
+  },
+  {
+   "en": "package",
+   "ar": "حزمة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "حزمة"
+    ],
+    "W": "نظام إدارة الحزم"
+   }
+  },
+  {
+   "en": "pagination",
+   "ar": "تقسيم إلى صفحات",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no agreed form (M فصل الصفحات); plain words",
+   "sources": {
+    "M": [
+     "الحدود الفاصلة للصفحات",
+     "فصل الصفحات"
+    ]
+   }
+  },
+  {
+   "en": "parameter",
+   "ar": "معامل",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "معلمة"
+   ],
+   "rule": 2,
+   "why": "H and developer use; paired with argument = وسيط, so the two stay apart; operator is عامل, so there is no clash",
+   "sources": {
+    "M": [
+     "معلمة"
+    ],
+    "W": "وسيط",
+    "H": [
+     "معامل"
+    ]
+   }
+  },
+  {
+   "en": "password",
+   "ar": "كلمة مرور",
+   "keepEnglish": false,
+   "also": [
+    "كلمة سر"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "رمز الوصول",
+     "كلمة المرور"
+    ],
+    "W": "كلمة سر"
+   }
+  },
+  {
+   "en": "path",
+   "ar": "مسار",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "مسار"
+    ]
+   }
+  },
+  {
+   "en": "pattern",
+   "ar": "نمط",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "نمط",
+     "نقش"
+    ],
+    "H": [
+     "نمط"
+    ]
+   }
+  },
+  {
+   "en": "permission",
+   "ar": "إذن",
+   "keepEnglish": false,
+   "also": [
+    "صلاحية"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (أذونات in Arabic systems)",
+   "sources": {
+    "M": [
+     "إذن"
+    ]
+   }
+  },
+  {
+   "en": "polymorphism",
+   "ar": "تعدد الأشكال",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (تعددية الأشكال)",
+   "sources": {
+    "W": "تعددية الأشكال"
+   }
+  },
+  {
+   "en": "prepared statement",
+   "ar": "prepared statement",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "no reference; explained as \"استعلام مُعَدّ مسبقًا\"",
+   "sources": {}
+  },
+  {
+   "en": "primary key",
+   "ar": "مفتاح أساسي",
+   "keepEnglish": false,
+   "also": [
+    "مفتاح رئيسي"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M; W says رئيسي",
+   "sources": {
+    "M": [
+     "مفتاح أساسي"
+    ],
+    "W": "مفتاح رئيسي"
+   }
+  },
+  {
+   "en": "production",
+   "ar": "بيئة الإنتاج",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (الإنتاج)",
+   "sources": {
+    "M": [
+     "الإنتاج"
+    ]
+   }
+  },
+  {
+   "en": "program",
+   "ar": "برنامج",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "برنامج",
+     "التطبيق",
+     "تطبيق"
+    ],
+    "W": "برنامج",
+    "H": [
+     "برنامج"
+    ]
+   }
+  },
+  {
+   "en": "programming",
+   "ar": "برمجة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (W, H)",
+   "sources": {
+    "W": "برمجة",
+    "H": [
+     "برمجة"
+    ]
+   }
+  },
+  {
+   "en": "programming language",
+   "ar": "لغة برمجة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W",
+   "sources": {
+    "M": [
+     "لغة الكمبيوتر",
+     "لغة"
+    ],
+    "W": "لغة برمجة"
+   }
+  },
+  {
+   "en": "property",
+   "ar": "خاصية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "خاصية"
+    ],
+    "H": [
+     "خاصية"
+    ]
+   }
+  },
+  {
+   "en": "query",
+   "ar": "استعلام",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "استعلام",
+     "يستعلم"
+    ],
+    "W": "لغة استعلام"
+   }
+  },
+  {
+   "en": "recursion",
+   "ar": "العودية",
+   "keepEnglish": false,
+   "also": [
+    "الاستدعاء الذاتي"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W; explained once as \"a function that calls itself\"",
+   "sources": {
+    "M": [
+     "الإعادة",
+     "أحداث متتالية"
+    ],
+    "W": "عودية"
+   }
+  },
+  {
+   "en": "refactoring",
+   "ar": "إعادة الهيكلة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (إعادة هيكلة الكود), with code = شيفرة",
+   "sources": {
+    "M": [
+     "إعادة بناء التعليمات البرمجية"
+    ],
+    "W": "إعادة هيكلة الكود"
+   }
+  },
+  {
+   "en": "regular expression",
+   "ar": "تعبير نمطي",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W and H (التعابير النمطية)",
+   "sources": {
+    "M": [
+     "تعبير عادي"
+    ],
+    "W": "تعبير نمطي",
+    "H": [
+     "يتضمن التعابير النمطية"
+    ]
+   }
+  },
+  {
+   "en": "relation",
+   "ar": "علاقة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "علاقة"
+    ],
+    "H": [
+     "علاقة"
+    ]
+   }
+  },
+  {
+   "en": "repository",
+   "ar": "مستودع",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "مستودع"
+    ],
+    "W": "مستودع"
+   }
+  },
+  {
+   "en": "request",
+   "ar": "طلب",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "طلب",
+     "طلب HTTP"
+    ]
+   }
+  },
+  {
+   "en": "response",
+   "ar": "استجابة",
+   "keepEnglish": false,
+   "also": [
+    "رد"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M; paired with request = طلب",
+   "sources": {
+    "M": [
+     "استجابة",
+     "مقطع فيديو للاستجابة",
+     "رد"
+    ],
+    "H": [
+     "رد"
+    ]
+   }
+  },
+  {
+   "en": "return value",
+   "ar": "القيمة المُرجعة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "القيمة المرجعة"
+    ],
+    "W": "تعليمة إخراج ناتج"
+   }
+  },
+  {
+   "en": "role",
+   "ar": "دور",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "دور",
+     "دور التحكم في الوصول استناداً إلى الدور"
+    ],
+    "H": [
+     "دور"
+    ]
+   }
+  },
+  {
+   "en": "routing",
+   "ar": "التوجيه",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "توجيه"
+    ]
+   }
+  },
+  {
+   "en": "row",
+   "ar": "صف",
+   "keepEnglish": false,
+   "also": [
+    "سجل"
+   ],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "صف",
+     "سجل"
+    ],
+    "W": "صف",
+    "H": [
+     "سجل"
+    ]
+   }
+  },
+  {
+   "en": "scope",
+   "ar": "نطاق",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "نطاق",
+     "المجموعة",
+     "النطاق"
+    ],
+    "W": "مجال",
+    "H": [
+     "نطاق",
+     "نطاق المتغيرات النطاق"
+    ]
+   }
+  },
+  {
+   "en": "security",
+   "ar": "الأمان",
+   "keepEnglish": false,
+   "also": [
+    "الأمن"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "M; W says أمن",
+   "sources": {
+    "M": [
+     "الأمان",
+     "أمان",
+     "الأمان في Microsoft 365"
+    ],
+    "W": "أمن الحاسوب"
+   }
+  },
+  {
+   "en": "server",
+   "ar": "خادم",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [
+    "خادوم"
+   ],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "خادم",
+     "ملقم الشبكة"
+    ],
+    "W": "خادوم",
+    "H": [
+     "خادم"
+    ]
+   }
+  },
+  {
+   "en": "session",
+   "ar": "جلسة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "جلسة",
+     "جلسة عمل",
+     "مشاركة جلسة عمل"
+    ],
+    "W": "جلسة"
+   }
+  },
+  {
+   "en": "source code",
+   "ar": "شيفرة مصدرية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "follows code = شيفرة",
+   "sources": {
+    "W": "نص برمجي مصدري"
+   }
+  },
+  {
+   "en": "statement",
+   "ar": "عبارة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "عبارة الإجراء",
+     "كشف",
+     "عبارة"
+    ],
+    "W": "عبارة",
+    "H": [
+     "عبارة"
+    ]
+   }
+  },
+  {
+   "en": "static",
+   "ar": "ساكن",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "H (الروابط الساكنة); avoids ثابت, which is constant",
+   "sources": {
+    "M": [
+     "ثابت"
+    ],
+    "H": [
+     "ثابت"
+    ]
+   }
+  },
+  {
+   "en": "static analysis",
+   "ar": "التحليل الساكن",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (تحليل البرنامج الساكن)",
+   "sources": {
+    "M": [
+     "تحليل التعليمات البرمجية"
+    ],
+    "W": "تحليل البرنامج الساكن"
+   }
+  },
+  {
+   "en": "status code",
+   "ar": "رمز الحالة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "W (رموز حالة)",
+   "sources": {
+    "W": "قائمة رموز حالة بروتوكول نقل النص الفائق"
+   }
+  },
+  {
+   "en": "strict typing",
+   "ar": "الأنواع الصارمة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no reference: built from agreed words; the keyword strict_types stays in English",
+   "sources": {
+    "W": "سلامة الأنماط"
+   }
+  },
+  {
+   "en": "string",
+   "ar": "سلسلة نصية",
+   "keepEnglish": false,
+   "also": [
+    "سلسلة"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "H; M and W share سلسلة, and نصية makes it clear",
+   "sources": {
+    "M": [
+     "سلسلة"
+    ],
+    "W": "سلسلة محارف",
+    "H": [
+     "السلاسل النصية",
+     "سلسلة",
+     "سلسلة نصية"
+    ]
+   }
+  },
+  {
+   "en": "table",
+   "ar": "جدول",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "جدول"
+    ],
+    "W": "جدول",
+    "H": [
+     "جدول"
+    ]
+   }
+  },
+  {
+   "en": "template",
+   "ar": "قالب",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "قالب",
+     "ملف قالب"
+    ],
+    "W": "معالج القالب"
+   }
+  },
+  {
+   "en": "terminal",
+   "ar": "طرفية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "الوحدة الطرفية"
+    ],
+    "W": "محاكي طرفية"
+   }
+  },
+  {
+   "en": "test",
+   "ar": "اختبار",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "يختبر",
+     "اختبار"
+    ],
+    "W": "فحص البرمجيات"
+   }
+  },
+  {
+   "en": "time zone",
+   "ar": "منطقة زمنية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W",
+   "sources": {
+    "M": [
+     "المنطقة الزمنية"
+    ],
+    "W": "منطقة زمنية"
+   }
+  },
+  {
+   "en": "token",
+   "ar": "رمز مميز",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "رمز مميز",
+     "رقم بطاقة مسبوقة الدفع",
+     "رمز مميّز"
+    ],
+    "W": "رمز الوصول"
+   }
+  },
+  {
+   "en": "trait",
+   "ar": "trait",
+   "keepEnglish": true,
+   "also": [],
+   "rejected": [],
+   "rule": 3,
+   "why": "a PHP keyword; M's سمة is attribute, which is another PHP feature",
+   "sources": {
+    "M": [
+     "سمة"
+    ]
+   }
+  },
+  {
+   "en": "transaction",
+   "ar": "معاملة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and W (معاملات)",
+   "sources": {
+    "M": [
+     "الحركة",
+     "عملية",
+     "معاملات"
+    ],
+    "W": "معاملات قاعدة البيانات"
+   }
+  },
+  {
+   "en": "type",
+   "ar": "نوع",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "نوع",
+     "يكتب"
+    ],
+    "W": "نوع بيانات",
+    "H": [
+     "نوع"
+    ]
+   }
+  },
+  {
+   "en": "type declaration",
+   "ar": "تصريح النوع",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no reference: built from agreed words (نوع)",
+   "sources": {}
+  },
+  {
+   "en": "unit test",
+   "ar": "اختبار الوحدة",
+   "keepEnglish": false,
+   "also": [
+    "اختبار وحدة"
+   ],
+   "rejected": [],
+   "rule": 2,
+   "why": "W; M says اختبار وحدة (the same words)",
+   "sources": {
+    "M": [
+     "اختبار وحدة"
+    ],
+    "W": "اختبار الوحدة"
+   }
+  },
+  {
+   "en": "upload",
+   "ar": "رفع",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M and H say تحميل, which in Arabic also means download; رفع is unambiguous",
+   "sources": {
+    "M": [
+     "تحميل",
+     "حمِّل",
+     "يحمّل"
+    ],
+    "H": [
+     "تحميل"
+    ]
+   }
+  },
+  {
+   "en": "validation",
+   "ar": "التحقق",
+   "keepEnglish": false,
+   "also": [
+    "التحقق من الصحة"
+   ],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W)",
+   "sources": {
+    "M": [
+     "التحقق من صحة",
+     "التحقق من استيفاء المتطلبات",
+     "التحقق من الصحة"
+    ],
+    "W": "التحقق من البيانات",
+    "H": [
+     "تحقق"
+    ]
+   }
+  },
+  {
+   "en": "value",
+   "ar": "قيمة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "قيمة"
+    ],
+    "H": [
+     "قيمة"
+    ]
+   }
+  },
+  {
+   "en": "value object",
+   "ar": "كائن قيمة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "no reference: built from agreed words",
+   "sources": {}
+  },
+  {
+   "en": "variable",
+   "ar": "متغير",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "متغيّر"
+    ],
+    "W": "متغير",
+    "H": [
+     "متغير"
+    ]
+   }
+  },
+  {
+   "en": "version",
+   "ar": "إصدار",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "الإصدار",
+     "إصدار"
+    ],
+    "H": [
+     "إصدار",
+     "نسخة"
+    ]
+   }
+  },
+  {
+   "en": "version control",
+   "ar": "التحكم في الإصدارات",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (التحكم بالإصدار); W says ضبط النسخ",
+   "sources": {
+    "M": [
+     "التحكم بالإصدار"
+    ],
+    "W": "ضبط النسخ"
+   }
+  },
+  {
+   "en": "visibility",
+   "ar": "الرؤية",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, H)",
+   "sources": {
+    "M": [
+     "الرؤية",
+     "رؤية"
+    ],
+    "H": [
+     "الرؤية"
+    ]
+   }
+  },
+  {
+   "en": "vulnerability",
+   "ar": "ثغرة",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M (ثغرة أمنية)",
+   "sources": {
+    "M": [
+     "قابلية التعرّض للخطر",
+     "ثغرة أمنية"
+    ],
+    "W": "نقطة ضعف"
+   }
+  },
+  {
+   "en": "warning",
+   "ar": "تحذير",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 2,
+   "why": "M",
+   "sources": {
+    "M": [
+     "تحذير"
+    ]
+   }
+  },
+  {
+   "en": "web server",
+   "ar": "خادم ويب",
+   "keepEnglish": false,
+   "also": [],
+   "rejected": [],
+   "rule": 1,
+   "why": "sources agree (M, W, H)",
+   "sources": {
+    "M": [
+     "ملقم ويب",
+     "خادم ويب"
+    ],
+    "W": "خادم ويب",
+    "H": [
+     "خادم ويب"
+    ]
+   }
+  }
+ ]
+}

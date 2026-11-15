@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Run the tests of one exercise against your code:
+//   composer exercise 06 beginner
+// Levels: beginner, intermediate, advanced.
+
+use Tools\Exercises;
+
+require __DIR__ . '/bootstrap.php';
+
+$root = dirname(__DIR__);
+[$chapter, $level] = [$argv[1] ?? '', $argv[2] ?? ''];
+
+if (preg_match('/^\d{1,2}$/', $chapter) !== 1 || !in_array($level, Exercises::LEVELS, true)) {
+    fwrite(STDERR, "Usage: composer exercise <chapter> <level>\n"
+        . "Example: composer exercise 06 beginner\n"
+        . 'Levels: ' . implode(', ', Exercises::LEVELS) . "\n");
+    exit(2);
+}
+
+$dirs = glob(sprintf('%s/exercises/%02d-*/%s', $root, (int) $chapter, $level), GLOB_ONLYDIR) ?: [];
+if ($dirs === []) {
+    fwrite(STDERR, "There is no $level exercise for chapter $chapter yet.\n");
+    exit(2);
+}
+
+echo 'Testing ' . substr($dirs[0], strlen($root) + 1) . "\n\n";
+$command = [PHP_BINARY, $root . '/vendor/bin/phpunit', '-c', $root . '/phpunit.xml.dist',
+    '--do-not-record-test-run-history', '--testdox', $dirs[0]];
+$process = proc_open($command, [STDIN, STDOUT, STDERR], $pipes, $root);
+exit($process === false ? 1 : proc_close($process));

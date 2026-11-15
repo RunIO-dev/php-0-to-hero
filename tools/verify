@@ -1,0 +1,108 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Every check of docs/standards.md §7, in one script. CI runs it on PHP 8.5 and 8.6:
+//   docker compose run --rm php composer verify
+//   docker compose run --rm php85 composer verify
+// Add --links to also check that every link in the book answers (CI does this weekly).
+
+use Tools\Chapters;
+use Tools\Examples;
+use Tools\Exercises;
+use Tools\Glossary;
+use Tools\Links;
+use Tools\Patterns;
+use Tools\Run;
+
+require __DIR__ . '/bootstrap.php';
+
+$root = dirname(__DIR__);
+$bin = $root . '/vendor/bin/';
+
+/**
+ * PHPStan level per path (docs/standards.md §4): no types before chapter 16, strict from 40.
+ *
+ * @return array<int, list<string>>
+ */
+function phpstanGroups(string $root): array
+{
+    $groups = [8 => ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book']];
+    if (is_dir("$root/shelf/src")) {
+        $groups[8][] = 'shelf';
+    }
+    foreach (['code', 'solutions'] as $top) {
+        foreach (glob("$root/$top/*", GLOB_ONLYDIR) ?: [] as $dir) {
+            $chapter = (int) basename($dir);
+            $level = match (true) {
+                $chapter < 16 => 5,
+                $chapter < 40 || $top === 'code' => 6,
+                default => 8,
+            };
+            $groups[$level][] = "$top/" . basename($dir);
+        }
+    }
+
+    return $groups;
+}
+
+$checks = [
+    'examples print their .out' => static fn(): array => Examples::check($root),
+    'exercises fail on the starter and pass on the solution' => static fn(): array => Exercises::check($root),
+    'forbidden patterns' => static function () use ($root): array {
+        $problems = [];
+        foreach (['code', 'exercises', 'solutions', 'shelf'] as $top) {
+            foreach (Run::files("$root/$top", '.php') as $file) {
+                array_push($problems, ...Patterns::check(substr($file, strlen($root) + 1), (string) file_get_contents($file)));
+            }
+        }
+
+        return $problems;
+    },
+    'chapters follow the template' => static fn(): array => Chapters::check($root),
+    'Arabic edition uses the agreed terms' => static fn(): array => Glossary::check($root),
+    'tool tests' => static function () use ($root, $bin): array {
+        $run = Run::capture([PHP_BINARY, $bin . 'phpunit', '--colors=never', '--testsuite', 'tools'], $root);
+
+        return $run['code'] === 0 ? [] : [trim($run['out'] . $run['err'])];
+    },
+    'static analysis (PHPStan)' => static function () use ($root, $bin): array {
+        $problems = [];
+        foreach (phpstanGroups($root) as $level => $paths) {
+            $run = Run::capture([PHP_BINARY, $bin . 'phpstan', 'analyse', '--no-progress', '--error-format=raw',
+                '-c', 'phpstan.neon.dist', '--level', (string) $level, ...$paths], $root);
+            if ($run['code'] !== 0) {
+                $problems[] = "level $level:\n" . trim($run['out'] . $run['err']);
+            }
+        }
+
+        return $problems;
+    },
+    'code style (PER)' => static function () use ($root, $bin): array {
+        $run = Run::capture([PHP_BINARY, $bin . 'php-cs-fixer', 'check', '--diff', '--no-ansi'], $root);
+
+        return $run['code'] === 0 ? [] : [trim($run['out']) . "\nFix with: vendor/bin/php-cs-fixer fix"];
+    },
+    'the book builds' => static function () use ($root): array {
+        $run = Run::capture([PHP_BINARY, $root . '/tools/book'], $root);
+
+        return $run['code'] === 0 ? [] : [trim($run['out'] . $run['err'])];
+    },
+];
+if (in_array('--links', $_SERVER['argv'], true)) {
+    $checks['links answer'] = static fn(): array => Links::check($root);
+}
+
+echo 'PHP ' . PHP_VERSION . "\n";
+$failed = 0;
+foreach ($checks as $name => $check) {
+    $problems = $check();
+    echo ($problems === [] ? 'ok    ' : 'FAIL  ') . $name . "\n";
+    foreach ($problems as $problem) {
+        echo '      ' . str_replace("\n", "\n      ", $problem) . "\n";
+    }
+    $failed += $problems === [] ? 0 : 1;
+}
+echo $failed === 0 ? "\nAll checks passed.\n" : "\n$failed check(s) failed.\n";
+exit($failed === 0 ? 0 : 1);

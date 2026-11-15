@@ -1,0 +1,29 @@
+{
+    "name": "runio-dev/php-0-to-hero",
+    "description": "PHP from zero to hero: a free book and video course with tested code.",
+    "type": "project",
+    "license": ["CC-BY-4.0", "MIT"],
+    "require": {
+        "php": ">=8.5"
+    },
+    "autoload-dev": {
+        "psr-4": { "Tools\\": "tools/src/" }
+    },
+    "scripts": {
+        "check": "php tools/check.php",
+        "verify": "php tools/verify",
+        "exercise": "php tools/exercise",
+        "book": "php tools/book"
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "league/commonmark": "^2.10",
+        "phpstan/phpstan": "^2.3",
+        "phpunit/phpunit": "^13.4",
+        "tempest/highlight": "^2.30"
+    }
+}
