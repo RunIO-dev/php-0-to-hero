@@ -1,0 +1,16 @@
+PHP 0-to-hero setup check
+
+  ok    PHP 8.5.12 (the course needs 8.5.0 or newer)
+  ok    extension mbstring
+  FIX   extension pdo_sqlite
+        Debian or Ubuntu: sudo apt install php-sqlite3
+        Fedora: sudo dnf install php-pdo
+  ok    extension ctype
+  ok    extension dom
+  ok    extension tokenizer
+  ok    extension xmlwriter
+  ok    error messages are shown (display_errors)
+  ok    Composer (it installs the tools that check your exercises)
+  ok    the course tools are installed (vendor/)
+
+1 thing(s) to fix. Fix them, then run this check again.

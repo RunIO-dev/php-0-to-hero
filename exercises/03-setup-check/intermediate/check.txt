@@ -1,0 +1,16 @@
+PHP 0-to-hero setup check
+
+  ok    PHP 8.6.0 (the course needs 8.5.0 or newer)
+  FIX   extension mbstring
+        Open your php.ini (run: php --ini to see where it is),
+        remove the ; in front of the line extension=mbstring, save, and run this check again.
+  ok    extension pdo_sqlite
+  ok    extension ctype
+  ok    extension dom
+  ok    extension tokenizer
+  ok    extension xmlwriter
+  ok    error messages are shown (display_errors)
+  ok    Composer (it installs the tools that check your exercises)
+  ok    the course tools are installed (vendor/)
+
+1 thing(s) to fix. Fix them, then run this check again.

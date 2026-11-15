@@ -1,0 +1,2 @@
+cd exercises/04-editor-and-terminal
+cd ../..

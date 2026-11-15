@@ -84,7 +84,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - nothing for "later".
 - **Comments** say why, not what. They are in English and kept short, and the code is the same in every language edition.
 - **"Don't do this" examples** go in files named `*.bad.php`, always shown next to the right version. They are run only for `php -l`, and the text marks them clearly (✗).
-- **Examples that show an error on purpose** (for "Common mistakes") go in files named `*.error.php`. They run like any example, and their `.out` holds the real error message. PHPStan and the style check skip them, and the text marks them (⚠).
+- **Examples that show an error on purpose** (for "Common mistakes") go in files named `*.error.php`. They run like any example, and their `.out` holds the real error message. PHPStan and the style check skip them, and the text marks them (⚠). An exercise starter with a mistake on purpose uses the same name.
 - **`.out` files** are written with `composer out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 
 ## 5. Exercises

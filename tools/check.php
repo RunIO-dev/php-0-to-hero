@@ -66,8 +66,18 @@ foreach ($paths as $dir) {
         }
     }
 }
-// Composer is needed from chapter 36, so it is a hint, not a problem.
-echo ($composer ? '  ok    ' : '  later ') . "Composer (needed from chapter 36; install it from getcomposer.org)\n";
+// Composer installs PHPUnit, which runs the exercise tests (chapter 3).
+$problems += report(
+    $composer,
+    'Composer (it installs the tools that check your exercises)',
+    "Install it from https://getcomposer.org/download/ (chapter 3 shows how)."
+);
+$root = dirname(__DIR__);
+$problems += report(
+    is_file($root . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php'),
+    'the course tools are installed (vendor/)',
+    "In the course folder, run: composer install"
+);
 
 echo "\n" . ($problems === 0
     ? "Everything the course needs is ready.\n"

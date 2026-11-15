@@ -1,0 +1,19 @@
+PHP 0-to-hero setup check
+
+  FIX   PHP 8.3.6 (the course needs 8.5.0 or newer)
+        Install PHP 8.5 or newer: see chapter 2 for your system.
+        Or use Docker, which needs no PHP on your computer: docker compose run --rm php php tools/check.php
+  ok    extension mbstring
+  ok    extension pdo_sqlite
+  ok    extension ctype
+  ok    extension dom
+  ok    extension tokenizer
+  ok    extension xmlwriter
+  FIX   error messages are shown (display_errors)
+        While learning you want to see every error. In your php.ini (php --ini shows where),
+        set: display_errors = On   and   error_reporting = E_ALL
+  ok    Composer (it installs the tools that check your exercises)
+  FIX   the course tools are installed (vendor/)
+        In the course folder, run: composer install
+
+3 thing(s) to fix. Fix them, then run this check again.
