@@ -55,16 +55,21 @@ final class Chapters
         return [];
     }
 
-    /** The real path of an included file, or null unless it is a file inside code/. */
+    /** The real path of an included file, or null unless it is a file inside code/ or shelf/. */
     public static function source(string $root, string $path): ?string
     {
-        $code = realpath($root . '/code');
         $file = realpath($root . '/' . $path);
-        if ($code === false || $file === false || !is_file($file) || !str_starts_with($file, $code . '/')) {
+        if ($file === false || !is_file($file)) {
             return null;
         }
+        foreach (['code', 'shelf'] as $top) {
+            $dir = realpath($root . '/' . $top);
+            if ($dir !== false && str_starts_with($file, $dir . '/')) {
+                return $file;
+            }
+        }
 
-        return $file;
+        return null;
     }
 
     /** @return list<string> */
@@ -74,7 +79,7 @@ final class Chapters
         preg_match_all(self::INCLUDE, $text, $m);
         foreach ($m[1] as $path) {
             if (self::source($root, $path) === null) {
-                $problems[] = "$name: include not found in code/: $path";
+                $problems[] = "$name: include not found in code/ or shelf/: $path";
             }
         }
 

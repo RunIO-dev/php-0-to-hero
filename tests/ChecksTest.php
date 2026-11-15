@@ -76,8 +76,8 @@ final class ChecksTest extends TestCase
         $this->put('book/en/variables.md', $this->chapter(Chapters::HEADINGS['en'], "<!-- include: code/nope.php -->\n<!-- include: ../secret -->\n"));
         self::assertSame([
             'book/en/variables.md: name must be NN-slug.md',
-            'book/en/variables.md: include not found in code/: code/nope.php',
-            'book/en/variables.md: include not found in code/: ../secret',
+            'book/en/variables.md: include not found in code/ or shelf/: code/nope.php',
+            'book/en/variables.md: include not found in code/ or shelf/: ../secret',
         ], Chapters::check($this->root));
     }
 

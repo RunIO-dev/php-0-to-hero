@@ -13,37 +13,45 @@ use Tools\Run;
 require __DIR__ . '/bootstrap.php';
 
 $root = dirname(__DIR__);
-$site = $root . '/site';
+// Optional argument: another output folder (tools/verify builds into a temporary one, so site/ and its PDF stay).
+$site = $_SERVER['argv'][1] ?? $root . '/site';
 
 // Start from an empty site/, so a removed chapter or edition does not linger.
 Run::remove($site);
 mkdir($site);
 copy($root . '/tools/book.css', $site . '/book.css');
-file_put_contents($site . '/book.css', "\n" . file_get_contents($root . '/vendor/tempest/highlight/src/Themes/Css/highlight-light-lite.css'), FILE_APPEND);
+mkdir($site . '/fonts');
+foreach (glob($root . '/tools/fonts/*') ?: [] as $font) {
+    copy($font, $site . '/fonts/' . basename($font));
+}
+
+$composer = json_decode((string) file_get_contents($root . '/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+$author = $composer['authors'][0] ?? throw new RuntimeException('composer.json needs "authors" for the cover');
+// the edition date: the last commit, so the same source always builds the same book
+$date = trim(Run::capture(['git', '-c', "safe.directory=$root", '-C', $root, 'log', '-1', '--format=%cs'])['out']) ?: date('Y-m-d');
 
 $built = [];
 foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     $lang = basename($dir);
     $out = "$site/$lang";
-    if (!is_dir($out)) {
-        mkdir($out);
-    }
+    mkdir($out);
+    $chapters = [];
     $contents = [];
     $all = '';
     foreach (glob($dir . '/*.md') ?: [] as $file) {
         $source = (string) file_get_contents($file);
-        $title = preg_match('/^# (.+)$/m', $source, $m) === 1 ? trim($m[1]) : basename($file, '.md');
-        $markdown = Book::expand($root, $source, $lang);
-        $html = Book::html($markdown);
+        $heading = preg_match('/^# (.+)$/m', $source, $m) === 1 ? trim($m[1]) : basename($file, '.md');
+        $title = (string) preg_replace('/^\d+\.\s*/', '', $heading);
+        $html = Book::structure(Book::html(Book::expand($root, $source, $lang)), $lang);
         $page = basename($file, '.md') . '.html';
         file_put_contents("$out/$page", Book::page("$title · " . Book::TITLE, $html, $lang));
-        $contents[] = sprintf('<li><a href="%s">%s</a></li>', $page, htmlspecialchars($title, ENT_QUOTES));
-        $all .= "<section class=\"chapter\">\n$html</section>\n";
+        $chapters[] = [(int) basename($file), $title];
+        $contents[] = sprintf('<li><a href="%s">%s</a></li>', $page, htmlspecialchars($heading, ENT_QUOTES));
+        $all .= "<article class=\"chapter\">\n$html</article>\n";
     }
     file_put_contents("$out/index.html", Book::page(Book::TITLE, '<h1>' . Book::TITLE . "</h1>\n<ol>\n" . implode("\n", $contents) . "\n</ol>", $lang));
-    file_put_contents("$out/book.html", Book::page(Book::TITLE, $all, $lang));
-    $built[] = "$lang: " . count($contents) . ' chapter(s)';
-
+    file_put_contents("$out/book.html", Book::page(Book::TITLE, Book::front($lang, '8.6', $chapters, $author, $date) . $all, $lang, 'print'));
+    $built[] = "$lang: " . count($chapters) . ' chapter(s)';
 }
 
 echo 'Book built in site/ (' . ($built === [] ? 'no chapters yet' : implode('; ', $built)) . ")\n";

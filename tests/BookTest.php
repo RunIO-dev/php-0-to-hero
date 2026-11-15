@@ -63,6 +63,26 @@ final class BookTest extends TestCase
         self::assertStringNotContainsString('javascript:', $html);
     }
 
+    public function testStructureGivesOpenerListingsAndSections(): void
+    {
+        $md = "# 6. Variables\n\n## Goals\n\n- one\n\n## Before you start\n\n<!-- include: code/06-variables/name.php -->\n\n<!-- include: code/06-variables/name.bad.php -->\n";
+        $html = Book::structure(Book::html(Book::expand($this->root, $md)), 'en');
+        self::assertStringContainsString('<header class="opener"><div class="opener-num">6</div><div class="opener-t"><div class="opener-k">Chapter</div><h1>Variables</h1></div></header>', $html);
+        self::assertStringContainsString('<section class="s-goals"><h2>Goals</h2>', $html);
+        self::assertStringContainsString('<section class="s-before-you-start">', $html);
+        self::assertStringContainsString('<figure class="listing ok"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">code/06-variables/name.php</span></figcaption><pre', $html);
+        self::assertStringContainsString('<div class="out"><div class="out-h">Output</div><pre data-lang="txt"', $html);
+        self::assertStringContainsString('<figure class="listing bad">', $html);
+        self::assertStringContainsString('<span class="badge">✗ Don\'t do this</span>', $html);
+    }
+
+    public function testBoldLabelsAreNotHighlightedLikeKeyTerms(): void
+    {
+        $html = Book::structure(Book::html("A **variable** is a name.\n\n**Fix:** write it.\n"), 'en');
+        self::assertStringContainsString('A <strong>variable</strong> is', $html);
+        self::assertStringContainsString('<strong class="label">Fix:</strong>', $html);
+    }
+
     public function testArabicPageIsRightToLeft(): void
     {
         self::assertStringContainsString('<html lang="ar" dir="rtl">', Book::page('عنوان', '', 'ar'));

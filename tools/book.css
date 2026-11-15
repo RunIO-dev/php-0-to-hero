@@ -1,47 +1,302 @@
-/* The book's look: readable, quiet, prints well. */
+/* The book's design: a full-colour programming book. Serif text, sans headings in PHP's indigo,
+   code listings in the video editor's colours, boxes with a coloured title bar per kind.
+   Fonts (SIL Open Font License, in tools/fonts/): Inter, Source Serif 4, JetBrains Mono. */
+
+/* fixed weights, not variable fonts: Chrome prints variable fonts as Type 3 glyphs */
+@font-face { font-family: "Inter"; src: url("fonts/Inter-400.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-600.ttf") format("truetype"); font-weight: 600; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-700.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-800.ttf") format("truetype"); font-weight: 800; }
+@font-face { font-family: "Source Serif 4"; src: url("fonts/SourceSerif4-400.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Source Serif 4"; src: url("fonts/SourceSerif4-600.ttf") format("truetype"); font-weight: 600; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-400.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-500.ttf") format("truetype"); font-weight: 500; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-800.ttf") format("truetype"); font-weight: 800; }
+@font-face { font-family: "Source Serif 4"; src: url("fonts/SourceSerif4-Italic-400.ttf") format("truetype"); font-weight: 400; font-style: italic; }
+
 :root {
-    --ink: #1d1d1f;
-    --muted: #5f6368;
-    --line: #e3e3e6;
-    --code-bg: #f6f7f9;
-    --accent: #4f5b93; /* PHP's own blue-violet */
+    --ink: #1c1d2b;
+    --muted: #5c607a;
+    --line: #e2e4ee;
+    --paper: #ffffff;
+    --php: #4f5b93;          /* PHP's indigo */
+    --php-dark: #2f3769;
+    --php-pale: #eceef8;
+    --amber: #d9891a;  --amber-pale: #fdf4e3;
+    --red: #c8414b;    --red-pale: #fcecee;
+    --green: #2a8f63;  --green-pale: #e8f6ef;
+    --marker: #ffe58a;       /* the highlighter pen on key terms */
+    --code-bg: #0d1426;
+    --code-bar: #16203a;
+    --code-ink: #e2e8f0;
+    --sans: "Inter", system-ui, sans-serif;
+    --serif: "Source Serif 4", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-body {
-    margin: 0;
+* { box-sizing: border-box; }
+
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.68 var(--serif); }
+main { max-width: 46rem; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+
+h1, h2, h3 { font-family: var(--sans); line-height: 1.25; }
+h2 { margin: 2.3em 0 0.7em; padding-bottom: 0.25em; font-size: 1.42em; font-weight: 700; color: var(--php-dark); border-bottom: 2px solid var(--php-pale); }
+h3 { margin: 1.9em 0 0.5em; font-size: 1.1em; font-weight: 700; color: var(--php); }
+p, li { hyphens: auto; }
+a { color: var(--php); }
+
+/* key terms: a highlighter stroke under bold words */
+/* drawn as a solid inset shadow: some PDF viewers show gradients with transparent stops as black */
+strong { font-weight: 600; box-shadow: inset 0 -0.38em 0 var(--marker); padding: 0 0.1em; }
+
+strong.label { box-shadow: none; padding: 0; color: var(--php-dark); }
+
+/* inline code: a soft indigo chip */
+:not(pre) > code { font: 500 0.85em var(--mono); color: var(--php-dark); background: var(--php-pale); padding: 0.1em 0.35em; border-radius: 4px; }
+
+/* ---------- chapter opening: an indigo band with the number ---------- */
+.opener {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin: 0 0 2.4rem;
+    padding: 2.2rem 2rem;
+    border-radius: 14px;
+    color: #fff;
+    background: linear-gradient(120deg, var(--php-dark) 0%, var(--php) 100%);
+}
+.opener-num { font: 800 5.2rem/1 var(--sans); color: #fff; opacity: 0.95; padding-right: 1.6rem; border-right: 2px solid rgba(255, 255, 255, 0.35); }
+.opener-k { font: 600 0.8rem var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: #c9cff0; }
+.opener h1 { margin: 0.3rem 0 0; font-size: 2.3rem; font-weight: 800; letter-spacing: -0.015em; color: #fff; }
+
+/* ---------- boxes: a coloured title bar and a white body, one colour per kind ---------- */
+.s-goals, .s-principle-check, .s-security, .s-summary {
+    --c: var(--php); --pale: var(--php-pale);
+    margin: 2.2rem 0;
+    padding: 0 1.3rem 0.9rem;
+    border: 1.5px solid var(--c);
+    border-radius: 10px;
     background: #fff;
-    color: var(--ink);
-    font: 17px/1.65 system-ui, -apple-system, "Segoe UI", "Noto Sans", "Noto Sans Arabic", sans-serif;
+    overflow: hidden;
 }
-
-main {
-    max-width: 46rem;
-    margin: 0 auto;
-    padding: 2rem 1rem 4rem;
+.s-principle-check { --c: var(--amber); --pale: var(--amber-pale); }
+.s-security { --c: var(--red); --pale: var(--red-pale); }
+.s-summary { --c: var(--green); --pale: var(--green-pale); }
+.s-goals h2, .s-principle-check h2, .s-security h2, .s-summary h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 -1.3rem 0.9rem;
+    padding: 0.55rem 1.3rem;
+    border: 0;
+    background: var(--c);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
+/* a round badge before the title: a letter per kind, drawn in the text font */
+.s-goals h2::before, .s-principle-check h2::before, .s-security h2::before, .s-summary h2::before {
+    display: inline-grid;
+    place-items: center;
+    width: 1.55rem;
+    height: 1.55rem;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--c);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+}
+.s-goals h2::before { content: "→"; }
+.s-principle-check h2::before { content: "★"; }
+.s-security h2::before { content: "!"; font-weight: 900; }
+.s-summary h2::before { content: "✓"; }
 
-h1, h2, h3 { line-height: 1.25; }
-h2 { margin-top: 2.5rem; padding-bottom: .3rem; border-bottom: 1px solid var(--line); }
-a { color: var(--accent); }
+.s-goals ul, .s-summary ul { list-style: none; padding: 0; margin: 0; }
+.s-goals li, .s-summary li { position: relative; padding: 0.3rem 0 0.3rem 1.8rem; border-bottom: 1px dashed var(--line); }
+.s-goals li:last-child, .s-summary li:last-child { border-bottom: 0; }
+.s-goals li::before, .s-summary li::before {
+    position: absolute;
+    left: 0;
+    top: 0.62rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 4px;
+    background: var(--pale);
+    color: var(--c);
+    font: 800 0.72rem/1.1rem var(--sans);
+    text-align: center;
+}
+.s-goals ul { counter-reset: goal; }
+.s-goals li { counter-increment: goal; }
+.s-goals li::before { content: counter(goal); }
+.s-summary li::before { content: "✓"; }
+.s-principle-check p, .s-security p { margin: 0.4rem 0; }
 
-pre, code { font-family: ui-monospace, "JetBrains Mono", Menlo, Consolas, monospace; font-size: .9em; }
-pre {
+/* ---------- Shelf and the exercises ---------- */
+.s-shelf h2::after {
+    content: "PROJECT";
+    margin-left: 0.7rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 99px;
+    background: var(--green-pale);
+    color: var(--green);
+    font: 700 0.62rem var(--sans);
+    letter-spacing: 0.12em;
+    vertical-align: 0.3em;
+}
+.s-exercises ol { list-style: none; padding: 0; }
+.s-exercises ol > li { margin: 0.7rem 0; padding: 0.7rem 1rem; border-radius: 10px; background: #f7f8fc; }
+.s-exercises ol > li > strong:first-child {
+    box-shadow: none;
+    display: inline-block;
+    margin-right: 0.3rem;
+    padding: 0.05rem 0.6rem;
+    border-radius: 99px;
+    background: var(--green);
+    color: #fff;
+    font: 700 0.75rem var(--sans);
+    letter-spacing: 0.04em;
+}
+.s-exercises ol > li > strong:first-child code { background: transparent; color: #fff; }
+.s-exercises ol > li:nth-child(2) > strong:first-child { background: var(--amber); }
+.s-exercises ol > li:nth-child(3) > strong:first-child { background: var(--red); }
+
+.s-further-reading { font-size: 0.95em; }
+
+/* ---------- code listings: file tab, editor, terminal ---------- */
+figure.listing {
+    margin: 1.4rem 0 1.6rem;
+    border-radius: 12px;
+    overflow: hidden;
     background: var(--code-bg);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: .8rem 1rem;
-    overflow-x: auto;
-    direction: ltr; /* code reads left to right in every edition */
-    text-align: left;
+    box-shadow: 0 6px 18px rgba(20, 24, 60, 0.18);
+    break-inside: avoid;
 }
-:not(pre) > code { background: var(--code-bg); padding: .1em .3em; border-radius: 4px; }
+figure.listing figcaption {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--code-bar);
+    color: #94a3b8;
+    font: 500 0.74rem var(--mono);
+}
+.dots { display: inline-flex; gap: 6px; margin-right: 0.3rem; }
+.dots i { width: 9px; height: 9px; border-radius: 50%; background: #334155; }
+.dots i:nth-child(1) { background: #f87171; } .dots i:nth-child(2) { background: #fbbf24; } .dots i:nth-child(3) { background: #34d399; }
+.badge {
+    margin-left: auto;
+    padding: 0.15rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+figure.bad .badge { background: rgba(214, 69, 80, 0.2); color: #fca5a5; }
+figure.error .badge { background: rgba(232, 163, 61, 0.2); color: #fcd34d; }
+figure.bad { box-shadow: 0 0 0 2px var(--red), 0 6px 18px rgba(20, 24, 60, 0.18); }
 
-table { border-collapse: collapse; }
-th, td { border: 1px solid var(--line); padding: .3rem .6rem; }
+pre {
+    margin: 0;
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    color: var(--code-ink);
+    background: var(--code-bg);
+    font: 400 0.8rem/1.6 var(--mono);
+    direction: ltr;
+    text-align: left;
+    tab-size: 4;
+}
+:not(figure) > pre { border-radius: 12px; margin: 1.2rem 0; }
+
+.out { border-top: 1px dashed #2a3654; }
+.out-h {
+    padding: 0.45rem 1.1rem 0;
+    font: 600 0.62rem var(--sans);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+.out pre { color: #cbd5e1; background: #0a1020; }
+
+/* highlighting (tempest/highlight classes), the editor's colours */
+.hl-keyword { color: #c792ea; }
+.hl-value, .hl-literal { color: #a5e3a0; }
+.hl-variable { color: #f8a77a; }
+.hl-number { color: #f59e0b; }
+.hl-comment { color: #64748b; font-style: italic; }
+.hl-property, .hl-type, .hl-generic { color: #7cc4ff; }
+.hl-attribute { color: #f472b6; }
+.hl-strong { font-weight: bold; }
+.hl-em { font-style: italic; }
+
+/* ---------- tables ---------- */
+table { border-collapse: collapse; width: 100%; font-size: 0.92em; }
+th, td { border-bottom: 1px solid var(--line); padding: 0.4rem 0.6rem; text-align: left; }
+th { font-family: var(--sans); font-size: 0.85em; color: var(--muted); }
+
+/* ---------- the printed book: cover, imprint and contents ---------- */
+.cover {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0 18mm;
+    color: #fff;
+    background:
+        radial-gradient(120% 70% at 100% 0%, rgba(136, 146, 191, 0.55) 0%, rgba(136, 146, 191, 0) 60%),
+        radial-gradient(90% 60% at 0% 100%, rgba(232, 163, 61, 0.28) 0%, rgba(232, 163, 61, 0) 65%),
+        linear-gradient(160deg, #262d52 0%, #151935 100%);
+    overflow: hidden;
+}
+.cover-code { position: absolute; right: -6mm; top: 14mm; font: 800 64mm/1 var(--mono); color: rgba(255, 255, 255, 0.07); letter-spacing: -0.05em; }
+.cover h1 { margin: 0; font: 800 34mm/0.95 var(--sans); letter-spacing: -0.04em; color: #fff; }
+.cover-sub { max-width: 120mm; margin: 10mm 0 0; font: 400 15pt/1.4 var(--serif); color: #d7dbf0; }
+.cover-meta { margin: 8mm 0 0; font: 700 10pt var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: #e8a33d; }
+.cover-author { margin: 16mm 0 0; font: 700 16pt var(--sans); color: #fff; }
+.cover-author span { display: block; margin-bottom: 1mm; font-size: 9pt; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #9ea6cf; }
+.cover-foot { position: absolute; left: 18mm; bottom: 14mm; margin: 0; font: 400 8.5pt var(--sans); color: #9ea6cf; }
+
+.imprint { display: flex; flex-direction: column; justify-content: flex-end; font-size: 0.88em; color: var(--muted); }
+.imprint p { margin: 0 0 1em; }
+.imprint strong { box-shadow: none; }
+
+.toc h2 { margin-top: 0; font-size: 1.9rem; border: 0; }
+.toc ol { list-style: none; padding: 0; }
+.toc li { display: flex; align-items: center; gap: 1rem; padding: 0.5rem 0; border-bottom: 1px solid var(--line); font: 500 1.05rem var(--sans); }
+.toc-num { display: inline-grid; place-items: center; width: 2.3rem; height: 2.3rem; border-radius: 8px; background: var(--php); color: #fff; font: 800 0.95rem var(--sans); }
+
+[dir="rtl"] .badge { margin-left: 0; margin-right: auto; }
+[dir="rtl"] .opener-num { padding-right: 0; padding-left: 1.6rem; border-right: 0; border-left: 2px solid rgba(255, 255, 255, 0.35); }
+[dir="rtl"] .s-goals li, [dir="rtl"] .s-summary li { padding: 0.3rem 1.8rem 0.3rem 0; }
+[dir="rtl"] .s-goals li::before, [dir="rtl"] .s-summary li::before { left: auto; right: 0; }
 
 @media print {
-    body { font-size: 11pt; }
+    @page { size: A4; margin: 20mm 19mm 22mm; }
+    @page :right {
+        @top-right { content: "PHP 0 to Hero"; font: 600 7.5pt "Inter", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: #8892bf; }
+        @bottom-right { content: counter(page); font: 700 9pt "Inter", sans-serif; color: #4f5b93; }
+    }
+    @page :left {
+        @top-left { content: "PHP 0 to Hero"; font: 600 7.5pt "Inter", sans-serif; letter-spacing: 0.14em; text-transform: uppercase; color: #8892bf; }
+        @bottom-left { content: counter(page); font: 700 9pt "Inter", sans-serif; color: #4f5b93; }
+    }
+    @page cover { margin: 0; @top-right { content: none; } @bottom-right { content: none; } @top-left { content: none; } @bottom-left { content: none; } }
+    @page front { @top-right { content: none; } @bottom-right { content: none; } @top-left { content: none; } @bottom-left { content: none; } }
+
+    body { font-size: 10.5pt; }
     main { max-width: none; padding: 0; }
+    .cover { page: cover; height: 297mm; min-height: 0; }
+    .imprint { page: front; break-before: page; height: 245mm; }
+    .toc { page: front; break-before: page; }
     .chapter { break-before: page; }
-    pre { white-space: pre-wrap; break-inside: avoid; }
+    h2, h3 { break-after: avoid; }
+    pre { white-space: pre-wrap; overflow: visible; }
+    figure.listing, figure.bad { box-shadow: none; }
+    figure.bad { outline: 2px solid var(--red); }
+    .s-goals, .s-summary, .s-principle-check, .s-security, .s-exercises ol > li { break-inside: avoid; }
+    a { text-decoration: none; }
 }

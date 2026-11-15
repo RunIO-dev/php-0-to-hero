@@ -2,18 +2,31 @@
     "name": "runio-dev/php-0-to-hero",
     "description": "PHP from zero to hero: a free book and video course with tested code.",
     "type": "project",
-    "license": ["CC-BY-4.0", "MIT"],
+    "license": [
+        "CC-BY-4.0",
+        "MIT"
+    ],
+    "authors": [
+        {
+            "name": "Amer Malik Mohammed",
+            "homepage": "https://runio.dev",
+            "role": "Author"
+        }
+    ],
     "require": {
         "php": ">=8.5"
     },
     "autoload-dev": {
-        "psr-4": { "Tools\\": "tools/src/" }
+        "psr-4": {
+            "Tools\\": "tools/src/"
+        }
     },
     "scripts": {
         "check": "php tools/check.php",
         "verify": "php tools/verify",
         "exercise": "php tools/exercise",
-        "book": "php tools/book"
+        "book": "php tools/book",
+        "out": "php tools/out"
     },
     "config": {
         "process-timeout": 0,

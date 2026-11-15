@@ -16,4 +16,5 @@ None yet.
 ## Third-party code in the build
 
 - `league/commonmark` (BSD-3-Clause): Markdown to HTML.
-- `tempest/highlight` (MIT): code highlighting, including its `highlight-light-lite` theme in `site/book.css`.
+- `tempest/highlight` (MIT): code highlighting.
+- Fonts in `tools/fonts/` (SIL Open Font License 1.1, licence files next to them): Inter, Source Serif 4 and JetBrains Mono, fixed-weight instances cut from the variable fonts in github.com/google/fonts.

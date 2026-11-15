@@ -6,3 +6,4 @@ parameters:
     tmpDir: .phpunit.cache/phpstan
     excludePaths:
         - tools/check.php   # old-style on purpose, so it runs on old PHP
+        - '*.error.php'     # shows an error on purpose

@@ -6,7 +6,9 @@ namespace Tools;
 
 /**
  * Every code/**.php example runs, and prints exactly its .out file (docs/standards.md §6.1).
+ * Shelf's scripts with a .out file are checked the same way.
  * A file marked "// PHP 8.6+" is skipped on older PHP. A *.bad.php file is only syntax-checked.
+ * A *.error.php file shows an error on purpose: its .out holds the error message.
  */
 final class Examples
 {
@@ -16,7 +18,8 @@ final class Examples
     public static function check(string $root): array
     {
         $problems = [];
-        foreach (Run::files($root . '/code', '.php') as $file) {
+        $shelf = array_filter(Run::files($root . '/shelf', '.php'), static fn(string $f): bool => is_file(substr($f, 0, -4) . '.out'));
+        foreach ([...Run::files($root . '/code', '.php'), ...$shelf] as $file) {
             $name = substr($file, strlen($root) + 1);
             if (str_ends_with($file, '.bad.php')) {
                 $lint = Run::capture([PHP_BINARY, '-l', $file]);

@@ -44,7 +44,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 11. **Further reading:** the PHP manual and other official docs only.
 
 - **Length:** about 1,500–3,000 words.
-- **Code in the text:** always included from a file, never pasted: `<!-- include: code/06-variables/naming.php -->`. The build inserts the file and its `.out`, so the text and the tested code can't drift.
+- **Code in the text:** always included from a file in `code/` or `shelf/`, never pasted: `<!-- include: code/06-variables/names.php -->`. The build inserts the file and its `.out`, so the text and the tested code can't drift.
 
 ## 3. Writing style
 
@@ -84,6 +84,8 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - nothing for "later".
 - **Comments** say why, not what. They are in English and kept short, and the code is the same in every language edition.
 - **"Don't do this" examples** go in files named `*.bad.php`, always shown next to the right version. They are run only for `php -l`, and the text marks them clearly (✗).
+- **Examples that show an error on purpose** (for "Common mistakes") go in files named `*.error.php`. They run like any example, and their `.out` holds the real error message. PHPStan and the style check skip them, and the text marks them (⚠).
+- **`.out` files** are written with `composer out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 
 ## 5. Exercises
 
@@ -91,13 +93,13 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - `exercises/NN-slug/<level>/` holds a starter file and a PHPUnit test.
 - **The test must fail on the starter, and pass on `solutions/NN-slug/<level>/`.** CI checks both, so every exercise is real and every solution works.
 - The learner runs one command: `composer exercise 06 beginner`.
-- A test loads the file it checks with `require_once subject(__DIR__, 'file.php');`. `tools/verify` runs the same test once against the starter and once against the solution.
+- A test finds the file it checks with `subject(__DIR__, 'file.php')`. For scripts, `output_of($file)` runs it and returns what it prints, and `variables_in()` and `strings_in()` let a test check how it was written. `tools/verify` runs the same test once against the starter and once against the solution.
 
 ## 6. Checks: `tools/verify`, which CI runs on every push
 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
-3. `shelf/` tests pass at every `shelf-chNN` tag. (Added with the first tag, in chapter 6.)
+3. Shelf: until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass at every `shelf-chNN` tag.
 4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;

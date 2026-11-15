@@ -28,7 +28,7 @@ $bin = $root . '/vendor/bin/';
  */
 function phpstanGroups(string $root): array
 {
-    $groups = [8 => ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book']];
+    $groups = [8 => ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book', 'tools/out']];
     if (is_dir("$root/shelf/src")) {
         $groups[8][] = 'shelf';
     }
@@ -85,7 +85,9 @@ $checks = [
         return $run['code'] === 0 ? [] : [trim($run['out'] . "\n" . $run['err']) . "\nFix with: vendor/bin/php-cs-fixer fix"];
     },
     'the book builds' => static function () use ($root): array {
-        $run = Run::capture([PHP_BINARY, $root . '/tools/book'], $root);
+        $tmp = sys_get_temp_dir() . '/php-0-to-hero-book-' . getmypid();
+        $run = Run::capture([PHP_BINARY, $root . '/tools/book', $tmp], $root);
+        Run::remove($tmp);
 
         return $run['code'] === 0 ? [] : [trim($run['out'] . $run['err'])];
     },
