@@ -1,7 +1,7 @@
 # Contributing
 
 Corrections are welcome: a wrong fact, an unclear sentence, a broken example, a
-better Arabic or German term.
+better term.
 
 - **Small fixes:** open a pull request.
 - **Larger changes** (a new chapter, a different approach): open an issue first.

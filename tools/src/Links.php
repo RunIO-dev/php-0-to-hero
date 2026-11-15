@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tools;
 
-/** Every web link in the book answers (docs/standards.md §7.6). Run weekly, not on every push. */
+/** Every web link in the book answers (docs/standards.md §6.6). Run weekly, not on every push. */
 final class Links
 {
     /** @return list<string> */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tools;
 
 /**
- * Every code/**.php example runs, and prints exactly its .out file (docs/standards.md §7.1).
+ * Every code/**.php example runs, and prints exactly its .out file (docs/standards.md §6.1).
  * A file marked "// PHP 8.6+" is skipped on older PHP. A *.bad.php file is only syntax-checked.
  */
 final class Examples

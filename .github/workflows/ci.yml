@@ -1,4 +1,4 @@
-# Every check of docs/standards.md §7, on PHP 8.5 and 8.6, in the same Docker
+# Every check of docs/standards.md §6, on PHP 8.5 and 8.6, in the same Docker
 # images that learners use (compose.yaml). Links are checked weekly.
 name: verify
 

@@ -6,7 +6,7 @@ namespace Tools;
 
 /**
  * The Arabic edition uses the agreed terms: no chapter in book/ar/ may use a
- * form that glossary/ar.json rejects (docs/standards.md §7.7).
+ * form that glossary/ar.json rejects (docs/standards.md §6.7).
  */
 final class Glossary
 {

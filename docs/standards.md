@@ -1,6 +1,6 @@
 # Writing and code standards
 
-These standards apply to the book, the code, the exercises and the videos. Where a rule can be checked by a machine, `tools/verify` checks it and CI runs it on every push (§7). See also [curriculum.md](curriculum.md).
+These standards apply to the book, the code and the exercises. Where a rule can be checked by a machine, `tools/verify` checks it and CI runs it on every push (§6). See also [curriculum.md](curriculum.md).
 
 ## 1. Repo layout: `RunIO-dev/php-0-to-hero`
 
@@ -9,7 +9,7 @@ README.md  LICENSE (CC BY 4.0 for text)  LICENSE-CODE (MIT)  ATTRIBUTION.md  CON
 Dockerfile, compose.yaml  php:8.6 and php:8.5 images (8.6-rc-cli until the 8.6 release), plus web and db from Part 7
 composer.json           "php": ">=8.5"; dev: phpunit 13, phpstan 2, php-cs-fixer 3
 tools/check.php         setup check: PHP version, extensions, Composer; prints the exact fix
-tools/verify            the one script CI and we run: every check in §7
+tools/verify            the one script CI and we run: every check in §6
 tools/book, tools/pdf   the HTML book into site/, then the PDF with Chrome
 book/en/NN-slug.md      one chapter = one file (later book/de/, book/ar/)
 code/NN-slug/           the chapter's examples: example.php + example.out (expected output)
@@ -17,7 +17,7 @@ exercises/NN-slug/      starter files + tests (tests fail on the starter)
 solutions/NN-slug/      solutions (tests pass)
 shelf/                  the project. Git tag shelf-chNN at every step it changes
 glossary/ar.json        Arabic terms (source of truth; the book's glossary page is built from it)
-site/                   generated: the HTML book (GitHub Pages) and the PDF
+site/                   generated: the HTML book and the PDF (not in git)
 ```
 
 - Chapter numbers are two-digit (`06-variables`), as in curriculum.md.
@@ -43,7 +43,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 10. **Summary:** five bullets at most.
 11. **Further reading:** the PHP manual and other official docs only.
 
-- **Length:** about 1,500–3,000 words. One chapter is one video of 6–10 minutes.
+- **Length:** about 1,500–3,000 words.
 - **Code in the text:** always included from a file, never pasted: `<!-- include: code/06-variables/naming.php -->`. The build inserts the file and its `.out`, so the text and the tested code can't drift.
 
 ## 3. Writing style
@@ -93,15 +93,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - The learner runs one command: `composer exercise 06 beginner`.
 - A test loads the file it checks with `require_once subject(__DIR__, 'file.php');`. `tools/verify` runs the same test once against the starter and once against the solution.
 
-## 6. Videos
-
-- **Our own animated editor, not a screen recording.** Code types itself line by line, the line being explained lights up, and the output appears from the `.out` file. It is built with our video engine, and the code on screen is read from the repo file.
-- **Narration:** written with the chapter, as a shorter spoken version. It points to the same example files. The book carries the full detail, and the video the core.
-- **Pauses:** a "pause and try" card before each exercise, with the command to run.
-- **Description:** links to the chapter's web page, its code folder and `shelf-chNN`. The narration never says "link in the description".
-- **Languages:** English first, then German, then Arabic. The code is identical in every edition, and only the text and the narration change.
-
-## 7. Checks: `tools/verify`, which CI runs on every push
+## 6. Checks: `tools/verify`, which CI runs on every push
 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
@@ -124,16 +116,15 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 
 The forbidden-pattern check reads PHP tokens, so it sees `echo $_GET[...]` but not request data passed through a variable first. Review still matters.
 
-**Our side, KISS:** one `tools/verify` script, one Docker setup, and one source per chapter. Nothing runs that isn't needed.
 
-## 8. Arabic edition
+## 7. Arabic edition
 
 - **Teaching words** (exercise, skill, objectives, evaluation) come from ALECSO's unified dictionary No. 44, Curricula and Teaching Methods (2020).
 - **IT terms** follow the rule recorded in `glossary/ar.json` (`about`): every term lists its sources, the chosen form and why.
 - The first time a chapter uses a term, the English word stands next to it: مصفوفة (array).
 - Code, identifiers and output stay in English. Arabic text inside code examples is used only where the chapter is about text (chapter 8, `mb_*`).
 
-## 9. Licensing and credit
+## 8. Licensing and credit
 
 - Our text is CC BY 4.0, and our code is MIT.
 - Adapted material is credited in ATTRIBUTION.md, with source, licence and what was changed. Only the PHP manual (CC BY 3.0) and PHP-FIG (CC BY / MIT) may be adapted.

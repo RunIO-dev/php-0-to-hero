@@ -1,7 +1,7 @@
 # PHP 0 to Hero
 
 A free course that takes you from no programming at all to a secure PHP web
-application online: a book and a video per chapter, with every line of code tested.
+application online: a free book, with every line of code tested.
 
 - **80 chapters in 13 parts.** See the [curriculum](docs/curriculum.md).
 - **One project grows through the course:** *Shelf*, a small lending library. It starts
@@ -9,7 +9,6 @@ application online: a book and a video per chapter, with every line of code test
 - **PHP 8.6**, with every example also tested on PHP 8.5.
 - **Secure, simple, no repetition:** these principles are taught where they apply, and
   the checks in `tools/verify` enforce them on every example.
-- **English first,** then German and Arabic. The code is the same in every edition.
 
 The course is being written. Chapters appear in `book/en/` as they are finished.
 

@@ -6,6 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 chrome="${CHROME:-$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)}"
 if [ -z "$chrome" ]; then echo "No Chrome found. Set CHROME=/path/to/chrome." >&2; exit 1; fi
+if ! ls book/*/*.md >/dev/null 2>&1; then echo "No chapters yet, so no PDF."; exit 0; fi
 for html in site/*/book.html; do
   [ -e "$html" ] || { echo "No book built yet: run composer book first." >&2; exit 1; }
   pdf="$(dirname "$html")/php-0-to-hero.pdf"

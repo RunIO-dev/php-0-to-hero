@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tools;
 
 /**
- * Forbidden patterns (docs/standards.md §7.5). Works on PHP tokens, so a
+ * Forbidden patterns (docs/standards.md §6.5). Works on PHP tokens, so a
  * word inside a comment or a string never counts as code.
  * A "don't do this" example in code/ is named *.bad.php and is skipped.
  *

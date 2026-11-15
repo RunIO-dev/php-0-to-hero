@@ -1,19 +1,8 @@
 # Curriculum
 
-**Decided.**
-- **Languages:** English first, then German and Arabic.
-- **Repo:** public, RunIO-dev/php-0-to-hero.
-- **Licences:** text CC BY 4.0, code MIT.
-- **Versions:** PHP 8.6, with examples also tested on 8.5. PER Coding Style. PHPUnit 13.
-- **Framework:** Symfony, the one framework of the course.
-- **Principles:** secure by default, KISS, DRY (rule of three) and YAGNI, enforced by CI.
-- **Setup:** `tools/check.php` from chapter 1. Docker from Part 7 (and available from day one).
+The course has **80 chapters in 13 parts**. Each chapter has goals, an explanation, tested examples, common mistakes, three exercises (beginner, intermediate and advanced) and a summary. The chapter template is in [standards.md](standards.md).
 
-**Shape.**
-- **One chapter = one book section = one video** of about 6–10 minutes.
-- **80 chapters in 13 parts.**
-- Each chapter follows the template in [standards.md](standards.md): goals, explanation, tested examples, common mistakes, exercises at three levels with solutions kept apart, and a summary.
-- At 3 videos a week, one language takes about 6 months.
+The course teaches PHP 8.6 (every example also runs on 8.5), with PER Coding Style, PHPUnit and, at the end, Symfony as its one framework. Secure code, KISS, DRY and YAGNI are taught where they apply, from the first example on.
 
 **The project that grows through the course: "Shelf", a small lending library.** It has books, members and loans. Simple enough for a beginner, and it naturally needs everything the course teaches:
 - lists and search (arrays);
@@ -23,7 +12,7 @@
 
 It starts as a command-line script and ends as a Symfony app in production. Each part adds one step, marked ◆ below.
 
-Dependencies run in order: each part needs the parts before it. Extra notes are in brackets.
+Dependencies run in order: each part needs the parts before it. Notes are in brackets.
 
 ---
 
@@ -31,7 +20,7 @@ Dependencies run in order: each part needs the parts before it. Extra notes are 
 1. **What programming is, and what PHP is for.** Websites, the command line, and where PHP runs. Client and server, in plain words.
 2. **Installing PHP 8.6** on Windows, macOS and Linux, from official sources only. Then `php -v`.
 3. **`tools/check.php`, the setup check.** What it checks and how to read its fix messages. (Every later chapter refers to it.)
-4. **Your editor and the terminal:** the minimum you need, with no tool promotion.
+4. **Your editor and the terminal:** the minimum you need.
 5. **The first program:** `echo`, running a file, PHP tags, comments, and reading an error message calmly.
 
 ## Part 2: Basics (9)
@@ -84,7 +73,7 @@ Dependencies run in order: each part needs the parts before it. Extra notes are 
 
 ## Part 7: The web (9)
 44. HTTP in plain words: request, response, status codes, headers.
-45. Docker for our setup: `compose.yaml`, PHP plus a web server, the same images that test the examples. *(Docker Desktop's licence and free alternatives, stated neutrally)*
+45. Docker for our setup: `compose.yaml`, PHP plus a web server, the same images that test the examples. *(Docker Desktop's licence, and free alternatives)*
 46. The first web page and escaping output (`htmlspecialchars`), from day one. ◆ the book list as a web page.
 47. Forms, GET and POST, and validating input on the server. ◆ add a book.
 48. A tiny front controller and routing, written by hand to understand it. *(KISS; replaced by Symfony later)*
@@ -131,11 +120,9 @@ Dependencies run in order: each part needs the parts before it. Extra notes are 
 79. CI with every check (tests, PHPStan, style), and a simple deployment. ◆ *Shelf* online.
 
 ## Part 13: What next (1)
-80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance), neutrally, without promoting any product.
+80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance).
 
 ---
-
-**Count:** 80 chapters, with Part 11 slightly over the plan. If that's too many, the first candidates to merge are 9 into 7, 32 into 29, 66 into 65, and 70 into 67.
 
 **Not included, on purpose:**
 - a second framework;
@@ -143,5 +130,3 @@ Dependencies run in order: each part needs the parts before it. Extra notes are 
 - Kubernetes;
 - Fibers, which are rarely needed in application code. A short mention goes in 80.
 - design patterns as a catalogue. The few we use (repository, value object, front controller) are taught where they appear.
-
-**Every video:** the code shown is the tested file from the repo, and the chapter's README links the video and the book section.

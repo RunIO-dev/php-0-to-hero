@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-// Every check of docs/standards.md §7, in one script. CI runs it on PHP 8.5 and 8.6:
+// Every check of docs/standards.md §6, in one script. CI runs it on PHP 8.5 and 8.6:
 //   docker compose run --rm php composer verify
 //   docker compose run --rm php85 composer verify
 // Add --links to also check that every link in the book answers (CI does this weekly).
