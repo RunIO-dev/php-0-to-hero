@@ -34,6 +34,10 @@ final class Patterns
             static fn(\PhpToken $t): bool => !$t->is([T_WHITESPACE, T_COMMENT, T_DOC_COMMENT]),
         ));
 
+        if (self::needsStrictTypes($file) && !self::declaresStrictTypes($tokens)) {
+            $add(1, 'start the file with declare(strict_types=1); (every file from chapter 16 on)');
+        }
+
         foreach ($tokens as $i => $t) {
             $name = self::calledFunction($tokens, $i);
 
@@ -58,6 +62,24 @@ final class Patterns
         }
 
         return $problems;
+    }
+
+    /** From chapter 16 on, and in Shelf, every file declares strict types (docs/standards.md §4). */
+    private static function needsStrictTypes(string $file): bool
+    {
+        if (str_starts_with($file, 'shelf/')) {
+            return true;
+        }
+
+        return preg_match('~^(?:code|exercises|solutions)/(\d+)-~', $file, $m) === 1 && (int) $m[1] >= 16;
+    }
+
+    /** @param list<\PhpToken> $tokens */
+    private static function declaresStrictTypes(array $tokens): bool
+    {
+        $first = implode('', array_map(static fn(\PhpToken $t): string => $t->text, array_slice($tokens, 1, 7)));
+
+        return ($tokens[0] ?? null)?->is(T_OPEN_TAG) === true && strtolower($first) === 'declare(strict_types=1);';
     }
 
     /**

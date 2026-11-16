@@ -61,7 +61,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 ## 4. Code standards
 
 - **PHP 8.6 target, and must also run on 8.5.** A feature only in 8.6 is marked in the text (`// PHP 8.6+`), and CI skips that file on 8.5 by that marker.
-- **`declare(strict_types=1);`** in every file from chapter 16 on. Before that, it's left out on purpose and explained in chapter 16.
+- **`declare(strict_types=1);`** in every file from chapter 16 on. Before that, it's left out on purpose and explained in chapter 16 `tools/verify` checks it, also in `shelf/`.
 - **PER Coding Style**, the latest release, through PHP-CS-Fixer. PHPStan levels: 5 before chapter 16 (no types yet), 6 from chapter 16, and 8 for `solutions/` from chapter 40, for `shelf/` and for our own `tools/`. Short examples stay at 6.
 - **Names:**
   - English identifiers that say what a thing is (`$dueDate`, not `$d`);
@@ -100,7 +100,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
 3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass.
-4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4.
+4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`).
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;
    - `md5(` or `sha1(` near "password";

@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught TypeError: lateFee(): Return value must be of type int, string returned in return-type.error.php:8
+Stack trace:
+#0 return-type.error.php(14): lateFee(0)
+#1 {main}
+  thrown in return-type.error.php on line 8

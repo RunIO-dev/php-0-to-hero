@@ -1,0 +1,7 @@
+2
+
+Fatal error: Uncaught RuntimeException: No book titled "Sula" in throw.error.php:10
+Stack trace:
+#0 throw.error.php(18): positionOf(Array, 'Sula')
+#1 {main}
+  thrown in throw.error.php on line 10

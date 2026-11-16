@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Unknown named parameter $days in unknown-name.error.php:10
+Stack trace:
+#0 {main}
+  thrown in unknown-name.error.php on line 10

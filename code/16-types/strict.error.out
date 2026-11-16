@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught TypeError: lateFee(): Argument #1 ($daysLate) must be of type int, string given, called in strict.error.php on line 11 and defined in strict.error.php:5
+Stack trace:
+#0 strict.error.php(11): lateFee('3')
+#1 {main}
+  thrown in strict.error.php on line 5

@@ -7,6 +7,7 @@ parameters:
     excludePaths:
         - tools/check.php   # old-style on purpose, so it runs on old PHP
         - '*.error.php'     # shows an error on purpose
+        - '*.bad.php'       # "don't do this", only linted
     ignoreErrors:
         # Before functions (chapter 15), examples decide on fixed values, so every
         # condition's answer is known in advance. That is the lesson, not a bug.

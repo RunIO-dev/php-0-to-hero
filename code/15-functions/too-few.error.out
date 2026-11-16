@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught ArgumentCountError: Too few arguments to function lateFee(), 0 passed in too-few.error.php on line 8 and exactly 1 expected in too-few.error.php:3
+Stack trace:
+#0 too-few.error.php(8): lateFee()
+#1 {main}
+  thrown in too-few.error.php on line 3

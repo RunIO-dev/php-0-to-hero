@@ -69,7 +69,7 @@ final class PatternsTest extends TestCase
     public function testSkipsMarkedBadExampleOnlyInCode(): void
     {
         self::assertSame([], Patterns::check('code/46-web/login.bad.php', '<?php echo $_GET["x"];'));
-        self::assertCount(1, Patterns::check('solutions/46-web/login.bad.php', '<?php echo $_GET["x"];'));
+        self::assertCount(1, Patterns::check('solutions/46-web/login.bad.php', "<?php\ndeclare(strict_types=1);\necho \$_GET['x'];"));
     }
 
     public function testShortEchoTagAndCloseTagEndTheStatement(): void
@@ -84,5 +84,17 @@ final class PatternsTest extends TestCase
             ['x.php:3: eval() runs text as code; never needed in this course'],
             Patterns::check('x.php', "<?php\n\neval(\$a);"),
         );
+    }
+
+    public function testStrictTypesFromChapter16(): void
+    {
+        $plain = "<?php\n\necho 1;\n";
+        $strict = "<?php\n\ndeclare(strict_types=1);\n\necho 1;\n";
+        self::assertSame([], Patterns::check('code/15-functions/a.php', $plain));
+        self::assertCount(1, Patterns::check('code/16-types/a.php', $plain));
+        self::assertCount(1, Patterns::check('exercises/20-closures/beginner/a.php', $plain));
+        self::assertCount(1, Patterns::check('shelf/shelf.php', $plain));
+        self::assertSame([], Patterns::check('solutions/16-types/beginner/a.php', $strict));
+        self::assertSame([], Patterns::check('code/14-arrays/a.php', $plain));
     }
 }

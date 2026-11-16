@@ -8,6 +8,7 @@ declare(strict_types=1);
 //   docker compose run --rm php85 composer verify
 // Add --links to also check that every link in the book answers (CI does this weekly).
 
+use Tools\Batches;
 use Tools\Chapters;
 use Tools\Examples;
 use Tools\Exercises;
@@ -23,16 +24,15 @@ $root = dirname(__DIR__);
 $bin = $root . '/vendor/bin/';
 
 /**
- * PHPStan level per path (docs/standards.md §4): no types before chapter 16, strict from 40.
+ * PHPStan runs per level (docs/standards.md §4): no types before chapter 16, strict from 40.
+ * Examples are analysed in batches without repeated function names (Tools\Batches).
  *
- * @return array<int, list<string>>
+ * @return list<array{int, list<string>}> level and paths of each run
  */
-function phpstanGroups(string $root): array
+function phpstanRuns(string $root): array
 {
-    $groups = [8 => ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book', 'tools/out']];
-    if (is_dir("$root/shelf/src")) {
-        $groups[8][] = 'shelf';
-    }
+    $runs = [[8, ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book', 'tools/out', ...(is_dir("$root/shelf/src") ? ['shelf'] : [])]]];
+    $files = [];
     foreach (['code', 'solutions'] as $top) {
         foreach (glob("$root/$top/*", GLOB_ONLYDIR) ?: [] as $dir) {
             $chapter = (int) basename($dir);
@@ -41,11 +41,21 @@ function phpstanGroups(string $root): array
                 $chapter < 40 || $top === 'code' => 6,
                 default => 8,
             };
-            $groups[$level][] = "$top/" . basename($dir);
+            foreach (Run::files($dir, '.php') as $file) {
+                if (!str_ends_with($file, '.error.php') && !str_ends_with($file, '.bad.php')) {
+                    $files[$level][] = substr($file, strlen($root) + 1);
+                }
+            }
+        }
+    }
+    ksort($files);
+    foreach ($files as $level => $paths) {
+        foreach (Batches::split(array_map(static fn(string $p): string => "$root/$p", $paths)) as $batch) {
+            $runs[] = [$level, array_map(static fn(string $f): string => substr($f, strlen($root) + 1), $batch)];
         }
     }
 
-    return $groups;
+    return $runs;
 }
 
 $checks = [
@@ -71,7 +81,7 @@ $checks = [
     },
     'static analysis (PHPStan)' => static function () use ($root, $bin): array {
         $problems = [];
-        foreach (phpstanGroups($root) as $level => $paths) {
+        foreach (phpstanRuns($root) as [$level, $paths]) {
             $run = Run::capture([PHP_BINARY, $bin . 'phpstan', 'analyse', '--no-progress', '--error-format=raw',
                 '-c', 'phpstan.neon.dist', '--level', (string) $level, ...$paths], $root);
             if ($run['code'] !== 0) {

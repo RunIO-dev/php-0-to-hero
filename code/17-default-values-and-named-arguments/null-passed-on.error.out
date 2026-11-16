@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught TypeError: strtoupper(): Argument #1 ($string) must be of type string, null given in null-passed-on.error.php:12
+Stack trace:
+#0 null-passed-on.error.php(12): strtoupper(NULL)
+#1 {main}
+  thrown in null-passed-on.error.php on line 12
