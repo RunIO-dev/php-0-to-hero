@@ -8,18 +8,18 @@ namespace Tools;
 final class Run
 {
     /**
-     * Runs $command with no input and a time limit, so an example that waits for
-     * input or loops forever fails the check instead of hanging it.
+     * Runs $command with no input (or the file $stdin as input) and a time limit, so
+     * an example that waits for input or loops forever fails the check instead of hanging it.
      *
      * @param list<string> $command
      * @param array<string, string> $env extra environment variables
      * @return array{code: int, out: string, err: string}
      */
-    public static function capture(array $command, ?string $cwd = null, array $env = [], int $seconds = 120): array
+    public static function capture(array $command, ?string $cwd = null, array $env = [], int $seconds = 120, ?string $stdin = null): array
     {
         $process = proc_open(
             $command,
-            [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
+            [0 => ['file', $stdin ?? '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']],
             $pipes,
             $cwd,
             $env === [] ? null : array_merge(getenv(), $env),

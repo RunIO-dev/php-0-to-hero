@@ -1,0 +1,7 @@
+"7"     accepted: 7
+"0"     accepted: 0
+"-3"    refused
+"abc"   refused
+"7.5"   refused
+"1000"  refused
+" 12"   accepted: 12

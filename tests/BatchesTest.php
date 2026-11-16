@@ -36,4 +36,22 @@ final class BatchesTest extends TestCase
             \Tools\Run::remove($dir);
         }
     }
+
+    public function testFilesThatRequireEachOtherStayTogether(): void
+    {
+        $dir = sys_get_temp_dir() . '/batches-' . bin2hex(random_bytes(4));
+        mkdir("$dir/shelf", 0o777, true);
+        try {
+            file_put_contents("$dir/a.php", "<?php\nfunction loadBooks() {}\n");
+            file_put_contents("$dir/shelf/books.php", "<?php\nfunction loadBooks() {}\n");
+            file_put_contents("$dir/shelf/shelf.php", "<?php\nrequire_once __DIR__ . '/books.php';\nloadBooks();\n");
+
+            self::assertSame(
+                [["$dir/a.php"], ["$dir/shelf/books.php", "$dir/shelf/shelf.php"]],
+                Batches::split(["$dir/a.php", "$dir/shelf/books.php", "$dir/shelf/shelf.php"]),
+            );
+        } finally {
+            \Tools\Run::remove($dir);
+        }
+    }
 }

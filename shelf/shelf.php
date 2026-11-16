@@ -2,62 +2,43 @@
 
 declare(strict_types=1);
 
-// Shelf: a small lending library. Chapter 20: sorted by title, and a shorter search.
+// Shelf: a small lending library. Chapter 26: reviewed, and split into three files.
+// Run: php shelf/shelf.php [list | search <text> [<author>] | lend <title> | add <title> <author> <year> [<isbn>]]
 
-final class BookNotFound extends RuntimeException {}
+require_once __DIR__ . '/books.php';
+require_once __DIR__ . '/library.php';
 
-final class NoCopyLeft extends RuntimeException {}
-
-$books = [
-    ['title' => 'Things Fall Apart', 'author' => 'Chinua Achebe', 'year' => 1958, 'copies' => 2],
-    ['title' => 'Kindred', 'author' => 'Octavia E. Butler', 'year' => 1979, 'copies' => 0],
-    ['title' => 'Kitchen', 'author' => 'Banana Yoshimoto', 'year' => 1988, 'copies' => 1],
-    ['title' => 'Parable of the Sower', 'author' => 'Octavia E. Butler', 'year' => 1993, 'copies' => 1],
-];
-
-/** @param array{title: string, author: string, year: int, copies: int} $book */
-function statusOf(array $book): string
-{
-    return $book['copies'] > 0 ? 'available' : 'all copies on loan';
-}
-
-/** @param array{title: string, author: string, year: int, copies: int} $book */
-function bookLine(array $book): string
-{
-    return "- {$book['title']} ({$book['author']}, {$book['year']}): " . statusOf($book);
-}
+const USAGE = <<<TXT
+    Usage: php shelf/shelf.php list
+           php shelf/shelf.php search <text> [<author>]
+           php shelf/shelf.php lend <title>
+           php shelf/shelf.php add <title> <author> <year> [<isbn>]
+    TXT;
 
 /**
- * @param list<array{title: string, author: string, year: int, copies: int}> $books
- * @return list<array{title: string, author: string, year: int, copies: int}>
- */
-function sortedByTitle(array $books): array
-{
-    usort($books, fn(array $a, array $b): int => strcasecmp($a['title'], $b['title']));
-
-    return $books;
-}
-
-/**
- * Every title that contains the search text, in any case, optionally only by one author.
+ * The argument at $position, which the command can't do without.
  *
- * @param list<array{title: string, author: string, year: int, copies: int}> $books
- * @return list<string>
+ * @param list<string> $args
  */
-function searchTitles(array $books, string $search, ?string $author = null): array
+function required(array $args, int $position): string
 {
-    $contains = fn(string $text, string $part): bool
-        => str_contains(mb_strtolower($text), mb_strtolower($part));
-    $found = array_filter(
-        $books,
-        fn(array $book): bool => $contains($book['title'], $search)
-            && ($author === null || $contains($book['author'], $author)),
-    );
+    $value = trim($args[$position] ?? '');
+    if ($value === '') {
+        throw new InvalidArgumentException(USAGE);
+    }
 
-    return array_column($found, 'title');
+    return $value;
 }
 
-/** @param list<array{title: string, author: string, year: int, copies: int}> $books */
+/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
+function listText(array $books): string
+{
+    $lines = array_map(fn(array $book): string => bookLine($book) . "\n", sortedByTitle($books));
+
+    return implode('', $lines) . count($books) . " books\n";
+}
+
+/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
 function searchLine(array $books, string $search, ?string $author = null): string
 {
     $found = searchTitles($books, $search, $author);
@@ -66,47 +47,50 @@ function searchLine(array $books, string $search, ?string $author = null): strin
     return "Search \"$search\"$by: " . ($found === [] ? 'nothing found' : implode(', ', $found));
 }
 
-/** @param list<array{title: string, author: string, year: int, copies: int}> $books */
-function findBook(array $books, string $title): int
+/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
+function lendAndSave(array $books, string $title, string $path, DateTimeImmutable $today): string
 {
-    foreach ($books as $position => $book) {
-        if (mb_strtolower($book['title']) === mb_strtolower($title)) {
-            return $position;
-        }
-    }
+    $books = lend($books, $title);
+    saveBooks($path, $books);
+    $lent = $books[findBook($books, $title)]['title'];
 
-    throw new BookNotFound("There is no book titled \"$title\"");
+    return "Lent: $lent, due back on " . dueDate($today)->format('l, j F Y') . "\n";
 }
 
 /**
- * The books after one copy of $title is lent.
- *
- * @param list<array{title: string, author: string, year: int, copies: int}> $books
- * @return list<array{title: string, author: string, year: int, copies: int}>
+ * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
+ * @param list<string> $fields
  */
-function lend(array $books, string $title): array
+function addAndSave(array $books, array $fields, string $path): string
 {
-    $position = findBook($books, $title);
-    if ($books[$position]['copies'] === 0) {
-        throw new NoCopyLeft("All copies of \"{$books[$position]['title']}\" are on loan");
-    }
-    $books[$position]['copies']--;
+    $books = addBook($books, $fields);
+    saveBooks($path, $books);
 
-    return $books;
+    return 'Added: ' . $books[count($books) - 1]['title'] . "\n";
 }
 
-foreach (['Kitchen', 'kindred', 'Sula'] as $wanted) {
-    try {
-        $books = lend($books, $wanted);
-        echo "Lent: $wanted\n";
-    } catch (BookNotFound|NoCopyLeft $e) {
-        echo 'Not lent: ', $e->getMessage(), "\n";
-    }
+/**
+ * Runs one command and returns the text to print.
+ *
+ * @param list<string> $args the words after the script's name
+ */
+function run(array $args, string $path, DateTimeImmutable $today): string
+{
+    $command = $args[0] ?? 'list';
+    $books = loadBooks($path);
+
+    return match ($command) {
+        'list' => listText($books),
+        'search' => searchLine($books, required($args, 1), $args[2] ?? null) . "\n",
+        'lend' => lendAndSave($books, required($args, 1), $path, $today),
+        'add' => addAndSave($books, array_slice($args, 1), $path),
+        default => throw new InvalidArgumentException("Unknown command \"$command\"\n" . USAGE),
+    };
 }
 
-echo "\n";
-foreach (sortedByTitle($books) as $book) {
-    echo bookLine($book), "\n";
+try {
+    echo run(array_slice($argv, 1), __DIR__ . '/books.json', new DateTimeImmutable('today'));
+} catch (InvalidArgumentException|BookNotFound|NoCopyLeft $e) {
+    fwrite(STDERR, $e->getMessage() . "\n");
+    exit(1);
 }
-echo "\n", searchLine($books, 'KI'), "\n";
-echo searchLine($books, '', author: 'butler'), "\n";

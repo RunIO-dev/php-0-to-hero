@@ -19,3 +19,7 @@ parameters:
                 - 'solutions/0*'
                 - 'solutions/1[0-5]-*'
             reportUnmatched: false
+        # Command-line scripts (chapter 24 on): PHP always sets $argv and $argc there.
+        -
+            message: '#^Variable \$arg[vc] might not be defined\.$#'
+            reportUnmatched: false

@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught JsonException: Syntax error near location 1:35 in invalid.error.php:10
+Stack trace:
+#0 invalid.error.php(10): json_decode('{"title": "Kind...', true, 512, 4194304)
+#1 {main}
+  thrown in invalid.error.php on line 10

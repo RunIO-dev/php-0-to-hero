@@ -98,6 +98,50 @@ final class ChecksTest extends TestCase
         );
     }
 
+    public function testExampleRunsWithTheArgumentsAndInputInItsRunFile(): void
+    {
+        $this->put('code/24-input/greet.php', "<?php\necho implode('|', array_slice(\$argv, 1)), ':', trim((string) fgets(STDIN)), \"\\n\";\n");
+        $this->put('code/24-input/names.txt', "Amira\n");
+        $this->put('code/24-input/greet.run', "php greet.php add \"Things Fall Apart\" '' < names.txt\n");
+
+        self::assertSame("add|Things Fall Apart|:Amira\n", Examples::output($this->root, $this->root . '/code/24-input/greet.php'));
+        self::assertSame("php greet.php add \"Things Fall Apart\" '' < names.txt", Examples::command($this->root . '/code/24-input/greet.php')['line']);
+    }
+
+    public function testRunFileMustRunThisFileWithInputFromTheSameFolder(): void
+    {
+        $this->put('code/24-input/greet.php', "<?php\n");
+        $this->put('code/24-input/greet.run', "php other.php\n");
+        try {
+            Examples::command($this->root . '/code/24-input/greet.php');
+            self::fail('a .run file for another script was accepted');
+        } catch (\RuntimeException $e) {
+            self::assertStringContainsString('php greet.php', $e->getMessage());
+        }
+
+        $this->put('code/24-input/greet.run', "php greet.php < ../../secret.txt\n");
+        $this->expectException(\RuntimeException::class);
+        Examples::command($this->root . '/code/24-input/greet.php');
+    }
+
+    public function testOutputOfPassesArgumentsAndTypedInput(): void
+    {
+        $this->put('exercises/24-input/beginner/add.php', "<?php\necho \$argv[1] ?? '-', ' ', trim((string) fgets(STDIN)), \"\\n\";\n");
+
+        self::assertSame("lend Kindred\n", output_of($this->root . '/exercises/24-input/beginner/add.php', ['lend'], "Kindred\n"));
+        self::assertSame("- \n", output_of($this->root . '/exercises/24-input/beginner/add.php'));
+    }
+
+    public function testARequiredFileOfFunctionsNeedsNoOutFile(): void
+    {
+        $this->put('code/26-review/format.php', "<?php\nfunction shout(string \$t): string { return strtoupper(\$t); }\n");
+        $this->put('code/26-review/report.php', "<?php\nrequire_once __DIR__ . '/format.php';\necho shout('kindred'), \"\\n\";\n");
+        $this->put('code/26-review/report.out', "KINDRED\n");
+
+        self::assertSame([], Examples::check($this->root));
+        self::assertSame(['format.php'], Examples::required($this->root . '/code/26-review'));
+    }
+
     public function testExampleWithDifferentOutputOrNoOutFileFails(): void
     {
         $this->put('code/05-first/hello.php', "<?php\necho \"Hi\\n\";\n");

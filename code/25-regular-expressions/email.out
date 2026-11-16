@@ -1,0 +1,4 @@
+amira@example.org             valid
+jonas.weber@mail.example.de   valid
+kenji@                        invalid
+ana example.org               invalid

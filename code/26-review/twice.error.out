@@ -1,0 +1,4 @@
+
+Fatal error: Cannot redeclare function money() (previously declared in format.php:7) in format.php on line 7
+Stack trace:
+#0 {main}

@@ -19,10 +19,25 @@ function subject(string $testDir, string $file): string
     return $dir . '/' . $file;
 }
 
-/** What a script prints (and its error messages), run in its own PHP process. */
-function output_of(string $file): string
+/**
+ * What a script prints (and its error messages), run in its own PHP process,
+ * with command-line arguments and typed input, as in: php file.php add Kindred
+ *
+ * @param list<string> $args
+ */
+function output_of(string $file, array $args = [], ?string $input = null): string
 {
-    return Tools\Examples::output(dirname($file), $file);
+    if ($input === null) {
+        return Tools\Examples::output(dirname($file), $file, $args);
+    }
+    $stdin = (string) tempnam(sys_get_temp_dir(), 'input-');
+    try {
+        file_put_contents($stdin, $input);
+
+        return Tools\Examples::output(dirname($file), $file, $args, $stdin);
+    } finally {
+        unlink($stdin);
+    }
 }
 
 /**

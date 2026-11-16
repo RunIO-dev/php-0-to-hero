@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Cannot use object of type stdClass as array in object.error.php:9
+Stack trace:
+#0 {main}
+  thrown in object.error.php on line 9

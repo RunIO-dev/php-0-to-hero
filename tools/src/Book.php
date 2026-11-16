@@ -34,7 +34,9 @@ final class Book
             $block = sprintf("%s`%s`\n\n```%s\n%s\n```\n", $label, $path, pathinfo($path, PATHINFO_EXTENSION), $code);
             $out = substr($file, 0, -4) . '.out';
             if (str_ends_with($path, '.php') && is_file($out)) {
-                $block .= sprintf("\n%s:\n\n```txt\n%s\n```\n", self::word('output', $lang), rtrim((string) file_get_contents($out)));
+                $command = Examples::command($file);
+                $typed = $command['custom'] ? '$ ' . $command['line'] . "\n" : '';
+                $block .= sprintf("\n%s:\n\n```txt\n%s%s\n```\n", self::word('output', $lang), $typed, rtrim((string) file_get_contents($out)));
             }
 
             return $block;

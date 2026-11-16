@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught DateMalformedStringException: Failed to parse time string (the first of Decembre) at position 0 (t): The timezone could not be found in the database in malformed.error.php:5
+Stack trace:
+#0 malformed.error.php(5): DateTimeImmutable->__construct('the first of De...')
+#1 {main}
+  thrown in malformed.error.php on line 5

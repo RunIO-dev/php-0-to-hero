@@ -12,6 +12,8 @@ namespace Tools;
 final class Batches
 {
     /**
+     * Files that load each other with require stay in one batch: all files of their folder.
+     *
      * @param list<string> $files
      * @return list<list<string>>
      */
@@ -19,20 +21,41 @@ final class Batches
     {
         $batches = [];
         $names = [];
-        foreach ($files as $file) {
-            $declared = self::declared((string) file_get_contents($file));
+        foreach (self::units($files) as $unit) {
+            $declared = [];
+            foreach ($unit as $file) {
+                array_push($declared, ...self::declared((string) file_get_contents($file)));
+            }
             foreach ($batches as $i => $batch) {
                 if (array_intersect($declared, $names[$i]) === []) {
-                    $batches[$i][] = $file;
+                    $batches[$i] = [...$batch, ...$unit];
                     $names[$i] = [...$names[$i], ...$declared];
                     continue 2;
                 }
             }
-            $batches[] = [$file];
+            $batches[] = $unit;
             $names[] = $declared;
         }
 
         return array_values($batches);
+    }
+
+    /**
+     * The files, one per unit, except that a folder with a require in it is one unit.
+     *
+     * @param list<string> $files
+     * @return list<list<string>>
+     */
+    private static function units(array $files): array
+    {
+        $units = [];
+        foreach ($files as $file) {
+            $dir = dirname($file);
+            $key = Examples::required($dir) === [] ? $file : $dir;
+            $units[$key][] = $file;
+        }
+
+        return array_values($units);
     }
 
     /** @return list<string> the lower-case names of the functions and classes the code declares */
