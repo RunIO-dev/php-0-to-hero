@@ -49,7 +49,7 @@ The solutions are in `solutions/`. Try first: the tests tell you when you are do
 | `book/en/` | the chapters, one file each |
 | `code/` | every example from the book, with its expected output (`.out`) |
 | `exercises/`, `solutions/` | the exercises with their tests, and the solutions |
-| `shelf/` | the project; the tag `shelf-chNN` is its state after chapter NN |
+| `shelf/` | the project, newest state; each chapter that changes it keeps its version in `code/NN-slug/shelf/` |
 | `glossary/ar.json` | the Arabic terms, with their sources |
 | `tools/` | the setup check, the checks, and the book build |
 | `docs/` | the curriculum and the standards the course is written to |

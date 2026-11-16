@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught TypeError: Unsupported operand types: string + string in plus.error.php:6
+Stack trace:
+#0 {main}
+  thrown in plus.error.php on line 6

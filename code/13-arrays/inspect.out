@@ -1,0 +1,14 @@
+Array
+(
+    [title] => Kindred
+    [year] => 1979
+    [isAvailable] => 1
+)
+array(3) {
+  ["title"]=>
+  string(7) "Kindred"
+  ["year"]=>
+  int(1979)
+  ["isAvailable"]=>
+  bool(true)
+}

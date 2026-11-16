@@ -15,7 +15,7 @@ book/en/NN-slug.md      one chapter = one file (later book/de/, book/ar/)
 code/NN-slug/           the chapter's examples: example.php + example.out (expected output)
 exercises/NN-slug/      starter files + tests (tests fail on the starter)
 solutions/NN-slug/      solutions (tests pass)
-shelf/                  the project. Git tag shelf-chNN at every step it changes
+shelf/                  the project, newest state. A chapter that changes it keeps a copy in code/NN-slug/shelf/
 glossary/ar.json        Arabic terms (source of truth; the book's glossary page is built from it)
 site/                   generated: the HTML book and the PDF (not in git)
 ```
@@ -32,19 +32,19 @@ site/                   generated: the HTML book and the PDF (not in git)
 Every `book/en/NN-slug.md` has these headings, in this order. A heading may say "none" (for example, Security), but it may not be missing:
 
 1. **Goals:** 2–4 "you will be able to …" lines.
-2. **Before you start:** the chapters it builds on, and `shelf-chNN` to start from, if the project changes.
+2. **Before you start:** the chapters it builds on.
 3. **The idea:** the concept in plain words. One analogy at most, and only if it really helps.
 4. **In code:** examples, one new concept each, at most about 30 lines. After each one, a walk through the lines that matter (not every line).
 5. **Common mistakes:** the real error message, what it means, and the fix.
 6. **Principle check:** which of secure, KISS, DRY or YAGNI applies here, and how (1–3 lines).
 7. **Security:** what could go wrong with this feature, or "nothing new here".
-8. **Shelf:** what the project gains in this chapter, with the commands to follow along.
+8. **Shelf:** what the project gains in this chapter, with the commands to follow along. The text includes the chapter's snapshot (`code/NN-slug/shelf/…`), never `shelf/` itself, so an early chapter never shows code from a later one.
 9. **Exercises:** beginner, intermediate and advanced, each a folder in `exercises/` with tests.
 10. **Summary:** five bullets at most.
 11. **Further reading:** the PHP manual and other official docs only.
 
 - **Length:** about 1,500–3,000 words.
-- **Code in the text:** always included from a file in `code/` or `shelf/`, never pasted: `<!-- include: code/06-variables/names.php -->`. The build inserts the file and its `.out`, so the text and the tested code can't drift.
+- **Code in the text:** always included from a file in `code/`, never pasted: `<!-- include: code/06-variables/names.php -->`. The build inserts the file and its `.out`, so the text and the tested code can't drift.
 
 ## 3. Writing style
 
@@ -85,7 +85,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - **Comments** say why, not what. They are in English and kept short, and the code is the same in every language edition.
 - **"Don't do this" examples** go in files named `*.bad.php`, always shown next to the right version. They are run only for `php -l`, and the text marks them clearly (✗).
 - **Examples that show an error on purpose** (for "Common mistakes") go in files named `*.error.php`. They run like any example, and their `.out` holds the real error message. PHPStan and the style check skip them, and the text marks them (⚠). An exercise starter with a mistake on purpose uses the same name.
-- **`.out` files** are written with `composer out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
+- **`.out` files** are written with `composer run-script out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 
 ## 5. Exercises
 
@@ -99,7 +99,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
-3. Shelf: until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass at every `shelf-chNN` tag.
+3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass.
 4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;

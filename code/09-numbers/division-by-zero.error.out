@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught DivisionByZeroError: Division by zero in division-by-zero.error.php:6
+Stack trace:
+#0 {main}
+  thrown in division-by-zero.error.php on line 6

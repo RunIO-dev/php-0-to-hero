@@ -123,7 +123,7 @@ Nothing new here. Variables only hold what your own code puts into them. From ch
 
 Create the file `shelf/shelf.php`:
 
-<!-- include: shelf/shelf.php -->
+<!-- include: code/06-variables/shelf/shelf.php -->
 
 Run it from the repository folder:
 

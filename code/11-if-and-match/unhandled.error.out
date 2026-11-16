@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught UnhandledMatchError: Unhandled match case 'poetry' in unhandled.error.php:5
+Stack trace:
+#0 {main}
+  thrown in unhandled.error.php on line 5

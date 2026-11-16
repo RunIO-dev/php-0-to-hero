@@ -26,6 +26,37 @@ function output_of(string $file): string
 }
 
 /**
+ * What a script prints when it starts with other values: the first assignment
+ * `$name = ...;` of each given variable (it may span lines) becomes `$name = <code>;`.
+ * Tests use it to try a learner's script with several inputs. Not supported: a string
+ * value with a ; at the end of one of its lines.
+ *
+ * @param array<string, string> $values variable name (without $) => PHP code for its value
+ */
+function output_with(string $file, array $values): string
+{
+    $code = (string) file_get_contents($file);
+    foreach ($values as $name => $value) {
+        // up to the first ; that ends a line, or is followed only by a // or # comment
+        $pattern = '/^\$' . preg_quote($name, '/') . ' = .*?;[ \t]*(?:(?:\/\/|#)[^\n]*)?$/ms';
+        if (preg_match($pattern, $code) !== 1) {
+            throw new RuntimeException("Keep the line \$$name = ...; at the start of " . basename($file) . ', the tests change its value.');
+        }
+        $code = (string) preg_replace($pattern, '$' . $name . ' = ' . addcslashes($value, '\\$') . ';', $code, 1);
+    }
+    $dir = sys_get_temp_dir() . '/output-with-' . bin2hex(random_bytes(4));
+    mkdir($dir);
+    $copy = $dir . '/' . basename($file);
+    try {
+        file_put_contents($copy, $code);
+
+        return output_of($copy);
+    } finally {
+        Tools\Run::remove($dir);
+    }
+}
+
+/**
  * The variable names a script uses, without the $, in order of first use.
  *
  * @return list<string>

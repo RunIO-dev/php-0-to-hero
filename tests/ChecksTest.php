@@ -9,6 +9,7 @@ use Tools\Chapters;
 use Tools\Examples;
 use Tools\Exercises;
 use Tools\Glossary;
+use Tools\Shelf;
 
 /** Each test builds a tiny repo in a temp folder and runs one check on it. */
 final class ChecksTest extends TestCase
@@ -184,5 +185,63 @@ final class ChecksTest extends TestCase
             'book/ar/13-arrays.md:2: "صفيف" is rejected; use مصفوفة (array)',
             'book/ar/13-arrays.md:4: "كود" is rejected; use شيفرة (code)',
         ], Glossary::check($this->root));
+    }
+
+    public function testShelfEqualToItsNewestSnapshotPasses(): void
+    {
+        $this->put('code/06-variables/shelf/shelf.php', 'old');
+        $this->put('code/08-strings/shelf/shelf.php', 'new');
+        $this->put('shelf/shelf.php', 'new');
+        $this->put('shelf/README.md', 'about');
+        $this->put('book/en/08-strings.md', "<!-- include: code/08-strings/shelf/shelf.php -->\n");
+        self::assertSame([], Shelf::check($this->root));
+    }
+
+    public function testShelfThatDiffersFromItsNewestSnapshotFails(): void
+    {
+        $this->put('code/06-variables/shelf/shelf.php', 'old');
+        $this->put('code/08-strings/shelf/shelf.php', 'new');
+        $this->put('shelf/shelf.php', 'old');
+        self::assertSame(['shelf/shelf.php differs from its newest snapshot code/08-strings/shelf/shelf.php'], Shelf::check($this->root));
+    }
+
+    public function testShelfFileWithoutSnapshotFails(): void
+    {
+        $this->put('shelf/shelf.php', 'new');
+        self::assertCount(1, Shelf::check($this->root));
+    }
+
+    public function testChapterThatIncludesTheLiveShelfFails(): void
+    {
+        $this->put('code/06-variables/shelf/shelf.php', 'x');
+        $this->put('shelf/shelf.php', 'x');
+        $this->put('book/en/06-variables.md', "<!-- include: shelf/shelf.php -->\n");
+        self::assertSame(["book/en/06-variables.md: include the chapter's snapshot code/NN-slug/shelf/shelf.php, not shelf/shelf.php"], Shelf::check($this->root));
+    }
+
+    public function testOutputWithRunsTheScriptWithOtherStartingValues(): void
+    {
+        $this->put('a.php', "<?php\n\n\$copies = 2;\n\$title = 'A';\necho \$title, \$copies;\n");
+        self::assertSame('B$0', output_with($this->root . '/a.php', ['copies' => '0', 'title' => "'B\$'"]));
+        self::assertSame("<?php\n\n\$copies = 2;\n\$title = 'A';\necho \$title, \$copies;\n", file_get_contents($this->root . '/a.php'));
+    }
+
+    public function testOutputWithNeedsTheStartingLine(): void
+    {
+        $this->put('a.php', "<?php\n\necho 1;\n");
+        $this->expectExceptionMessage('Keep the line $copies = ...;');
+        output_with($this->root . '/a.php', ['copies' => '0']);
+    }
+
+    public function testOutputWithReplacesAnAssignmentOverSeveralLines(): void
+    {
+        $this->put('a.php', "<?php\n\n\$books = [\n    'A',\n    'B',\n];\n\necho count(\$books);\n");
+        self::assertSame('1', output_with($this->root . '/a.php', ['books' => "['C']"]));
+    }
+
+    public function testOutputWithKeepsTheLinesAfterACommentedAssignment(): void
+    {
+        $this->put('a.php', "<?php\n\n\$age = 5;   // years\n\$x = 1;\necho \$age, \$x;\n");
+        self::assertSame('91', output_with($this->root . '/a.php', ['age' => '9']));
     }
 }

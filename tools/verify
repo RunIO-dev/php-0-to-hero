@@ -15,6 +15,7 @@ use Tools\Glossary;
 use Tools\Links;
 use Tools\Patterns;
 use Tools\Run;
+use Tools\Shelf;
 
 require __DIR__ . '/bootstrap.php';
 
@@ -61,6 +62,7 @@ $checks = [
         return $problems;
     },
     'chapters follow the template' => static fn(): array => Chapters::check($root),
+    'Shelf matches its newest chapter snapshot' => static fn(): array => Shelf::check($root),
     'Arabic edition uses the agreed terms' => static fn(): array => Glossary::check($root),
     'tool tests' => static function () use ($root, $bin): array {
         $run = Run::capture([PHP_BINARY, $bin . 'phpunit', '--colors=never', '--testsuite', 'tools'], $root);

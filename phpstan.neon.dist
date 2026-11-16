@@ -7,3 +7,14 @@ parameters:
     excludePaths:
         - tools/check.php   # old-style on purpose, so it runs on old PHP
         - '*.error.php'     # shows an error on purpose
+    ignoreErrors:
+        # Before functions (chapter 15), examples decide on fixed values, so every
+        # condition's answer is known in advance. That is the lesson, not a bug.
+        -
+            message: '#is always (true|false|null)|will always evaluate to|between \*NEVER\* and|(on left side of \?\?|in isset\(\)) does not exist#'
+            paths:
+                - 'code/0*'
+                - 'code/1[0-5]-*'
+                - 'solutions/0*'
+                - 'solutions/1[0-5]-*'
+            reportUnmatched: false
