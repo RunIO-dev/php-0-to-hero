@@ -1,0 +1,15 @@
+# docroot public
+# A "cover" named note.php.
+POST /upload.bad.php
+Content-Type: multipart/form-data; boundary=CoverBoundary
+
+--CoverBoundary
+Content-Disposition: form-data; name="cover"; filename="note.php"
+Content-Type: image/png
+
+< samples/code.txt
+--CoverBoundary--
+
+###
+# Anyone can now run it.
+GET /uploads/note.php

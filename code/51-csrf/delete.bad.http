@@ -1,0 +1,9 @@
+GET /delete.bad.php
+
+###
+# Sent by a form on another site, with the visitor's session cookie.
+POST /delete.bad.php
+Origin: https://stranger.example
+Content-Type: application/x-www-form-urlencoded
+
+confirm=yes

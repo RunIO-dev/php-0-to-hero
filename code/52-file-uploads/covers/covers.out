@@ -1,0 +1,55 @@
+> GET /upload.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/upload.php" enctype="multipart/form-data">
+    <input type="file" name="cover" accept="image/png, image/jpeg">
+    <button>Upload</button>
+</form>
+
+> POST /upload.php
+> Content-Type: multipart/form-data; boundary=CoverBoundary
+>
+> --CoverBoundary
+> Content-Disposition: form-data; name="cover"; filename="kindred.png"
+> Content-Type: image/png
+>
+> < samples/kindred.png
+> --CoverBoundary--
+
+< HTTP/1.1 303 See Other
+< Location: /cover.php?file={{file}}
+< Content-type: text/html; charset=UTF-8
+
+> GET /cover.php?file={{file}}
+
+< HTTP/1.1 200 OK
+< Content-Type: image/png
+< X-Content-Type-Options: nosniff
+
+(73 bytes of binary data)
+
+> POST /upload.php
+> Content-Type: multipart/form-data; boundary=CoverBoundary
+>
+> --CoverBoundary
+> Content-Disposition: form-data; name="cover"; filename="cover.png"
+> Content-Type: image/png
+>
+> < samples/code.txt
+> --CoverBoundary--
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<p class="error">Only PNG and JPEG images, please.</p>
+<form method="post" action="/upload.php" enctype="multipart/form-data">
+    <input type="file" name="cover" accept="image/png, image/jpeg">
+    <button>Upload</button>
+</form>
+
+> GET /cover.php?file=../public/upload.php
+
+< HTTP/1.1 404 Not Found
+< Content-type: text/html; charset=UTF-8

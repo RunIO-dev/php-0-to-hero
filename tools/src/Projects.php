@@ -155,7 +155,7 @@ final class Projects
         return $problems;
     }
 
-    private static function dumpAutoload(string $dir): ?string
+    public static function dumpAutoload(string $dir): ?string
     {
         $composer = getenv('COMPOSER_BINARY');
         $command = is_string($composer) && $composer !== '' ? [PHP_BINARY, $composer] : ['composer'];

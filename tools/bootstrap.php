@@ -175,3 +175,15 @@ function missed_bugs(string $exerciseDir, string $testFile, string $subject): ar
 
     return $missed;
 }
+
+/**
+ * Sends requests to the pages in a folder, as a browser would (Part 7 on): $http holds them in
+ * the .http format of Tools\Web, such as "GET /add.php" or a POST with a body. The folder is
+ * served as a copy, so a form that saves something changes nothing in your exercise.
+ *
+ * @return list<array{status: int, headers: array<string, string>, body: string}> header names in lower case
+ */
+function responses_of(string $dir, string $http): array
+{
+    return Tools\Web::exchange($dir, $http)['responses'];
+}

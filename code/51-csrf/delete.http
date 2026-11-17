@@ -1,0 +1,23 @@
+# capture token /name="_token" value="([^"]+)"/
+GET /delete.php
+
+###
+# From another site: it can send the form, but doesn't know the token.
+POST /delete.php
+Origin: https://stranger.example
+Content-Type: application/x-www-form-urlencoded
+
+confirm=yes
+
+###
+POST /delete.php
+Content-Type: application/x-www-form-urlencoded
+
+_token=guessed
+
+###
+# From the form itself, with the token from its hidden field.
+POST /delete.php
+Content-Type: application/x-www-form-urlencoded
+
+_token={{token}}

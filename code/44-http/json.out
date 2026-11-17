@@ -1,0 +1,7 @@
+> GET /json.php
+> Accept: application/json
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+
+{"title":"Kindred","author":"Octavia E. Butler","year":1979}

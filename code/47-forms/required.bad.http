@@ -1,0 +1,5 @@
+# Sent without a browser, as anyone can.
+POST /required.bad.php
+Content-Type: application/x-www-form-urlencoded
+
+name=

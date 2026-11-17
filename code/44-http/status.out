@@ -1,0 +1,13 @@
+> GET /status.php?title=Kindred
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Kindred, Octavia E. Butler, 1979
+
+> GET /status.php?title=Dune
+
+< HTTP/1.1 404 Not Found
+< Content-Type: text/plain; charset=UTF-8
+
+There is no book with that title.

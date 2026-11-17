@@ -92,6 +92,16 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - **PHPStan output as examples** (chapter 40): an example `x.php` may have an `x.phpstan` file. Its first line is the command (`$ vendor/bin/phpstan analyse --level 8 code/40-static-analysis/x.php`), the rest is what PHPStan prints. `tools/verify` runs the command and compares, and the book shows it below the output; `php tools/out` writes it again. Such an example has problems on purpose, so the normal PHPStan runs leave it out (`tools/src/Analysis.php`).
 - **Composer projects** (*Shelf* from chapter 36): a folder below `code/` or `shelf/` with its own `composer.json`. Only the scripts next to `composer.json` have a `.out`; the classes below it, in `src/` and `tests/`, are loaded by the autoloader and checked through the scripts. The checks run `composer dump-autoload --dev` there first; `vendor/` is generated and ignored by git (`tools/src/Projects.php`). A *Shelf* snapshot holds only what its chapter changes, so PHPStan and the tests run on *Shelf* as it is after that chapter, put together from every snapshot up to it (`Shelf::state`).
 
+- **Web examples** (Part 7 on): a page `x.php` with an `x.http` next to it, or a standalone `site.http` for a folder (*Shelf*'s `web.http`, or a small site with `# docroot public`). The checks serve a copy of the folder with PHP's built-in server, as a learner runs it, send the requests, and compare the transcript with the `.out` (`tools/src/Web.php`). The `.http` format:
+  - requests are separated by `###`; a request is `METHOD /path`, header lines, a blank line and the body;
+  - `# docroot public` and `# router front.php` start the server as `php -S localhost:8000 -t public front.php` would; `# env NAME=value` sets an environment variable;
+  - `# capture name /regex/` remembers group 1 of a response (headers and body), and `{{name}}` in a later request sends it; the `.out` shows `{{name}}`, so a random token gives the same `.out` every time;
+  - in a `multipart/form-data` body, a line `< samples/cover.png` sends that file's bytes (an upload);
+  - cookies are kept between the requests of one file; long cookie values and dates are shown as `…`, and a binary answer as its size.
+  A page that only an `.http` file requests (in its folder, or one folder up) is checked through the requests, not run on its own. Exercise tests send requests with `responses_of($dir, $http)` (`tools/bootstrap.php`).
+- **Removed files:** a *Shelf* file that a chapter deletes gets an empty `X.removed` in that chapter's snapshot; from then on, `Shelf::state` leaves it out, and the check refuses it in `shelf/`.
+- **Course files in the text:** `compose.yaml` and `Dockerfile` at the top of the repo may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
+
 ## 5. Exercises
 
 - Three per chapter: beginner, intermediate and advanced. Each is a real-world task, never "foo/bar".
@@ -105,12 +115,12 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
-3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Each script with a `.out` file is checked like an example. From chapter 41, its tests pass, in `shelf/` and in the state after every chapter that has them.
+3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, every file of the newest state is in `shelf/`, and no chapter includes `shelf/` directly. Each script with a `.out` file is checked like an example. From chapter 41, its tests pass, in `shelf/` and in the state after every chapter that has them.
 4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`). A folder whose files `require` each other, and a Composer project, stay in one batch.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;
    - `md5(` or `sha1(` near "password";
-   - `echo $_GET` or `echo $_POST` without escaping;
+   - `echo $_GET` or `echo $_POST` without escaping, unless the page answers in plain text or JSON (`header('Content-Type: text/plain ...')`);
    - `mysql_`;
    - `extract(`;
    - `eval(`;
@@ -119,7 +129,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 6. **Chapters:**
    - every heading from §2 is present;
    - every `include:` path exists;
-   - every link answers (checked weekly, not on every push).
+   - every link answers (checked weekly, not on every push); addresses that stand for one in the text, such as `localhost` and reserved example domains (`shelf.example`), are skipped.
 7. **Arabic edition:** no chapter uses a form that `glossary/ar.json` lists as `rejected`. Only unambiguous forms are listed there; a word that is also ordinary Arabic (أسلوب is also style) is recorded in the term's reason instead, so the check never blocks a correct sentence.
 
 The forbidden-pattern check reads PHP tokens, so it sees `echo $_GET[...]` but not request data passed through a variable first. Review still matters.

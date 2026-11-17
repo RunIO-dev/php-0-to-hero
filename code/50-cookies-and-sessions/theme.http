@@ -1,0 +1,8 @@
+GET /theme.php
+
+###
+GET /theme.php?theme=dark
+
+###
+# The browser sends the cookie back on its own.
+GET /theme.php

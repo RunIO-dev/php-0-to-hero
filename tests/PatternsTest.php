@@ -52,6 +52,8 @@ final class PatternsTest extends TestCase
         yield 'prose with from' => ['echo "Select a file from " . $dir;'];
         yield 'echo int cast' => ['echo (int) $_GET["id"];'];
         yield 'md5 compass' => ['$h = md5($compass);'];
+        yield 'plain text page' => ['header("Content-Type: text/plain; charset=UTF-8"); echo $_GET["name"];'];
+        yield 'JSON page' => ["header('Content-Type: application/json'); echo \$_SERVER['REQUEST_METHOD'];"];
     }
 
     #[DataProvider('forbidden')]

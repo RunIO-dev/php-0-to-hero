@@ -12,6 +12,8 @@ namespace Tools;
  * An optional .run file holds the command a learner types, with arguments and input:
  *   php greet.php Amira "Things Fall Apart" < titles.txt
  * In a Composer project (Tools\Projects), the autoloaded classes are checked through its scripts.
+ * A file with a .http next to it (Part 7 on) is a web page: Tools\Web serves it and sends the requests,
+ * also a *.bad.php page, to show what goes wrong (chapter 46).
  * A *Test.php file (chapter 41 on) is run with PHPUnit: its .out holds what PHPUnit prints,
  * without the lines that change from run to run.
  */
@@ -26,10 +28,11 @@ final class Examples
         $shelf = array_filter(Run::files($root . '/shelf', '.php'), static fn(string $f): bool => is_file(substr($f, 0, -4) . '.out'));
         foreach ([...Run::files($root . '/code', '.php'), ...$shelf] as $file) {
             $name = substr($file, strlen($root) + 1);
-            if (in_array(basename($file), self::required(dirname($file)), true) || Projects::isAutoloaded($file)) {
+            if (in_array(basename($file), self::required(dirname($file)), true) || Projects::isAutoloaded($file) || self::isTemplate($file)
+                || in_array($file, Web::served(dirname($file)), true) && !Web::has($file)) {
                 continue; // loaded by its neighbours, or by the autoloader: checked through them
             }
-            if (str_ends_with($file, '.bad.php')) {
+            if (str_ends_with($file, '.bad.php') && !Web::has($file)) {
                 $lint = Run::capture([PHP_BINARY, '-l', $file]);
                 if ($lint['code'] !== 0) {
                     $problems[] = "$name: syntax error: " . trim($lint['out'] . $lint['err']);
@@ -50,7 +53,42 @@ final class Examples
             }
         }
 
+        foreach ([...Run::files($root . '/code', '.http'), ...Run::files($root . '/shelf', '.http')] as $http) {
+            if (is_file(substr($http, 0, -5) . '.php')) {
+                continue; // a page's requests: checked with the page above
+            }
+            $name = substr($http, strlen($root) + 1);
+            $expected = substr($http, 0, -5) . '.out';
+            $got = self::siteOutput($root, $http);
+            if (!is_file($expected)) {
+                $problems[] = "$name: no .out file next to it";
+            } elseif ($got !== (string) file_get_contents($expected)) {
+                $problems[] = "$name: the answers differ from its .out file:\n" . self::diff((string) file_get_contents($expected), $got);
+            }
+        }
+
         return $problems;
+    }
+
+    /**
+     * The answers to a .http file of its own, such as Shelf's web.http: the requests go to the
+     * folder it is in. A Shelf snapshot is served as Shelf was after its chapter (Tools\Shelf::state).
+     */
+    public static function siteOutput(string $root, string $http): string
+    {
+        $dir = dirname($http);
+        if (preg_match('~/code/\d\d-[^/]+/shelf$~', $dir) !== 1) {
+            return Web::exchange($dir, (string) file_get_contents($http))['out'];
+        }
+        $state = sys_get_temp_dir() . '/shelf-site-' . bin2hex(random_bytes(4));
+        try {
+            Shelf::assemble($root, $dir, $state);
+            Projects::dumpAutoload($state);
+
+            return Web::exchange($state, (string) file_get_contents($http))['out'];
+        } finally {
+            Run::remove($state);
+        }
     }
 
     /**
@@ -64,6 +102,9 @@ final class Examples
     {
         if (self::isTest($file)) {
             return self::testOutput($root, $file);
+        }
+        if (Web::has($file)) {
+            return Web::output($file);
         }
         if ($args === null) {
             ['args' => $args, 'stdin' => $stdin] = self::command($file);
@@ -89,6 +130,9 @@ final class Examples
         if (self::isTest($file)) {
             return ['line' => 'vendor/bin/phpunit --testdox ' . self::fromCourse($file), 'args' => [], 'stdin' => null, 'custom' => true];
         }
+        if (Web::has($file)) {
+            return ['line' => Web::command($file), 'args' => [], 'stdin' => null, 'custom' => true];
+        }
         $runFile = substr($file, 0, -4) . '.run';
         if (!is_file($runFile)) {
             return ['line' => "php $name", 'args' => [], 'stdin' => null, 'custom' => false];
@@ -110,6 +154,12 @@ final class Examples
         }
 
         return ['line' => $line, 'args' => array_slice($words, 2), 'stdin' => $stdin, 'custom' => true];
+    }
+
+    /** A template (chapter 49 on): a file in a templates/ folder, checked through the pages that render it. */
+    public static function isTemplate(string $file): bool
+    {
+        return basename(dirname($file)) === 'templates';
     }
 
     /**

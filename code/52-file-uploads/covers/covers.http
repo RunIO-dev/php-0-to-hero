@@ -1,0 +1,34 @@
+# docroot public
+GET /upload.php
+
+###
+# A real PNG image.
+# capture file /file=([0-9a-f]+\.png)/
+POST /upload.php
+Content-Type: multipart/form-data; boundary=CoverBoundary
+
+--CoverBoundary
+Content-Disposition: form-data; name="cover"; filename="kindred.png"
+Content-Type: image/png
+
+< samples/kindred.png
+--CoverBoundary--
+
+###
+GET /cover.php?file={{file}}
+
+###
+# PHP code, named cover.png and sent as image/png: the content says otherwise.
+POST /upload.php
+Content-Type: multipart/form-data; boundary=CoverBoundary
+
+--CoverBoundary
+Content-Disposition: form-data; name="cover"; filename="cover.png"
+Content-Type: image/png
+
+< samples/code.txt
+--CoverBoundary--
+
+###
+# Asking for another file than a stored cover.
+GET /cover.php?file=../public/upload.php

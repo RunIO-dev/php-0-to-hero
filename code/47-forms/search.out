@@ -1,0 +1,11 @@
+> GET /search.php?q=ki
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<form method="get" action="/search.php">
+    <input name="q" value="ki">
+    <button>Search</button>
+</form>
+<p>Kindred</p>
+<p>Kitchen</p>

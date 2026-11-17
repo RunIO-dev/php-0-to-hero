@@ -1,0 +1,20 @@
+> GET /request.php?name=Amira
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Method: GET
+Path: /request.php
+Name: Amira
+
+> POST /request.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Jonas
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Method: POST
+Path: /request.php
+Name: Jonas

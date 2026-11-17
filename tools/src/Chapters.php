@@ -7,6 +7,9 @@ namespace Tools;
 /** Every chapter has the template headings in order, and every include exists (docs/standards.md §2). */
 final class Chapters
 {
+    /** Files of the course itself that a chapter may include, besides code/ and shelf/. */
+    public const array COURSE_FILES = ['compose.yaml', 'Dockerfile'];
+
     /** The template headings per language edition. A new edition adds its list here. */
     public const HEADINGS = [
         'en' => ['Goals', 'Before you start', 'The idea', 'In code', 'Common mistakes', 'Principle check',
@@ -61,6 +64,9 @@ final class Chapters
         $file = realpath($root . '/' . $path);
         if ($file === false || !is_file($file)) {
             return null;
+        }
+        if (in_array($path, self::COURSE_FILES, true)) {
+            return $file; // the course's own setup, which chapter 45 explains
         }
         foreach (['code', 'shelf'] as $top) {
             $dir = realpath($root . '/' . $top);

@@ -1,6 +1,7 @@
 # One setup for everyone: the same images run the course examples in CI.
 #   docker compose run --rm php php tools/check.php      PHP 8.6
 #   docker compose run --rm php85 composer verify        PHP 8.5
+#   docker compose up web                                Shelf in the browser (chapter 45)
 x-php: &php
   # Files you create stay yours, not root's. On Linux, if `id -u` is not 1000:
   #   export HOST_UID=$(id -u) HOST_GID=$(id -g)
@@ -17,3 +18,11 @@ services:
     <<: *php
     build: { context: ., args: { PHP: 8.5-cli } }
     image: php-0-to-hero:8.5
+  # Shelf's web pages at http://localhost:8000, with PHP's built-in server. Stop it with Ctrl+C.
+  # 0.0.0.0: answer requests from outside the container; 127.0.0.1 below: only from this computer.
+  web:
+    <<: *php
+    build: { context: ., args: { PHP: 8.6-rc-cli } }
+    image: php-0-to-hero:8.6
+    command: php -S 0.0.0.0:8000 -t shelf/public
+    ports: ["127.0.0.1:8000:8000"]

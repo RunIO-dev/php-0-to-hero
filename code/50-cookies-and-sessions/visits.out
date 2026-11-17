@@ -1,0 +1,21 @@
+> GET /visits.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+
+Visits in this session: 1
+
+> GET /visits.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Visits in this session: 2
+
+> GET /visits.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Visits in this session: 3

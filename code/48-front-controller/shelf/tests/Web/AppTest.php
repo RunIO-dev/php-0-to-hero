@@ -1,0 +1,67 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Shelf\Tests\Web;
+
+use PHPUnit\Framework\TestCase;
+use Shelf\Book;
+use Shelf\Library;
+use Shelf\Tests\InMemoryBookRepository;
+use Shelf\Web\App;
+use Shelf\Web\Request;
+
+/** The web pages, tested without a server: a Request goes in, a Response comes out. */
+final class AppTest extends TestCase
+{
+    private App $app;
+    private Library $library;
+
+    protected function setUp(): void
+    {
+        $this->library = new Library(new InMemoryBookRepository([new Book('Kindred', 'Octavia E. Butler', 1979)]), []);
+        $this->app = new App($this->library);
+    }
+
+    public function testTheListShowsTheBooksEscaped(): void
+    {
+        $this->library->add(['Tom & Jerry', 'Someone', '1940']);
+
+        $response = $this->app->handle(new Request('GET', '/'));
+
+        self::assertSame(200, $response->status);
+        self::assertStringContainsString('<li>Kindred (Octavia E. Butler, 1979)</li>', $response->body);
+        self::assertStringContainsString('Tom &amp; Jerry', $response->body);
+    }
+
+    public function testAGoodBookIsAddedAndRedirects(): void
+    {
+        $response = $this->app->handle(new Request('POST', '/add', form: ['title' => 'Sula', 'author' => 'Toni Morrison', 'year' => '1973']));
+
+        self::assertSame(303, $response->status);
+        self::assertSame(['Location' => '/'], $response->headers);
+        self::assertCount(2, $this->library->books());
+    }
+
+    public function testAWrongBookComesBackWith422(): void
+    {
+        $response = $this->app->handle(new Request('POST', '/add', form: ['title' => '<b>', 'author' => '', 'year' => '1973']));
+
+        self::assertSame(422, $response->status);
+        self::assertStringContainsString('value="&lt;b&gt;"', $response->body);
+        self::assertCount(1, $this->library->books());
+    }
+
+    public function testAnUnknownPathIs404(): void
+    {
+        self::assertSame(404, $this->app->handle(new Request('GET', '/nothing'))->status);
+    }
+
+    public function testAKnownPathWithTheWrongMethodIs405(): void
+    {
+        $response = $this->app->handle(new Request('DELETE', '/add'));
+
+        self::assertSame(405, $response->status);
+        self::assertSame(['Allow' => 'GET, POST'], $response->headers);
+    }
+}

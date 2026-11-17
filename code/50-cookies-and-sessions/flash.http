@@ -1,0 +1,8 @@
+POST /flash.php
+
+###
+GET /flash.php
+
+###
+# Reloaded: the message was shown once.
+GET /flash.php

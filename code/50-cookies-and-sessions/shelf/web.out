@@ -1,0 +1,324 @@
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Books</h1>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kindred</h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kitchen</h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2>Parable of the Sower</h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2>Things Fall Apart</h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">4 books</p>
+    </main>
+</body>
+</html>
+
+> GET /add
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Add a book</h1>
+    <form class="card" method="post" action="/add">
+        <label>Title <input name="title" value="" required maxlength="200"></label>
+        <label>Author <input name="author" value="" required maxlength="200"></label>
+        <label>Year <input name="year" value="" required inputmode="numeric"></label>
+        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+        <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=&author=&year=
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Add a book</h1>
+    <p class="error" role="alert">A book needs a title, an author and a year from 1 to 2100.</p>
+    <form class="card" method="post" action="/add">
+        <label>Title <input name="title" value="" required maxlength="200"></label>
+        <label>Author <input name="author" value="" required maxlength="200"></label>
+        <label>Year <input name="year" value="" required inputmode="numeric"></label>
+        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+        <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=kindred&author=Octavia+E.+Butler&year=1979
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Add a book</h1>
+    <p class="error" role="alert">&quot;Kindred&quot; is already on the shelf</p>
+    <form class="card" method="post" action="/add">
+        <label>Title <input name="title" value="kindred" required maxlength="200"></label>
+        <label>Author <input name="author" value="Octavia E. Butler" required maxlength="200"></label>
+        <label>Year <input name="year" value="1979" required inputmode="numeric"></label>
+        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+        <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Add a book</h1>
+    <p class="error" role="alert">A book needs a title, an author and a year from 1 to 2100.</p>
+    <form class="card" method="post" action="/add">
+        <label>Title <input name="title" value="&quot;&gt;&lt;script&gt;x()&lt;/script&gt;" required maxlength="200"></label>
+        <label>Author <input name="author" value="Someone" required maxlength="200"></label>
+        <label>Year <input name="year" value="10000" required inputmode="numeric"></label>
+        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+        <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&author=Toni+Morrison&year=1973
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Books</h1>
+    <p class="flash" role="status">Added &quot;Sula&quot;.</p>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kindred</h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kitchen</h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2>Parable of the Sower</h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">S</span>
+            <h2>Sula</h2>
+            <p>Toni Morrison, 1973</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2>Things Fall Apart</h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">5 books</p>
+    </main>
+</body>
+</html>
+
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Books</h1>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kindred</h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2>Kitchen</h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2>Parable of the Sower</h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">S</span>
+            <h2>Sula</h2>
+            <p>Toni Morrison, 1973</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2>Things Fall Apart</h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">5 books</p>
+    </main>
+</body>
+</html>
+
+> GET /add.php
+
+< HTTP/1.1 404 Not Found
+< Content-Type: text/html; charset=UTF-8
+
+<h1>Not found</h1>
+
+> DELETE /add
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: GET, POST
+< Content-type: text/html; charset=UTF-8

@@ -1,0 +1,41 @@
+> GET /delete.php
+
+< HTTP/1.1 200 OK
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/delete.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <button>Delete all my loans</button>
+</form>
+
+> POST /delete.php
+> Origin: https://stranger.example
+> Content-Type: application/x-www-form-urlencoded
+>
+> confirm=yes
+
+< HTTP/1.1 403 Forbidden
+< Content-Type: text/plain; charset=UTF-8
+
+This form has expired. Please reload the page and try again.
+
+> POST /delete.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token=guessed
+
+< HTTP/1.1 403 Forbidden
+< Content-Type: text/plain; charset=UTF-8
+
+This form has expired. Please reload the page and try again.
+
+> POST /delete.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token={{token}}
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Deleted all loans of Amira.

@@ -21,7 +21,13 @@ foreach (Projects::prepare($root) as $problem) {
 }
 foreach (array_slice($_SERVER['argv'], 1) as $path) {
     $file = realpath($path);
-    if ($file === false || !str_ends_with($file, '.php') || str_ends_with($file, '.bad.php')) {
+    if ($file !== false && str_ends_with($file, '.http') && !is_file(substr($file, 0, -5) . '.php')) {
+        file_put_contents(substr($file, 0, -5) . '.out', Examples::siteOutput($root, $file));
+        echo substr($file, 0, -5) . ".out\n";
+        continue;
+    }
+    if ($file === false || !str_ends_with($file, '.php') || str_ends_with($file, '.bad.php') && !Tools\Web::has($file)
+        || in_array($file, Tools\Web::served(dirname($file)), true) && !Tools\Web::has($file) || Examples::isTemplate($file)) {
         fwrite(STDERR, "skipped: $path\n");
         continue;
     }

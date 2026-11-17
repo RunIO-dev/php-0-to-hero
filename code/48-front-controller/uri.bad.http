@@ -1,0 +1,5 @@
+# router uri.bad.php
+GET /books
+
+###
+GET /books?sort=title

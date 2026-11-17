@@ -1,0 +1,25 @@
+> GET /search.bad.php?q=Kindred
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Search</title></head>
+<body>
+    <p>You searched for: Kindred</p>
+</body>
+</html>
+
+> GET /search.bad.php?q=%3Cscript%3Esteal(document.cookie)%3C%2Fscript%3E
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Search</title></head>
+<body>
+    <p>You searched for: <script>steal(document.cookie)</script></p>
+</body>
+</html>

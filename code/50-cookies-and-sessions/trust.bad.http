@@ -1,0 +1,6 @@
+GET /trust.bad.php
+
+###
+# Anyone can send any cookie.
+GET /trust.bad.php
+Cookie: role=admin

@@ -1,0 +1,20 @@
+> POST /flash.php
+
+< HTTP/1.1 303 See Other
+< Content-Type: text/plain; charset=UTF-8
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /flash.php
+
+> GET /flash.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Message: Saved.
+
+> GET /flash.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+No message

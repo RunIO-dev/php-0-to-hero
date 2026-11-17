@@ -1,0 +1,43 @@
+# Shelf's web pages, served as by: docker compose up web
+# docroot public
+GET /
+
+###
+GET /add
+
+###
+# Nothing filled in: Library::add refuses, and the form comes back.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=&author=&year=
+
+###
+# A book that is already on the shelf, in other letters.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=kindred&author=Octavia+E.+Butler&year=1979
+
+###
+# Escaped when it comes back: the quote and the tag stay text.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000
+
+###
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula&author=Toni+Morrison&year=1973
+
+###
+GET /
+
+###
+# Addresses that don't exist, and a method the page doesn't take.
+GET /add.php
+
+###
+DELETE /add

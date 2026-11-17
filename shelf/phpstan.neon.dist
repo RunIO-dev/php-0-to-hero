@@ -1,4 +1,4 @@
-# Static analysis for Shelf (chapter 40; its tests from chapter 41), at the highest level. From the course folder:
+# Static analysis for Shelf (chapter 40; its tests from chapter 41, its web pages from 46, templates from 49), at the highest level. From the course folder:
 #   vendor/bin/phpstan analyse -c shelf/phpstan.neon.dist
 parameters:
     level: 10
@@ -6,6 +6,8 @@ parameters:
         - shelf.php
         - src
         - tests
+        - public
+        - templates
     ignoreErrors:
         # PHP always sets $argv when it runs a script from the command line.
         -

@@ -1,0 +1,42 @@
+> GET /join.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/join.php">
+    <input name="name" value="">
+    <input name="year" value="">
+    <button>Join</button>
+</form>
+
+> POST /join.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=&year=19x9
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/join.php">
+    <p class="error">A name of 1 to 50 characters, please.</p>
+    <p class="error">A year of birth from 1900 to 2026, please.</p>
+    <input name="name" value="">
+    <input name="year" value="19x9">
+    <button>Join</button>
+</form>
+
+> POST /join.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira+%3Cb%3E&year=1990
+
+< HTTP/1.1 303 See Other
+< Location: /welcome.php?name=Amira+%3Cb%3E
+< Content-type: text/html; charset=UTF-8
+
+> GET /welcome.php?name=Amira+%3Cb%3E
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<p>Welcome, Amira &lt;b&gt;!</p>

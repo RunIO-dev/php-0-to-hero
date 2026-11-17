@@ -1,0 +1,25 @@
+> GET /fixation.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+
+Member: nobody
+Same ID as before this request: yes
+
+> POST /fixation.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+
+Member: Amira
+Same ID as before this request: no
+
+> GET /fixation.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Member: Amira
+Same ID as before this request: yes

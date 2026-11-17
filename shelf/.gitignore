@@ -2,3 +2,5 @@
 # and can make again at any time.
 /vendor/
 /.phpunit.cache/
+# Covers that visitors upload (chapter 52): data, not code.
+/storage/

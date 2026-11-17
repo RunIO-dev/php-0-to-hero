@@ -1,0 +1,17 @@
+# router front.php
+GET /
+
+###
+GET /books?sort=title
+
+###
+GET /hello?name=Amira
+
+###
+GET /lend
+
+###
+POST /books
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula

@@ -1,0 +1,21 @@
+> GET /theme.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Theme: light
+
+> GET /theme.php?theme=dark
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+< Set-Cookie: theme=dark; expires=…; Max-Age=31536000; path=/; secure; HttpOnly; SameSite=Lax
+
+Theme saved: dark
+
+> GET /theme.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Theme: dark

@@ -1,0 +1,8 @@
+> GET /late-header.error.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+Moved
+<br />
+<b>Warning</b>:  Cannot modify header information - headers already sent by (output started at late-header.error.php:7) in <b>late-header.error.php</b> on line <b>9</b><br />

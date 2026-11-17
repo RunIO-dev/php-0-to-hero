@@ -72,15 +72,15 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 43. Git basics for one developer: commits, `.gitignore`, and never committing secrets. ◆ *Shelf* becomes a repository, with a `.gitignore`.
 
 ## Part 7: The web (9)
-44. HTTP in plain words: request, response, status codes, headers.
-45. Docker for our setup: `compose.yaml`, PHP plus a web server, the same images that test the examples. *(Docker Desktop's licence, and free alternatives)*
-46. The first web page and escaping output (`htmlspecialchars`), from day one. ◆ the book list as a web page.
-47. Forms, GET and POST, and validating input on the server. ◆ add a book.
-48. A tiny front controller and routing, written by hand to understand it. *(KISS; replaced by Symfony later)*
-49. Templates: keeping HTML apart from logic.
-50. Cookies and sessions, with secure settings.
-51. CSRF tokens. ◆ forms protected.
-52. File uploads, done safely. ◆ book covers.
+44. HTTP in plain words: request, response, status codes, headers; PHP's built-in server.
+45. Docker for our setup: `compose.yaml`, PHP plus a web server, the same images that test the examples. *(Docker Desktop's licence, and free alternatives)* ◆ `shelf/public/`, served by `docker compose up web`; `shelf/web.http`.
+46. The first web page and escaping output (`htmlspecialchars`), from day one. ◆ the book list as a web page; `e()`.
+47. Forms, GET and POST, and validating input on the server; 422 and Post/Redirect/Get. ◆ add a book (`public/add.php`, checked by `Library::add`).
+48. A tiny front controller and routing, written by hand to understand it; 404 and 405. *(KISS; replaced by Symfony later)* ◆ `Shelf\Web\Request`, `Response`, `App`; `AppTest` without a server.
+49. Templates: keeping HTML apart from logic; template files return typed functions, no `extract`. ◆ `templates/` with a layout; `Templates`.
+50. Cookies and sessions, with secure settings; session fixation; flash messages. ◆ `Session`, `PhpSession`, a message after adding a book.
+51. CSRF tokens, checked with `hash_equals`. ◆ forms protected: every POST checked in `App`.
+52. File uploads, done safely: content type by `finfo`, own names, stored outside `public/`, `nosniff`. ◆ book covers.
 
 ## Part 8: Databases (8)
 53. What a database is, and SQL basics with SQLite (no server needed).

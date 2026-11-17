@@ -292,6 +292,25 @@ final class ChecksTest extends TestCase
         self::assertSame(['shelf/shelf.php differs from its newest snapshot code/08-strings/shelf/shelf.php'], Shelf::check($this->root));
     }
 
+    public function testAFileRemovedByANewerSnapshotMustBeGone(): void
+    {
+        $this->put('code/47-forms/shelf/public/add.php', 'page');
+        $this->put('code/48-front/shelf/public/add.php.removed', '');
+        $this->put('shelf/public/add.php', 'page');
+        self::assertSame(['shelf/public/add.php was removed in code/48-front/shelf/public/add.php.removed; delete it'], Shelf::check($this->root));
+    }
+
+    public function testAFileOfTheNewestStateMissingInShelfFails(): void
+    {
+        $this->put('code/47-forms/shelf/public/add.php', 'page');
+        $this->put('code/48-front/shelf/public/index.php', 'front');
+        $this->put('shelf/public/index.php', 'front');
+        self::assertSame(['shelf/public/add.php is missing; its newest snapshot is code/47-forms/shelf/public/add.php'], Shelf::check($this->root));
+
+        $this->put('code/48-front/shelf/public/add.php.removed', '');
+        self::assertSame([], Shelf::check($this->root));
+    }
+
     public function testShelfFileWithoutSnapshotFails(): void
     {
         $this->put('shelf/shelf.php', 'new');

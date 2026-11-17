@@ -1,0 +1,21 @@
+> POST /upload.bad.php
+> Content-Type: multipart/form-data; boundary=CoverBoundary
+>
+> --CoverBoundary
+> Content-Disposition: form-data; name="cover"; filename="note.php"
+> Content-Type: image/png
+>
+> < samples/code.txt
+> --CoverBoundary--
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+Saved as /uploads/note.php
+
+> GET /uploads/note.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+This ran on the server: 42

@@ -1,0 +1,16 @@
+GET /join.php
+
+###
+POST /join.php
+Content-Type: application/x-www-form-urlencoded
+
+name=&year=19x9
+
+###
+POST /join.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira+%3Cb%3E&year=1990
+
+###
+GET /welcome.php?name=Amira+%3Cb%3E

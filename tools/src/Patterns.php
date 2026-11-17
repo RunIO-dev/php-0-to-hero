@@ -54,7 +54,7 @@ final class Patterns
             } elseif (in_array($name, ['md5', 'sha1', 'hash', 'crypt'], true) && self::nearPassword($tokens, $i)) {
                 $add($t->line, "$name() is not for passwords; use password_hash()");
             } elseif (($t->is([T_ECHO, T_PRINT, T_OPEN_TAG_WITH_ECHO]) || in_array($name, ['printf', 'print_r'], true))
-                && self::printsRequest($tokens, $i)) {
+                && self::printsRequest($tokens, $i) && !self::notHtml($code)) {
                 $add($t->line, 'request data printed without escaping; use htmlspecialchars()');
             } elseif (self::isSql($t) && self::joinedWithVariable($tokens, $i)) {
                 $add($t->line, 'SQL built from variables; use a prepared statement');
@@ -62,6 +62,12 @@ final class Patterns
         }
 
         return $problems;
+    }
+
+    /** A page that answers in plain text or JSON: request data in it can't become HTML. */
+    private static function notHtml(string $code): bool
+    {
+        return preg_match('~header\(\s*[\'"]Content-Type:\s*(?:text/plain|application/json)~i', $code) === 1;
     }
 
     /** From chapter 16 on, and in Shelf, every file declares strict types (docs/standards.md §4). */

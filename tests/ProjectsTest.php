@@ -113,6 +113,15 @@ final class ProjectsTest extends TestCase
         self::assertSame(['composer.json', 'shelf.php', 'src/Book.php'], array_keys($state));
     }
 
+    public function testARemovedFileLeavesTheStateFromItsChapterOn(): void
+    {
+        $this->put('code/41-z/shelf/src/Book.php', 'new');
+        $this->put('code/42-z/shelf/src/Book.php.removed', '');
+
+        self::assertArrayHasKey('src/Book.php', Shelf::state($this->root, $this->root . '/code/41-z/shelf'));
+        self::assertSame(['composer.json', 'shelf.php'], array_keys(Shelf::state($this->root, $this->root . '/code/42-z/shelf')));
+    }
+
     public function testASnapshotWithoutComposerJsonIsPartOfShelf(): void
     {
         $this->put('code/42-w/shelf/tests/BookTest.php', "<?php\n");

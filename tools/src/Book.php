@@ -38,6 +38,9 @@ final class Book
                 $typed = $command['custom'] ? '$ ' . $command['line'] . "\n" : '';
                 $block .= sprintf("\n%s:\n\n```txt\n%s%s\n```\n", self::word('output', $lang), $typed, rtrim((string) file_get_contents($out)));
             }
+            if (str_ends_with($path, '.http') && is_file(substr($file, 0, -5) . '.out')) {
+                $block .= sprintf("\n%s:\n\n```txt\n%s\n```\n", self::word('output', $lang), rtrim((string) file_get_contents(substr($file, 0, -5) . '.out')));
+            }
             $analysis = substr($file, 0, -4) . '.phpstan';
             if (str_ends_with($path, '.php') && is_file($analysis)) {
                 $block .= sprintf("\nPHPStan:\n\n```txt\n%s\n```\n", rtrim((string) file_get_contents($analysis)));

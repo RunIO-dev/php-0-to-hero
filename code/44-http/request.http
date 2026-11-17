@@ -1,0 +1,7 @@
+GET /request.php?name=Amira
+
+###
+POST /request.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Jonas

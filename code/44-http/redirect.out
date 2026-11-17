@@ -1,0 +1,5 @@
+> GET /redirect.php
+
+< HTTP/1.1 301 Moved Permanently
+< Location: /hello.php
+< Content-type: text/html; charset=UTF-8

@@ -1,0 +1,163 @@
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shelf</title>
+</head>
+<body>
+    <h1>Shelf</h1>
+    <ul>
+        <li>Kindred (Octavia E. Butler, 1979) · all copies on loan</li>
+        <li>Kitchen (Banana Yoshimoto, 1988)</li>
+        <li>Parable of the Sower (Octavia E. Butler, 1993)</li>
+        <li>Things Fall Apart (Chinua Achebe, 1958)</li>
+    </ul>
+    <p>4 books · <a href="/add.php">Add a book</a></p>
+</body>
+</html>
+
+> GET /add.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Add a book · Shelf</title>
+</head>
+<body>
+    <h1>Add a book</h1>
+    <form method="post" action="/add.php">
+        <label>Title <input name="title" value="" required maxlength="200"></label>
+        <label>Author <input name="author" value="" required maxlength="200"></label>
+        <label>Year <input name="year" value="" required inputmode="numeric"></label>
+        <label>ISBN <input name="isbn" value=""></label>
+        <button>Add</button>
+    </form>
+    <p><a href="/">Back to the list</a></p>
+</body>
+</html>
+
+> POST /add.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=&author=&year=
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Add a book · Shelf</title>
+</head>
+<body>
+    <h1>Add a book</h1>
+    <p class="error">A book needs a title, an author and a year from 1 to 2100.</p>
+    <form method="post" action="/add.php">
+        <label>Title <input name="title" value="" required maxlength="200"></label>
+        <label>Author <input name="author" value="" required maxlength="200"></label>
+        <label>Year <input name="year" value="" required inputmode="numeric"></label>
+        <label>ISBN <input name="isbn" value=""></label>
+        <button>Add</button>
+    </form>
+    <p><a href="/">Back to the list</a></p>
+</body>
+</html>
+
+> POST /add.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=kindred&author=Octavia+E.+Butler&year=1979
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Add a book · Shelf</title>
+</head>
+<body>
+    <h1>Add a book</h1>
+    <p class="error">&quot;Kindred&quot; is already on the shelf</p>
+    <form method="post" action="/add.php">
+        <label>Title <input name="title" value="kindred" required maxlength="200"></label>
+        <label>Author <input name="author" value="Octavia E. Butler" required maxlength="200"></label>
+        <label>Year <input name="year" value="1979" required inputmode="numeric"></label>
+        <label>ISBN <input name="isbn" value=""></label>
+        <button>Add</button>
+    </form>
+    <p><a href="/">Back to the list</a></p>
+</body>
+</html>
+
+> POST /add.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Add a book · Shelf</title>
+</head>
+<body>
+    <h1>Add a book</h1>
+    <p class="error">A book needs a title, an author and a year from 1 to 2100.</p>
+    <form method="post" action="/add.php">
+        <label>Title <input name="title" value="&quot;&gt;&lt;script&gt;x()&lt;/script&gt;" required maxlength="200"></label>
+        <label>Author <input name="author" value="Someone" required maxlength="200"></label>
+        <label>Year <input name="year" value="10000" required inputmode="numeric"></label>
+        <label>ISBN <input name="isbn" value=""></label>
+        <button>Add</button>
+    </form>
+    <p><a href="/">Back to the list</a></p>
+</body>
+</html>
+
+> POST /add.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&author=Toni+Morrison&year=1973
+
+< HTTP/1.1 303 See Other
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Shelf</title>
+</head>
+<body>
+    <h1>Shelf</h1>
+    <ul>
+        <li>Kindred (Octavia E. Butler, 1979) · all copies on loan</li>
+        <li>Kitchen (Banana Yoshimoto, 1988)</li>
+        <li>Parable of the Sower (Octavia E. Butler, 1993)</li>
+        <li>Sula (Toni Morrison, 1973)</li>
+        <li>Things Fall Apart (Chinua Achebe, 1958)</li>
+    </ul>
+    <p>5 books · <a href="/add.php">Add a book</a></p>
+</body>
+</html>

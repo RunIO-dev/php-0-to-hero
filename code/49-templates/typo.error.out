@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught Error: Unknown named parameter $titel in typo.error.php:12
+Stack trace:
+#0 typo.error.php(17): render('/app/code/49-te...', Array)
+#1 {main}
+  thrown in typo.error.php on line 12

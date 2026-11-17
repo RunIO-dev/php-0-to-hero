@@ -15,6 +15,12 @@ function sameTitle(string $a, string $b): bool
     return mb_strtolower(trim($a)) === mb_strtolower(trim($b));
 }
 
+/** Text made safe to put into HTML: between tags, or in an attribute in double or single quotes. */
+function e(string $text): string
+{
+    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
 /** Text as typed, trimmed, and with every run of spaces made one space. */
 function tidy(string $text): string
 {

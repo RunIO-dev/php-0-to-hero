@@ -1,0 +1,7 @@
+
+Fatal error: Uncaught TypeError: {closure:templates/book.php:8}(): Argument #3 ($year) must be of type int, string given, called in wrong-type.error.php on line 12 and defined in templates/book.php:8
+Stack trace:
+#0 wrong-type.error.php(12): {closure:templates/book.php:8}('Kindred', 'Octavia E. Butl...', 'long ago')
+#1 wrong-type.error.php(17): render('/app/code/49-te...', Array)
+#2 {main}
+  thrown in templates/book.php on line 8

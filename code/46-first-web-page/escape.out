@@ -1,0 +1,5 @@
+Tom & Jerry        => Tom &amp; Jerry
+<b>bold</b>        => &lt;b&gt;bold&lt;/b&gt;
+Say "hello"        => Say &quot;hello&quot;
+Butler's Kindred   => Butler&#039;s Kindred
+Kindred            => Kindred
