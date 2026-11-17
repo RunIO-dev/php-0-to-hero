@@ -1,0 +1,13 @@
+$ vendor/bin/phpstan analyse --level 8 code/40-static-analysis/null.php
+ ------ ------------------------------------------------------------- 
+  Line   null.php                                                     
+ ------ ------------------------------------------------------------- 
+  19     Parameter #1 $string of function strtoupper expects string,  
+         string|null given.                                           
+         🪪  argument.type                                            
+ ------ ------------------------------------------------------------- 
+
+
+ [ERROR] Found 1 error                                                          
+
+Note: Using configuration file phpstan.neon.dist.

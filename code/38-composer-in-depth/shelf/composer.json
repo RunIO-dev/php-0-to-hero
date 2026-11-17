@@ -1,0 +1,18 @@
+{
+    "name": "learner/shelf",
+    "description": "Shelf: a small lending library, built in the course PHP from Zero to Hero.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shelf\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    }
+}

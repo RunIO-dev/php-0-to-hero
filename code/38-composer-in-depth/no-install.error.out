@@ -1,0 +1,7 @@
+
+Warning: require(): Failed to open stream: No such file or directory in no-install.error.php on line 8
+
+Fatal error: Uncaught Error: Failed opening required 'vendor/autoload.php' (include_path='.:') in no-install.error.php:8
+Stack trace:
+#0 {main}
+  thrown in no-install.error.php on line 8

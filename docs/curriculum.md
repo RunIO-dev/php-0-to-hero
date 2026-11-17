@@ -64,12 +64,12 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 37. SOLID in plain words, one example per letter, and only where it simplifies.
 
 ## Part 6: Professional tools (6)
-38. Composer in depth: packages, versions, the lock file, and security advisories (`composer audit`).
-39. Code style: PER Coding Style with PHP-CS-Fixer (and PSR-12 as the older form).
-40. Static analysis with PHPStan. ◆ the project at a strict level.
-41. First tests with PHPUnit. ◆ tests for `Loan` and the due date.
-42. Testing well: the arrange-act-assert pattern, testing exceptions, data providers, and what not to test.
-43. Git basics for one developer: commits, `.gitignore`, and never committing secrets.
+38. Composer in depth: packages, versions, the lock file, and security advisories (`composer audit`). ◆ `composer.json` declares `ext-mbstring` and a licence. *(Shelf has no packages; the tools come from the course folder)*
+39. Code style: PER Coding Style with PHP-CS-Fixer (and PSR-12 as the older form). *(Shelf already follows it: checked since chapter 6)*
+40. Static analysis with PHPStan. ◆ the project at the highest level, 10, with its own `phpstan.neon.dist`.
+41. First tests with PHPUnit. ◆ tests for `Loan` and the due date (`Loan::start`), `phpunit.xml.dist`.
+42. Testing well: the arrange-act-assert pattern, testing exceptions, data providers, fakes, and what not to test. ◆ `Library` tested with an in-memory repository; `Isbn` with data providers.
+43. Git basics for one developer: commits, `.gitignore`, and never committing secrets. ◆ *Shelf* becomes a repository, with a `.gitignore`.
 
 ## Part 7: The web (9)
 44. HTTP in plain words: request, response, status codes, headers.

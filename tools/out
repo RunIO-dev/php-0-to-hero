@@ -6,7 +6,10 @@ declare(strict_types=1);
 // Writes the .out file next to each example: exactly what the check expects.
 //   php tools/out code/06-variables/*.php
 // Read every .out before you commit it: it becomes the expected output.
+// An example with a .phpstan file (chapter 40) gets it written again too: write its first
+// line, the command, by hand: $ vendor/bin/phpstan analyse --level 6 code/NN-slug/x.php
 
+use Tools\Analysis;
 use Tools\Examples;
 use Tools\Projects;
 
@@ -24,4 +27,8 @@ foreach (array_slice($_SERVER['argv'], 1) as $path) {
     }
     file_put_contents(substr($file, 0, -4) . '.out', Examples::output($root, $file));
     echo substr($file, 0, -4) . ".out\n";
+    if (Analysis::has($file)) {
+        Analysis::write($root, $file);
+        echo substr($file, 0, -4) . ".phpstan\n";
+    }
 }

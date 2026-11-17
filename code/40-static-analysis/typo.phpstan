@@ -1,0 +1,14 @@
+$ vendor/bin/phpstan analyse --level 2 code/40-static-analysis/typo.php
+ ------ ----------------------------------------------------------------------- 
+  Line   typo.php                                                               
+ ------ ----------------------------------------------------------------------- 
+  15     Access to an undefined property Book::$autor.                          
+         🪪  property.notFound                                                  
+         💡  Learn more: https://phpstan.org/blog/solving-phpstan-access-to-und  
+         efined-property                                                        
+ ------ ----------------------------------------------------------------------- 
+
+
+ [ERROR] Found 1 error                                                          
+
+Note: Using configuration file phpstan.neon.dist.

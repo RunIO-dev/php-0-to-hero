@@ -62,7 +62,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 
 - **PHP 8.6 target, and must also run on 8.5.** A feature only in 8.6 is marked in the text (`// PHP 8.6+`), and CI skips that file on 8.5 by that marker.
 - **`declare(strict_types=1);`** in every file from chapter 16 on. Before that, it's left out on purpose and explained in chapter 16 `tools/verify` checks it, also in `shelf/`.
-- **PER Coding Style**, the latest release, through PHP-CS-Fixer. PHPStan levels: 5 before chapter 16 (no types yet), 6 from chapter 16, and 8 for `solutions/` from chapter 40, for `shelf/` and for our own `tools/`. Short examples stay at 6.
+- **PER Coding Style**, the latest release, through PHP-CS-Fixer. PHPStan levels: 5 before chapter 16 (no types yet), 6 from chapter 16, and 8 for `solutions/` from chapter 40, for `shelf/` and for our own `tools/`. From chapter 40, *Shelf* has its own `phpstan.neon.dist` at level 10, and the checks use it. Short examples stay at 6.
 - **Names:**
   - English identifiers that say what a thing is (`$dueDate`, not `$d`);
   - classes are nouns, methods are verbs;
@@ -88,7 +88,9 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - **`.out` files** are written with `composer run-script out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 - **Arguments and input:** an example that needs them has a `.run` file next to it with the command as a learner types it: `php greet.php Amira "Things Fall Apart" < names.txt`. Only `php <file>`, arguments, and `< file` from the same folder are allowed; no shell runs it. The book shows the command above the output.
 - **Files of functions** that other examples load with `require_once __DIR__ . '/name.php'` need no `.out`: they are checked through the files that load them.
-- **Composer projects** (*Shelf* from chapter 36): a folder below `code/` or `shelf/` with its own `composer.json`. Only the scripts next to `composer.json` have a `.out`; the classes below it, in `src/`, are loaded by the autoloader and checked through the scripts. The checks run `composer dump-autoload` there first; `vendor/` is generated and ignored by git (`tools/src/Projects.php`).
+- **Tests as examples** (chapter 41 on): a `code/**/*Test.php` file runs with PHPUnit from the course folder (`vendor/bin/phpunit --testdox <file>`), and its `.out` holds what PHPUnit prints, without the version, runtime, time and memory lines. The file it tests is loaded with `require_once __DIR__ . '/name.php'`, so it needs no `.out`.
+- **PHPStan output as examples** (chapter 40): an example `x.php` may have an `x.phpstan` file. Its first line is the command (`$ vendor/bin/phpstan analyse --level 8 code/40-static-analysis/x.php`), the rest is what PHPStan prints. `tools/verify` runs the command and compares, and the book shows it below the output; `php tools/out` writes it again. Such an example has problems on purpose, so the normal PHPStan runs leave it out (`tools/src/Analysis.php`).
+- **Composer projects** (*Shelf* from chapter 36): a folder below `code/` or `shelf/` with its own `composer.json`. Only the scripts next to `composer.json` have a `.out`; the classes below it, in `src/` and `tests/`, are loaded by the autoloader and checked through the scripts. The checks run `composer dump-autoload --dev` there first; `vendor/` is generated and ignored by git (`tools/src/Projects.php`). A *Shelf* snapshot holds only what its chapter changes, so PHPStan and the tests run on *Shelf* as it is after that chapter, put together from every snapshot up to it (`Shelf::state`).
 
 ## 5. Exercises
 
@@ -96,13 +98,14 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - `exercises/NN-slug/<level>/` holds a starter file and a PHPUnit test.
 - **The test must fail on the starter, and pass on `solutions/NN-slug/<level>/`.** CI checks both, so every exercise is real and every solution works.
 - The learner runs one command: `composer exercise 06 beginner`.
+- **Exercises where the learner writes the tests** (chapter 41 on): the starter test file is the learner's, and a `bugs/` folder holds versions of the code with one mistake each, described in a `// Bug:` line or their first PHPDoc. A checking test calls `missed_bugs(__DIR__, 'XTest.php', 'x.php')`: the learner's tests must pass on the right code and fail on every bug. PHPStan exercises use `analysis_of($file, $level)`.
 - A test finds the file it checks with `subject(__DIR__, 'file.php')`. For scripts, `output_of($file)` runs it and returns what it prints, and `variables_in()` and `strings_in()` let a test check how it was written. `tools/verify` runs the same test once against the starter and once against the solution.
 
 ## 6. Checks: `tools/verify`, which CI runs on every push
 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
-3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass.
+3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Each script with a `.out` file is checked like an example. From chapter 41, its tests pass, in `shelf/` and in the state after every chapter that has them.
 4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`). A folder whose files `require` each other, and a Composer project, stay in one batch.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;

@@ -1,0 +1,9 @@
+....                                                                4 / 4 (100%)
+
+Fee Table
+ ✔ The fee with data set "three days late"
+ ✔ The fee with data set "a month late"
+ ✔ The fee with data set "on time"
+ ✔ The fee with data set "early"
+
+OK (4 tests, 4 assertions)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Tools\Analysis;
 use Tools\Chapters;
 use Tools\Examples;
 use Tools\Exercises;
@@ -151,6 +152,48 @@ final class ChecksTest extends TestCase
         self::assertCount(2, $problems);
         self::assertStringContainsString("want: Hello\n    got:  Hi", $problems[0]);
         self::assertSame('code/05-first/other.php: no .out file next to it', $problems[1]);
+    }
+
+    public function testATestFileRunsWithPhpunitWithoutTheLinesThatChange(): void
+    {
+        $this->put('code/41-tests/fee.php', "<?php\nfunction fee(int \$days): int\n{\n    return \$days * 20;\n}\n");
+        $this->put('code/41-tests/FeeTest.php', <<<'PHP'
+            <?php
+            use PHPUnit\Framework\TestCase;
+            require_once __DIR__ . '/fee.php';
+            final class FeeTest extends TestCase
+            {
+                public function testTwentyCentsADay(): void
+                {
+                    self::assertSame(100, fee(5));
+                }
+            }
+            PHP);
+        $out = Examples::output($this->root, $this->root . '/code/41-tests/FeeTest.php');
+
+        self::assertSame("Fee\n ✔ Twenty cents a day\n\nOK (1 test, 1 assertion)\n", (string) preg_replace('/^\..*\n\n/', '', $out));
+        self::assertStringNotContainsString($this->root, $out);
+        self::assertSame('vendor/bin/phpunit --testdox code/41-tests/FeeTest.php', Examples::command($this->root . '/code/41-tests/FeeTest.php')['line']);
+        $this->put('code/41-tests/FeeTest.out', $out);
+        self::assertSame([], Examples::check($this->root), 'fee.php is loaded by the test, so it needs no .out');
+    }
+
+    public function testPhpstanOutputOfAnExampleIsChecked(): void
+    {
+        $this->put('code/40-analysis/upper.php', "<?php\necho strtoupper(rand(0, 1) === 1 ? 'kindred' : null), \"\\n\";\n");
+        $command = '$ vendor/bin/phpstan analyse --level 8 code/40-analysis/upper.php';
+        $this->put('code/40-analysis/upper.phpstan', "$command\nold message\n");
+        self::assertTrue(Analysis::has($this->root . '/code/40-analysis/upper.php'));
+        self::assertStringContainsString('PHPStan now prints something else', implode("\n", Analysis::check($this->root)));
+
+        Analysis::write($this->root, $this->root . '/code/40-analysis/upper.php');
+        $written = (string) file_get_contents($this->root . '/code/40-analysis/upper.phpstan');
+        self::assertStringStartsWith("$command\n", $written);
+        self::assertStringContainsString('strtoupper expects string,', $written);
+        self::assertSame([], Analysis::check($this->root));
+
+        $this->put('code/40-analysis/upper.phpstan', "\$ vendor/bin/phpstan analyse --level 8 code/40-analysis/other.php\n");
+        self::assertStringContainsString('the first line must be', implode("\n", Analysis::check($this->root)));
     }
 
     public function testBadExampleIsOnlySyntaxChecked(): void

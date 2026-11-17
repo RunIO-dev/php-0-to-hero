@@ -1,0 +1,16 @@
+{
+    "name": "psr/log",
+    "version": "3.0.2",
+    "source": {
+        "type": "git",
+        "url": "https://github.com/php-fig/log.git",
+        "reference": "f16e1d5863e37f8d8c2a01719f5b34baa2b714d3"
+    },
+    "require": {
+        "php": ">=8.0.0"
+    },
+    "type": "library",
+    "license": [
+        "MIT"
+    ]
+}

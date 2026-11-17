@@ -8,6 +8,7 @@ declare(strict_types=1);
 //   docker compose run --rm php85 composer verify
 // Add --links to also check that every link in the book answers (CI does this weekly).
 
+use Tools\Analysis;
 use Tools\Batches;
 use Tools\Chapters;
 use Tools\Examples;
@@ -15,6 +16,7 @@ use Tools\Exercises;
 use Tools\Glossary;
 use Tools\Links;
 use Tools\Patterns;
+use Tools\Projects;
 use Tools\Run;
 use Tools\Shelf;
 
@@ -26,12 +28,15 @@ $bin = $root . '/vendor/bin/';
 /**
  * PHPStan runs per level (docs/standards.md §4): no types before chapter 16, strict from 40.
  * Examples are analysed in batches without repeated function names (Tools\Batches).
+ * Shelf with its own phpstan.neon.dist (chapter 40 on) is analysed with it, as a learner
+ * does (Tools\\Projects::analyse). Examples with a .phpstan file have problems on purpose: Tools\Analysis checks them.
  *
- * @return list<array{int, list<string>}> level and paths of each run
+ * @return list<list<string>> the arguments of each run, after "phpstan analyse"
  */
 function phpstanRuns(string $root): array
 {
-    $runs = [[8, ['tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book', 'tools/out', ...(is_dir("$root/shelf/src") ? ['shelf'] : [])]]];
+    $shelf = is_dir("$root/shelf/src") && !is_file("$root/shelf/phpstan.neon.dist") ? ['shelf'] : [];
+    $runs = [['-c', 'phpstan.neon.dist', '--level', '8', 'tools', 'tests', 'tools/verify', 'tools/exercise', 'tools/book', 'tools/out', ...$shelf]];
     $files = [];
     foreach (['code', 'solutions'] as $top) {
         foreach (glob("$root/$top/*", GLOB_ONLYDIR) ?: [] as $dir) {
@@ -42,7 +47,8 @@ function phpstanRuns(string $root): array
                 default => 8,
             };
             foreach (Run::files($dir, '.php') as $file) {
-                if (!str_ends_with($file, '.error.php') && !str_ends_with($file, '.bad.php')) {
+                if (!str_ends_with($file, '.error.php') && !str_ends_with($file, '.bad.php')
+                    && !Analysis::has($file) && !Projects::hasOwnAnalysis($file)) {
                     $files[$level][] = substr($file, strlen($root) + 1);
                 }
             }
@@ -51,7 +57,7 @@ function phpstanRuns(string $root): array
     ksort($files);
     foreach ($files as $level => $paths) {
         foreach (Batches::split(array_map(static fn(string $p): string => "$root/$p", $paths)) as $batch) {
-            $runs[] = [$level, array_map(static fn(string $f): string => substr($f, strlen($root) + 1), $batch)];
+            $runs[] = ['-c', 'phpstan.neon.dist', '--level', (string) $level, ...array_map(static fn(string $f): string => substr($f, strlen($root) + 1), $batch)];
         }
     }
 
@@ -73,6 +79,7 @@ $checks = [
     },
     'chapters follow the template' => static fn(): array => Chapters::check($root),
     'Shelf matches its newest chapter snapshot' => static fn(): array => Shelf::check($root),
+    'project tests (Shelf from chapter 41)' => static fn(): array => Projects::test($root),
     'Arabic edition uses the agreed terms' => static fn(): array => Glossary::check($root),
     'tool tests' => static function () use ($root, $bin): array {
         $run = Run::capture([PHP_BINARY, $bin . 'phpunit', '--colors=never', '--testsuite', 'tools'], $root);
@@ -81,15 +88,14 @@ $checks = [
     },
     'static analysis (PHPStan)' => static function () use ($root, $bin): array {
         $problems = [];
-        foreach (phpstanRuns($root) as [$level, $paths]) {
-            $run = Run::capture([PHP_BINARY, $bin . 'phpstan', 'analyse', '--no-progress', '--error-format=raw',
-                '-c', 'phpstan.neon.dist', '--level', (string) $level, ...$paths], $root);
+        foreach (phpstanRuns($root) as $args) {
+            $run = Run::capture([PHP_BINARY, $bin . 'phpstan', 'analyse', '--no-progress', '--error-format=raw', ...$args], $root);
             if ($run['code'] !== 0) {
-                $problems[] = "level $level:\n" . trim($run['out'] . $run['err']);
+                $problems[] = implode(' ', array_slice($args, 0, 4)) . ":\n" . trim($run['out'] . $run['err']);
             }
         }
 
-        return $problems;
+        return [...$problems, ...Projects::analyse($root), ...Analysis::check($root)];
     },
     'code style (PER)' => static function () use ($root, $bin): array {
         $run = Run::capture([PHP_BINARY, $bin . 'php-cs-fixer', 'check', '--diff', '--no-ansi'], $root);

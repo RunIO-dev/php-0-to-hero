@@ -1,0 +1,18 @@
+$ vendor/bin/phpstan analyse --level 10 code/40-static-analysis/mixed.php
+ ------ ------------------------------------------------------------- 
+  Line   mixed.php                                                    
+ ------ ------------------------------------------------------------- 
+  9      Cannot access offset 'title' on mixed.                       
+         🪪  offsetAccess.nonOffsetAccessible                         
+  9      Cannot access offset 'year' on mixed.                        
+         🪪  offsetAccess.nonOffsetAccessible                         
+  9      Parameter #1 (mixed) of echo cannot be converted to string.  
+         🪪  echo.nonString                                           
+  9      Parameter #3 (mixed) of echo cannot be converted to string.  
+         🪪  echo.nonString                                           
+ ------ ------------------------------------------------------------- 
+
+
+ [ERROR] Found 4 errors                                                         
+
+Note: Using configuration file phpstan.neon.dist.

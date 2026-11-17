@@ -18,8 +18,8 @@ final class Shelf
         $problems = [];
         foreach (Run::files($root . '/shelf', '') as $file) {
             $path = substr($file, strlen($root . '/shelf/'));
-            if ($path === 'README.md') {
-                continue;
+            if ($path === 'README.md' || str_starts_with($path, '.phpunit.cache/')) {
+                continue; // about Shelf, not part of it; or PHPUnit's cache (chapter 41)
             }
             $snapshots = glob("$root/code/[0-9][0-9]-*/shelf/$path") ?: [];
             if ($snapshots === []) {
@@ -42,5 +42,42 @@ final class Shelf
         }
 
         return $problems;
+    }
+
+    /**
+     * Shelf as it is after the chapter of a snapshot: every file of that snapshot and of the
+     * snapshots before it, each in its newest version up to that chapter. A snapshot holds only
+     * what its chapter changes, so this is what the chapter's tests and analysis run on.
+     *
+     * @return array<string, string> path inside shelf/ => the snapshot file it comes from
+     */
+    public static function state(string $root, string $snapshot): array
+    {
+        $chapter = basename(dirname($snapshot));
+        $dirs = glob("$root/code/[0-9][0-9]-*/shelf", GLOB_ONLYDIR) ?: [];
+        sort($dirs);
+        $files = [];
+        foreach ($dirs as $dir) {
+            if (strcmp(basename(dirname($dir)), $chapter) > 0) {
+                break;
+            }
+            foreach (Run::files($dir, '') as $file) {
+                $files[substr($file, strlen($dir) + 1)] = $file;
+            }
+        }
+        ksort($files);
+
+        return $files;
+    }
+
+    /** Writes the state of Shelf after a snapshot's chapter into $target. */
+    public static function assemble(string $root, string $snapshot, string $target): void
+    {
+        foreach (self::state($root, $snapshot) as $path => $file) {
+            if (!is_dir(dirname("$target/$path"))) {
+                mkdir(dirname("$target/$path"), 0o777, true);
+            }
+            copy($file, "$target/$path");
+        }
     }
 }

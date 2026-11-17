@@ -1,0 +1,13 @@
+.F                                                                  2 / 2 (100%)
+
+Loose
+ ✔ With assert equals
+ ✘ With assert same
+   │
+   │ Failed asserting that 60 is identical to '60'.
+   │
+   │ code/41-first-tests/LooseTest.php:18
+   │
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1.

@@ -9,7 +9,10 @@ $finder = (new PhpCsFixer\Finder())
     ->append(['tools/verify', 'tools/exercise', 'tools/book', 'tools/out'])
     ->exclude('vendor')
     ->notName('check.php') // old-style on purpose, so it runs on old PHP and can say: upgrade
-    ->notName('*.error.php'); // shows an error on purpose
+    ->notName('*.error.php') // shows an error on purpose
+    // chapter 39: messy on purpose, to show what the fixer changes, and the starter of its exercise
+    // (paths are relative to each folder above: code/ and exercises/)
+    ->notPath(['39-code-style/messy.php', '39-code-style/beginner/fines.php']);
 
 return (new PhpCsFixer\Config())
     ->setRules(['@PER-CS' => true])

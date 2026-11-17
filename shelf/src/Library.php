@@ -48,7 +48,7 @@ final readonly class Library
         $book->lend();
         $this->repository->save($books);
 
-        return new Loan($book, $member, $today->modify('+' . $member->role->loanDays() . ' days'));
+        return Loan::start($book, $member, $today);
     }
 
     /** @param list<string> $fields title, author, year and, optionally, the ISBN */

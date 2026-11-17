@@ -1,0 +1,16 @@
+$ vendor/bin/phpstan analyse --level 6 code/40-static-analysis/value-type.php
+ ------ ----------------------------------------------------------------------- 
+  Line   value-type.php                                                         
+ ------ ----------------------------------------------------------------------- 
+  7      Function longest() has parameter $titles with no value type specified  
+         in iterable type array.                                                
+         🪪  missingType.iterableValue                                          
+         💡  See:                                                               
+         https://phpstan.org/blog/solving-phpstan-no-value-type-specified-in-i  
+         terable-type                                                           
+ ------ ----------------------------------------------------------------------- 
+
+
+ [ERROR] Found 1 error                                                          
+
+Note: Using configuration file phpstan.neon.dist.

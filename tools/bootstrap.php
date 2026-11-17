@@ -104,3 +104,74 @@ function strings_in(string $file): array
 
     return $values;
 }
+
+/**
+ * What PHPStan says about a file at a level, run from the course folder (chapter 40 on).
+ *
+ * @return array{passed: bool, out: string}
+ */
+function analysis_of(string $file, int $level): array
+{
+    $root = dirname(__DIR__);
+    $run = Tools\Run::capture(
+        [PHP_BINARY, "$root/vendor/bin/phpstan", 'analyse', '--no-progress', '--no-ansi', '--error-format=raw', '--level', (string) $level, $file],
+        $root,
+    );
+
+    return ['passed' => $run['code'] === 0, 'out' => trim(str_replace($root . '/', '', $run['out'] . $run['err']))];
+}
+
+/**
+ * Runs a test file against another version of the code it tests (chapter 41 on): the
+ * test is copied into an empty folder, next to $code saved as $subject. Exercises in
+ * which you write the tests use it to check that your tests catch each bug in bugs/.
+ *
+ * @return array{passed: bool, out: string}
+ */
+function tests_against(string $testFile, string $subject, string $code): array
+{
+    $root = dirname(__DIR__);
+    $dir = sys_get_temp_dir() . '/tests-against-' . bin2hex(random_bytes(4));
+    mkdir($dir);
+    try {
+        copy($testFile, $dir . '/' . basename($testFile));
+        file_put_contents("$dir/$subject", $code);
+        $run = Tools\Run::capture([PHP_BINARY, "$root/vendor/bin/phpunit", '-c', "$root/phpunit.xml.dist",
+            '--colors=never', '--do-not-record-test-run-history', $dir . '/' . basename($testFile)], $root);
+
+        return ['passed' => $run['code'] === 0, 'out' => str_replace("$dir/", '', $run['out'] . $run['err'])];
+    } finally {
+        Tools\Run::remove($dir);
+    }
+}
+
+/** What a file in bugs/ gets wrong: its "// Bug:" line, or else its first PHPDoc comment. */
+function bug_of(string $code): string
+{
+    if (preg_match('~^// Bug: (.+)$~m', $code, $m) === 1 || preg_match('~/\*\*\s*(.+?)\s*\*/~s', $code, $m) === 1) {
+        return $m[1];
+    }
+
+    return 'a bug';
+}
+
+/**
+ * Checks that the tests you wrote pass on the right code and fail on every file in bugs/.
+ *
+ * @return list<string> what is missing, empty when your tests are good
+ */
+function missed_bugs(string $exerciseDir, string $testFile, string $subject): array
+{
+    $missed = [];
+    $right = tests_against(subject($exerciseDir, $testFile), $subject, (string) file_get_contents("$exerciseDir/$subject"));
+    if (!$right['passed']) {
+        $missed[] = "Your tests must pass on $subject, which is right:\n" . $right['out'];
+    }
+    foreach (glob("$exerciseDir/bugs/*.php") ?: [] as $bug) {
+        if (tests_against(subject($exerciseDir, $testFile), $subject, (string) file_get_contents($bug))['passed']) {
+            $missed[] = 'Your tests pass on bugs/' . basename($bug) . ': ' . bug_of((string) file_get_contents($bug));
+        }
+    }
+
+    return $missed;
+}

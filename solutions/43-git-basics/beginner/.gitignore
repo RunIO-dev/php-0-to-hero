@@ -1,0 +1,6 @@
+# What Git leaves out of this project. One pattern per line.
+/vendor/
+.env
+/var/
+*.log
+.phpunit.cache/

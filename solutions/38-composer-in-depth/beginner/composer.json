@@ -1,0 +1,15 @@
+{
+    "name": "learner/book-club",
+    "description": "The reading lists of a book club.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "BookClub\\": "src/"
+        }
+    }
+}

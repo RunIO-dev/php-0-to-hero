@@ -1,0 +1,29 @@
+{
+    "_readme": [
+        "A shortened lock file of an online shop, for exercise 38. The packages are made up."
+    ],
+    "packages": [
+        {
+            "name": "example/http-client",
+            "version": "7.4.4",
+            "type": "library"
+        },
+        {
+            "name": "example/log",
+            "version": "3.0.2",
+            "type": "library"
+        },
+        {
+            "name": "example/templates",
+            "version": "2.1.0",
+            "type": "library"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "example/test-tools",
+            "version": "1.9.0",
+            "type": "library"
+        }
+    ]
+}

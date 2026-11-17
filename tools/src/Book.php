@@ -38,6 +38,10 @@ final class Book
                 $typed = $command['custom'] ? '$ ' . $command['line'] . "\n" : '';
                 $block .= sprintf("\n%s:\n\n```txt\n%s%s\n```\n", self::word('output', $lang), $typed, rtrim((string) file_get_contents($out)));
             }
+            $analysis = substr($file, 0, -4) . '.phpstan';
+            if (str_ends_with($path, '.php') && is_file($analysis)) {
+                $block .= sprintf("\nPHPStan:\n\n```txt\n%s\n```\n", rtrim((string) file_get_contents($analysis)));
+            }
 
             return $block;
         }, $markdown);
@@ -71,11 +75,12 @@ final class Book
 
         $output = preg_quote(self::word('output', $lang), '~');
         $html = (string) preg_replace_callback(
-            '~<p>(?:(✗|⚠) [^<]*: )?<code>([^<]+)</code></p>\s*(<pre data-lang="[a-z]+".*?</pre>)(?:\s*<p>' . $output . ':</p>\s*(<pre data-lang="txt".*?</pre>))?~s',
+            '~<p>(?:(✗|⚠) [^<]*: )?<code>([^<]+)</code></p>\s*(<pre data-lang="[a-z]+".*?</pre>)(?:\s*<p>' . $output . ':</p>\s*(<pre data-lang="txt".*?</pre>))?(?:\s*<p>PHPStan:</p>\s*(<pre data-lang="txt".*?</pre>))?~s',
             static function (array $m) use ($lang): string {
                 $kind = ['✗' => 'bad', '⚠' => 'error'][$m[1]] ?? 'ok';
                 $badge = $kind === 'ok' ? '' : sprintf('<span class="badge">%s %s</span>', $m[1], self::word($kind === 'bad' ? 'wrong' : 'error', $lang));
                 $out = ($m[4] ?? '') === '' ? '' : sprintf('<div class="out"><div class="out-h">%s</div>%s</div>', self::word('output', $lang), $m[4]);
+                $out .= ($m[5] ?? '') === '' ? '' : sprintf('<div class="out"><div class="out-h">PHPStan</div>%s</div>', $m[5]);
 
                 return sprintf('<figure class="listing %s"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">%s</span>%s</figcaption>%s%s</figure>', $kind, $m[2], $badge, $m[3], $out);
             },

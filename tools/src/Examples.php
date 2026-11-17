@@ -12,6 +12,8 @@ namespace Tools;
  * An optional .run file holds the command a learner types, with arguments and input:
  *   php greet.php Amira "Things Fall Apart" < titles.txt
  * In a Composer project (Tools\Projects), the autoloaded classes are checked through its scripts.
+ * A *Test.php file (chapter 41 on) is run with PHPUnit: its .out holds what PHPUnit prints,
+ * without the lines that change from run to run.
  */
 final class Examples
 {
@@ -60,6 +62,9 @@ final class Examples
      */
     public static function output(string $root, string $file, ?array $args = null, ?string $stdin = null): string
     {
+        if (self::isTest($file)) {
+            return self::testOutput($root, $file);
+        }
         if ($args === null) {
             ['args' => $args, 'stdin' => $stdin] = self::command($file);
         }
@@ -81,6 +86,9 @@ final class Examples
     public static function command(string $file): array
     {
         $name = basename($file);
+        if (self::isTest($file)) {
+            return ['line' => 'vendor/bin/phpunit --testdox ' . self::fromCourse($file), 'args' => [], 'stdin' => null, 'custom' => true];
+        }
         $runFile = substr($file, 0, -4) . '.run';
         if (!is_file($runFile)) {
             return ['line' => "php $name", 'args' => [], 'stdin' => null, 'custom' => false];
@@ -130,6 +138,33 @@ final class Examples
         preg_match_all('~"([^"]*)"|\'([^\']*)\'|(\S+)~', $line, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         return array_map(static fn(array $m): string => $m[1] ?? $m[2] ?? $m[3] ?? '', $matches);
+    }
+
+    public static function isTest(string $file): bool
+    {
+        return str_ends_with($file, 'Test.php');
+    }
+
+    /**
+     * What PHPUnit prints for a test file, run from the course folder as a learner does,
+     * without the version, runtime, configuration, time and memory lines.
+     */
+    private static function testOutput(string $root, string $file): string
+    {
+        $run = Run::capture(
+            [PHP_BINARY, $root . '/vendor/bin/phpunit', '--colors=never', '--testdox', '--do-not-record-test-run-history', self::fromCourse($file)],
+            $root,
+        );
+        $out = str_replace($root . '/', '', $run['out'] . $run['err']);
+        $out = (string) preg_replace('/^(?:PHPUnit \d.*|Runtime:.*|Configuration:.*|Time: .*)\n/m', '', $out);
+
+        return (string) preg_replace("/\n{3,}/", "\n\n", ltrim($out, "\n"));
+    }
+
+    /** The path a learner types in the course folder: code/NN-slug/... */
+    private static function fromCourse(string $file): string
+    {
+        return preg_match('~/((?:code|shelf)/.+)$~', $file, $m) === 1 ? $m[1] : basename($file);
     }
 
     private static function diff(string $want, string $got): string
