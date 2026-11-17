@@ -1,4 +1,5 @@
-/vendor/
+# Composer's packages, and the generated autoloader of Shelf from chapter 36
+vendor/
 /site/
 /.phpunit.cache/
 /.php-cs-fixer.cache

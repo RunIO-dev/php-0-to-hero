@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Cannot instantiate interface Notifier in new.error.php:10
+Stack trace:
+#0 {main}
+  thrown in new.error.php on line 10

@@ -1,0 +1,11 @@
+Kindred by Octavia E. Butler (1979)
+object(Book)#1 (4) {
+  ["title"]=>
+  string(7) "Kindred"
+  ["author"]=>
+  string(17) "Octavia E. Butler"
+  ["year"]=>
+  int(1979)
+  ["copies"]=>
+  int(2)
+}

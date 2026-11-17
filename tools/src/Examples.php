@@ -11,6 +11,7 @@ namespace Tools;
  * A *.error.php file shows an error on purpose: its .out holds the error message.
  * An optional .run file holds the command a learner types, with arguments and input:
  *   php greet.php Amira "Things Fall Apart" < titles.txt
+ * In a Composer project (Tools\Projects), the autoloaded classes are checked through its scripts.
  */
 final class Examples
 {
@@ -19,12 +20,12 @@ final class Examples
     /** @return list<string> */
     public static function check(string $root): array
     {
-        $problems = [];
+        $problems = Projects::prepare($root);
         $shelf = array_filter(Run::files($root . '/shelf', '.php'), static fn(string $f): bool => is_file(substr($f, 0, -4) . '.out'));
         foreach ([...Run::files($root . '/code', '.php'), ...$shelf] as $file) {
             $name = substr($file, strlen($root) + 1);
-            if (in_array(basename($file), self::required(dirname($file)), true)) {
-                continue; // a file of functions for its neighbours: checked through them
+            if (in_array(basename($file), self::required(dirname($file)), true) || Projects::isAutoloaded($file)) {
+                continue; // loaded by its neighbours, or by the autoloader: checked through them
             }
             if (str_ends_with($file, '.bad.php')) {
                 $lint = Run::capture([PHP_BINARY, '-l', $file]);

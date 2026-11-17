@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Cannot instantiate abstract class Notice in new-abstract.error.php:10
+Stack trace:
+#0 {main}
+  thrown in new-abstract.error.php on line 10

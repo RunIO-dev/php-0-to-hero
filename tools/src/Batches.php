@@ -12,7 +12,7 @@ namespace Tools;
 final class Batches
 {
     /**
-     * Files that load each other with require stay in one batch: all files of their folder.
+     * Files that load each other stay in one batch: all files of their folder, or of their Composer project.
      *
      * @param list<string> $files
      * @return list<list<string>>
@@ -41,7 +41,7 @@ final class Batches
     }
 
     /**
-     * The files, one per unit, except that a folder with a require in it is one unit.
+     * The files, one per unit, except that a folder with a require in it, and a Composer project, are one unit each.
      *
      * @param list<string> $files
      * @return list<list<string>>
@@ -51,7 +51,7 @@ final class Batches
         $units = [];
         foreach ($files as $file) {
             $dir = dirname($file);
-            $key = Examples::required($dir) === [] ? $file : $dir;
+            $key = Projects::of($file) ?? (Examples::required($dir) === [] ? $file : $dir);
             $units[$key][] = $file;
         }
 

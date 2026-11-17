@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Typed property Item::$title must not be accessed before initialization in parent.error.php:21
+Stack trace:
+#0 {main}
+  thrown in parent.error.php on line 21

@@ -1,0 +1,4 @@
+
+Fatal error: Class Ebook cannot extend final class Book in final.error.php on line 10
+Stack trace:
+#0 {main}

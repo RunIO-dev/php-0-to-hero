@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught ArgumentCountError: Too few arguments to function Book::__construct(), 1 passed in too-few.error.php on line 14 and exactly 3 expected in too-few.error.php:9
+Stack trace:
+#0 too-few.error.php(14): Book->__construct('Kindred')
+#1 {main}
+  thrown in too-few.error.php on line 9

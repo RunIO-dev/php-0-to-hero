@@ -1,0 +1,4 @@
+
+Fatal error: Class Welcome contains 1 abstract method and must therefore be declared abstract or implement the remaining method (Notice::body) in missing.error.php on line 10
+Stack trace:
+#0 {main}

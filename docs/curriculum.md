@@ -55,11 +55,11 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 28. Properties, methods, constructors, and constructor property promotion. ◆ `Book`, `Member`, `Loan`.
 29. Visibility and encapsulation: why `private` is the default.
 30. `readonly` properties and value objects. ◆ `Isbn` as a value object (validated once).
-31. Enums. ◆ `LoanStatus` and `Role`.
+31. Enums. ◆ `Role` sets the loan period. *(`LoanStatus` as an example only, until loans are stored in Part 8)*
 32. Static members and constants, and when not to use static.
 33. Interfaces. ◆ `BookRepository` interface (file now, database later).
-34. Inheritance vs composition. *(prefer composition, KISS)*
-35. Abstract classes and traits: what they are for, and their limits.
+34. Inheritance vs composition. *(prefer composition, KISS)* ◆ a `Library` that has a repository and members.
+35. Abstract classes and traits: what they are for, and their limits. *(Shelf needs neither, and the chapter says why)*
 36. Namespaces and autoloading with Composer (PSR-4). The first `composer.json`. ◆ the project becomes `src/`.
 37. SOLID in plain words, one example per letter, and only where it simplifies.
 

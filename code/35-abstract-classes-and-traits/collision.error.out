@@ -1,0 +1,4 @@
+
+Fatal error: Trait method FormatsDates::format has not been applied as Receipt::format, because of collision with FormatsMoney::format in collision.error.php on line 21
+Stack trace:
+#0 {main}

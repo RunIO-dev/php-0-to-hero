@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Cannot modify readonly property Money::$cents in readonly.error.php:11
+Stack trace:
+#0 {main}
+  thrown in readonly.error.php on line 11

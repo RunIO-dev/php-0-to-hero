@@ -1,0 +1,7 @@
+
+Deprecated: Creation of dynamic property Book::$titel is deprecated in typo.error.php on line 12
+
+Fatal error: Uncaught Error: Typed property Book::$title must not be accessed before initialization in typo.error.php:14
+Stack trace:
+#0 {main}
+  thrown in typo.error.php on line 14

@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught UnhandledMatchError: Unhandled match case Role::Guest in missing-case.error.php:16
+Stack trace:
+#0 missing-case.error.php(20): loanDays(Role::Guest)
+#1 {main}
+  thrown in missing-case.error.php on line 16

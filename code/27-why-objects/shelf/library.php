@@ -10,31 +10,41 @@ final class NoCopyLeft extends RuntimeException {}
 
 const LOAN_DAYS = 14;
 
+/** One book on the shelf. The class replaces the array shape that every PHPDoc comment repeated. */
+final class Book
+{
+    public string $title;
+    public string $author;
+    public int $year;
+    public int $copies;
+    public ?string $isbn = null;
+
+    public function isAvailable(): bool
+    {
+        return $this->copies > 0;
+    }
+
+    public function line(): string
+    {
+        $status = $this->isAvailable() ? 'available' : 'all copies on loan';
+
+        return "- $this->title ($this->author, $this->year): $status";
+    }
+}
+
 /** Two titles are the same in any case, and with spaces around them. */
 function sameTitle(string $a, string $b): bool
 {
     return mb_strtolower(trim($a)) === mb_strtolower(trim($b));
 }
 
-/** @param array{title: string, author: string, year: int, copies: int, isbn: ?string} $book */
-function statusOf(array $book): string
-{
-    return $book['copies'] > 0 ? 'available' : 'all copies on loan';
-}
-
-/** @param array{title: string, author: string, year: int, copies: int, isbn: ?string} $book */
-function bookLine(array $book): string
-{
-    return "- {$book['title']} ({$book['author']}, {$book['year']}): " . statusOf($book);
-}
-
 /**
- * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
- * @return list<array{title: string, author: string, year: int, copies: int, isbn: ?string}>
+ * @param list<Book> $books
+ * @return list<Book>
  */
 function sortedByTitle(array $books): array
 {
-    usort($books, fn(array $a, array $b): int => strcasecmp($a['title'], $b['title']));
+    usort($books, fn(Book $a, Book $b): int => strcasecmp($a->title, $b->title));
 
     return $books;
 }
@@ -42,7 +52,7 @@ function sortedByTitle(array $books): array
 /**
  * Every title that contains the search text, in any case, optionally only by one author.
  *
- * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
+ * @param list<Book> $books
  * @return list<string>
  */
 function searchTitles(array $books, string $search, ?string $author = null): array
@@ -51,19 +61,19 @@ function searchTitles(array $books, string $search, ?string $author = null): arr
         => str_contains(mb_strtolower($text), mb_strtolower($part));
     $found = array_filter(
         $books,
-        fn(array $book): bool => $contains($book['title'], $search)
-            && ($author === null || $contains($book['author'], $author)),
+        fn(Book $book): bool => $contains($book->title, $search)
+            && ($author === null || $contains($book->author, $author)),
     );
 
     return array_column($found, 'title');
 }
 
-/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
-function findBook(array $books, string $title): int
+/** @param list<Book> $books */
+function findBook(array $books, string $title): Book
 {
-    foreach ($books as $position => $book) {
-        if (sameTitle($book['title'], $title)) {
-            return $position;
+    foreach ($books as $book) {
+        if (sameTitle($book->title, $title)) {
+            return $book;
         }
     }
 
@@ -76,20 +86,19 @@ function dueDate(DateTimeImmutable $lentOn): DateTimeImmutable
 }
 
 /**
- * The books after one copy of $title is lent.
+ * Lends one copy of $title, and returns that book. The book in the list changes too: it is the same object.
  *
- * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
- * @return list<array{title: string, author: string, year: int, copies: int, isbn: ?string}>
+ * @param list<Book> $books
  */
-function lend(array $books, string $title): array
+function lend(array $books, string $title): Book
 {
-    $position = findBook($books, $title);
-    if ($books[$position]['copies'] === 0) {
-        throw new NoCopyLeft("All copies of \"{$books[$position]['title']}\" are on loan");
+    $book = findBook($books, $title);
+    if (!$book->isAvailable()) {
+        throw new NoCopyLeft("All copies of \"$book->title\" are on loan");
     }
-    $books[$position]['copies']--;
+    $book->copies--;
 
-    return $books;
+    return $book;
 }
 
 /** An ISBN without hyphens and spaces. */
@@ -122,9 +131,9 @@ function tidy(string $text): string
 /**
  * The books with one new book: every field is checked first.
  *
- * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
+ * @param list<Book> $books
  * @param list<string> $fields title, author, year and, optionally, the ISBN
- * @return list<array{title: string, author: string, year: int, copies: int, isbn: ?string}>
+ * @return list<Book>
  */
 function addBook(array $books, array $fields): array
 {
@@ -138,10 +147,16 @@ function addBook(array $books, array $fields): array
     if ($isbn !== null && !isIsbn13($isbn)) {
         throw new InvalidArgumentException("\"{$fields[3]}\" is not a valid ISBN-13");
     }
-    if (array_filter($books, fn(array $book): bool => sameTitle($book['title'], $title)) !== []) {
+    if (array_filter($books, fn(Book $book): bool => sameTitle($book->title, $title)) !== []) {
         throw new InvalidArgumentException("\"$title\" is already on the shelf");
     }
-    $books[] = ['title' => $title, 'author' => $author, 'year' => $year, 'copies' => 1, 'isbn' => $isbn];
+    $book = new Book();
+    $book->title = $title;
+    $book->author = $author;
+    $book->year = $year;
+    $book->copies = 1;
+    $book->isbn = $isbn;
+    $books[] = $book;
 
     return $books;
 }

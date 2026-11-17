@@ -2,16 +2,23 @@
 
 declare(strict_types=1);
 
-// Shelf: a small lending library. Chapter 26: reviewed, and split into three files.
-// Run: php shelf/shelf.php [list | search <text> [<author>] | lend <title> | add <title> <author> <year> [<isbn>]]
+// Shelf: a small lending library. Chapter 36: classes in src/, loaded by Composer's autoloader.
+// Once, in the folder shelf/: composer dump-autoload
+// Run: php shelf/shelf.php [list | search <text> [<author>] | lend <title> <member> | add <title> <author> <year> [<isbn>]]
 
-require_once __DIR__ . '/books.php';
-require_once __DIR__ . '/library.php';
+use Shelf\Book;
+use Shelf\JsonBookRepository;
+use Shelf\Library;
+use Shelf\ShelfException;
+
+use function Shelf\loadMembers;
+
+require __DIR__ . '/vendor/autoload.php';
 
 const USAGE = <<<TXT
     Usage: php shelf/shelf.php list
            php shelf/shelf.php search <text> [<author>]
-           php shelf/shelf.php lend <title>
+           php shelf/shelf.php lend <title> <member>
            php shelf/shelf.php add <title> <author> <year> [<isbn>]
     TXT;
 
@@ -30,43 +37,20 @@ function required(array $args, int $position): string
     return $value;
 }
 
-/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
+/** @param list<Book> $books */
 function listText(array $books): string
 {
-    $lines = array_map(fn(array $book): string => bookLine($book) . "\n", sortedByTitle($books));
+    $lines = array_map(fn(Book $book): string => $book->line() . "\n", $books);
 
     return implode('', $lines) . count($books) . " books\n";
 }
 
-/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
-function searchLine(array $books, string $search, ?string $author = null): string
+function searchLine(Library $library, string $search, ?string $author = null): string
 {
-    $found = searchTitles($books, $search, $author);
+    $found = $library->search($search, $author);
     $by = $author === null ? '' : " by \"$author\"";
 
     return "Search \"$search\"$by: " . ($found === [] ? 'nothing found' : implode(', ', $found));
-}
-
-/** @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books */
-function lendAndSave(array $books, string $title, string $path, DateTimeImmutable $today): string
-{
-    $books = lend($books, $title);
-    saveBooks($path, $books);
-    $lent = $books[findBook($books, $title)]['title'];
-
-    return "Lent: $lent, due back on " . dueDate($today)->format('l, j F Y') . "\n";
-}
-
-/**
- * @param list<array{title: string, author: string, year: int, copies: int, isbn: ?string}> $books
- * @param list<string> $fields
- */
-function addAndSave(array $books, array $fields, string $path): string
-{
-    $books = addBook($books, $fields);
-    saveBooks($path, $books);
-
-    return 'Added: ' . $books[count($books) - 1]['title'] . "\n";
 }
 
 /**
@@ -74,23 +58,23 @@ function addAndSave(array $books, array $fields, string $path): string
  *
  * @param list<string> $args the words after the script's name
  */
-function run(array $args, string $path, DateTimeImmutable $today): string
+function run(array $args, Library $library, DateTimeImmutable $today): string
 {
     $command = $args[0] ?? 'list';
-    $books = loadBooks($path);
 
     return match ($command) {
-        'list' => listText($books),
-        'search' => searchLine($books, required($args, 1), $args[2] ?? null) . "\n",
-        'lend' => lendAndSave($books, required($args, 1), $path, $today),
-        'add' => addAndSave($books, array_slice($args, 1), $path),
+        'list' => listText($library->books()),
+        'search' => searchLine($library, required($args, 1), $args[2] ?? null) . "\n",
+        'lend' => $library->lend(required($args, 1), required($args, 2), $today)->line() . "\n",
+        'add' => 'Added: ' . $library->add(array_slice($args, 1))->title . "\n",
         default => throw new InvalidArgumentException("Unknown command \"$command\"\n" . USAGE),
     };
 }
 
 try {
-    echo run(array_slice($argv, 1), __DIR__ . '/books.json', new DateTimeImmutable('today'));
-} catch (InvalidArgumentException|BookNotFound|NoCopyLeft $e) {
+    $library = new Library(new JsonBookRepository(__DIR__ . '/books.json'), loadMembers(__DIR__ . '/members.json'));
+    echo run(array_slice($argv, 1), $library, new DateTimeImmutable('today'));
+} catch (InvalidArgumentException|ShelfException $e) {
     fwrite(STDERR, $e->getMessage() . "\n");
     exit(1);
 }

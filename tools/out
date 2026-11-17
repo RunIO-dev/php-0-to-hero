@@ -8,10 +8,14 @@ declare(strict_types=1);
 // Read every .out before you commit it: it becomes the expected output.
 
 use Tools\Examples;
+use Tools\Projects;
 
 require __DIR__ . '/bootstrap.php';
 
 $root = dirname(__DIR__);
+foreach (Projects::prepare($root) as $problem) {
+    fwrite(STDERR, "$problem\n");
+}
 foreach (array_slice($_SERVER['argv'], 1) as $path) {
     $file = realpath($path);
     if ($file === false || !str_ends_with($file, '.php') || str_ends_with($file, '.bad.php')) {

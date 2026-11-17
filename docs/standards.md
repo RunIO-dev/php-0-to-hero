@@ -88,6 +88,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - **`.out` files** are written with `composer run-script out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 - **Arguments and input:** an example that needs them has a `.run` file next to it with the command as a learner types it: `php greet.php Amira "Things Fall Apart" < names.txt`. Only `php <file>`, arguments, and `< file` from the same folder are allowed; no shell runs it. The book shows the command above the output.
 - **Files of functions** that other examples load with `require_once __DIR__ . '/name.php'` need no `.out`: they are checked through the files that load them.
+- **Composer projects** (*Shelf* from chapter 36): a folder below `code/` or `shelf/` with its own `composer.json`. Only the scripts next to `composer.json` have a `.out`; the classes below it, in `src/`, are loaded by the autoloader and checked through the scripts. The checks run `composer dump-autoload` there first; `vendor/` is generated and ignored by git (`tools/src/Projects.php`).
 
 ## 5. Exercises
 
@@ -102,7 +103,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
 3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, and no chapter includes `shelf/` directly. Until it has tests, each script with a `.out` file is checked like an example. From chapter 41, its tests pass.
-4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`).
+4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`). A folder whose files `require` each other, and a Composer project, stay in one batch.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;
    - `md5(` or `sha1(` near "password";

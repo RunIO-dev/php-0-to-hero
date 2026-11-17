@@ -1,0 +1,2 @@
+Things Fall Apart is 68 years old
+TypeError: age(): Argument #1 ($book) must be of type Book, array given, called in type.error.php on line 24

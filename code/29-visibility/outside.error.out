@@ -1,0 +1,5 @@
+
+Fatal error: Uncaught Error: Cannot modify private(set) property Book::$copies from global scope in outside.error.php:11
+Stack trace:
+#0 {main}
+  thrown in outside.error.php on line 11

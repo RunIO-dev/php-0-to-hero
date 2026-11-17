@@ -1,0 +1,16 @@
+{
+    "name": "learner/shelf",
+    "description": "Shelf: a small lending library, built in the course PHP from Zero to Hero.",
+    "type": "project",
+    "require": {
+        "php": ">=8.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shelf\\": "src/"
+        },
+        "files": [
+            "src/functions.php"
+        ]
+    }
+}
