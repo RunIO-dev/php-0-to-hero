@@ -45,6 +45,14 @@ final class PhpSession implements Session
         return $value;
     }
 
+    public function regenerate(): void
+    {
+        $this->start();
+        if (!session_regenerate_id(true)) { // true: the old ID's data is deleted, so it is worth nothing
+            throw new RuntimeException('The session could not get a new ID');
+        }
+    }
+
     private function start(): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE && !session_start(self::SETTINGS)) {

@@ -296,3 +296,24 @@ button:hover,
 .button:hover {
     filter: brightness(1.08);
 }
+
+/* chapter 62: who is logged in, and the login form */
+.who {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    color: var(--muted);
+}
+
+button.link {
+    padding: 0;
+    background: none;
+    color: var(--accent);
+    font-weight: 400;
+    text-decoration: underline;
+}
+
+.narrow {
+    max-width: 26rem;
+}

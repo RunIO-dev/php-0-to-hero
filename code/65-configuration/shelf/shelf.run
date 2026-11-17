@@ -1,0 +1,4 @@
+php shelf.php import
+php shelf.php password Amira < amira-password.txt
+php shelf.php password Amira < short-password.txt
+php shelf.php password Nobody < amira-password.txt

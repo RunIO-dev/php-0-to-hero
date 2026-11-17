@@ -44,6 +44,12 @@ final readonly class Request
         return trim($this->query[$name] ?? '');
     }
 
+    /** A form field exactly as it was sent, or '': for a password, where every space counts (chapter 62). */
+    public function secret(string $name): string
+    {
+        return $this->form[$name] ?? '';
+    }
+
     /** A form field, trimmed, or '' if it wasn't sent. */
     public function field(string $name): string
     {

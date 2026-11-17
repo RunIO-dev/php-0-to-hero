@@ -1,0 +1,54 @@
+# A visitor: may look, may not remove.
+GET /books.php
+
+###
+POST /remove.php
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred
+
+###
+# capture token /name="_token" value="([^"]+)"/
+GET /login.php
+
+###
+# Amira, a reader.
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+GET /books.php
+
+###
+# She sends the form without the button: the server still says no.
+POST /remove.php
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&_token={{token}}
+
+###
+GET /loans.php
+
+###
+POST /logout.php
+Content-Type: application/x-www-form-urlencoded
+
+_token={{token}}
+
+###
+# Jonas, staff.
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+###
+GET /books.php
+
+###
+POST /remove.php
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&_token={{token}}

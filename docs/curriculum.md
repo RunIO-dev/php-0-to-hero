@@ -93,12 +93,12 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 60. Testing code that uses a database: a new database per test, rollback on a server, contract tests. ◆ contract tests for the repositories; the PDO classes tested on SQLite in memory.
 
 ## Part 9: Users and security (6)
-61. Passwords: `password_hash` and `password_verify`, and never storing plain text. ◆ member accounts.
-62. Login, logout, and regenerating the session.
-63. Authorization: roles and checks. ◆ librarian vs member.
-64. The security part in one place: why everything we did so far matters (injection, XSS, CSRF, sessions, uploads), with the OWASP Top 10 in plain words.
-65. Configuration and secrets: environment variables, `.env`, and what never goes into git.
-66. Logging (PSR-3) and errors in production: show little, log much.
+61. Passwords: `password_hash` and `password_verify`, `password_needs_rehash`, bcrypt's 72 bytes, and never storing plain text. ◆ member accounts: `Accounts`, migration 004, `shelf.php password`.
+62. Login, logout, and regenerating the session; one answer for every failed login. ◆ `/login` and `/logout`, who is logged in, in the bar.
+63. Authorization: roles and checks on every request, deny by default, IDOR. ◆ librarian vs member: staff change books, members see their own loans.
+64. The security part in one place: the OWASP Top 10:2025 in plain words, mapped to the chapters; security headers; fail closed. ◆ the security headers on every page.
+65. Configuration and secrets: environment variables, `.env` and `.env.local`, and what never goes into git. ◆ `Config`, read and checked at the start.
+66. Logging (PSR-3) and errors in production: show little, log much; log injection. ◆ `psr/log`, the first package; `FileLogger`; an error page with a reference.
 
 ## Part 10: APIs (5)
 67. REST in plain words, and JSON responses. ◆ `GET /api/books`.

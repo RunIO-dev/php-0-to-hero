@@ -159,6 +159,12 @@ final class Projects
     {
         $composer = getenv('COMPOSER_BINARY');
         $command = is_string($composer) && $composer !== '' ? [PHP_BINARY, $composer] : ['composer'];
+        if (is_file("$dir/composer.lock")) {
+            // A project with packages (Shelf from chapter 66): install exactly the versions in the lock file.
+            $run = Run::capture([...$command, 'install', '--quiet', '--no-interaction', '--no-progress'], $dir);
+
+            return $run['code'] === 0 ? null : 'composer install failed: ' . trim($run['out'] . $run['err']);
+        }
         // --dev: also the autoload-dev rules (chapter 41), which Composer leaves out when no dev packages were installed
         $run = Run::capture([...$command, 'dump-autoload', '--dev', '--quiet', '--no-interaction'], $dir);
 

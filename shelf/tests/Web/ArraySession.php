@@ -9,6 +9,9 @@ use Shelf\Web\Session;
 /** A session for tests: an array, with no cookie and no server. */
 final class ArraySession implements Session
 {
+    /** How often the session got a new ID. */
+    public int $regenerated = 0;
+
     /** @param array<string, string> $values */
     public function __construct(public array $values = []) {}
 
@@ -28,5 +31,10 @@ final class ArraySession implements Session
         unset($this->values[$key]);
 
         return $value;
+    }
+
+    public function regenerate(): void
+    {
+        $this->regenerated++;
     }
 }

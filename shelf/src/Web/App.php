@@ -5,25 +5,37 @@ declare(strict_types=1);
 namespace Shelf\Web;
 
 use InvalidArgumentException;
+use LogicException;
+use Psr\Log\LoggerInterface;
+use Shelf\Accounts;
 use Shelf\BookNotFound;
 use Shelf\Library;
+use Shelf\Member;
 
 /**
  * Shelf on the web: one request in, one response out. public/index.php sends every request here;
  * the HTML is in templates/ (chapter 49), and what a visitor's pages remember is in the session (50).
  * Every POST must carry the session's CSRF token (51). Covers are uploaded with a new book (52).
  * Each book has its own page, where its copies can be changed and it can be removed (55), unless
- * it is on loan (56).
+ * it is on loan (56). Members log in with their password, and out again (62). Only staff may change
+ * books, and every member sees their own loans (63). Logins and refusals go into the log (66).
  */
 final readonly class App
 {
+    /** Paths for members only (chapter 63); the ones in STAFF_ONLY need a role that may change books. */
+    private const array MEMBERS_ONLY = ['/loans', '/add', '/copies', '/remove'];
+
+    private const array STAFF_ONLY = ['/add', '/copies', '/remove'];
+
     private Csrf $csrf;
 
     public function __construct(
         private Library $library,
+        private Accounts $accounts,
         private Templates $templates,
         private Session $session,
         private Covers $covers,
+        private LoggerInterface $logger,
     ) {
         $this->csrf = new Csrf($session);
     }
@@ -40,6 +52,12 @@ final readonly class App
             '/book' => ['GET' => fn(): Response => $this->book($request->query('title'))],
             '/copies' => ['POST' => fn(): Response => $this->copies($request)],
             '/remove' => ['POST' => fn(): Response => $this->remove($request)],
+            '/login' => [
+                'GET' => fn(): Response => $this->loginForm('', null),
+                'POST' => fn(): Response => $this->logIn($request),
+            ],
+            '/logout' => ['POST' => fn(): Response => $this->logOut()],
+            '/loans' => ['GET' => fn(): Response => $this->loans()],
         ];
         $route = $routes[$request->path] ?? null;
         if ($route === null) {
@@ -48,8 +66,12 @@ final readonly class App
         if (!isset($route[$request->method])) {
             return new Response(405, ['Allow' => implode(', ', array_keys($route))]);
         }
+        $refused = $this->refused($request->path);
+        if ($refused !== null) {
+            return $refused;
+        }
         if ($request->method === 'POST' && !$this->csrf->isValid($request->field(Csrf::FIELD))) {
-            return Response::html($this->templates->page('Expired · Shelf', 'expired', []), 403);
+            return Response::html($this->page('Expired · Shelf', 'expired', []), 403);
         }
 
         return $route[$request->method]();
@@ -66,7 +88,7 @@ final readonly class App
             }
         }
 
-        return Response::html($this->templates->page('Shelf', 'list', [$flash, $covered, ...$books]));
+        return Response::html($this->page('Shelf', 'list', [$flash, $covered, ...$books]));
     }
 
     private function add(Request $request): Response
@@ -106,13 +128,14 @@ final readonly class App
         } catch (BookNotFound) {
             return $this->missing();
         }
-        $html = $this->templates->page("$book->title · Shelf", 'book', [
+        $html = $this->page("$book->title · Shelf", 'book', [
             'book' => $book,
             'hasCover' => $this->covers->find($book->title) !== null,
             'flash' => $this->session->pull('flash'),
             'copies' => $copies ?? (string) $book->copies,
             'error' => $error,
             'token' => $this->csrf->token(),
+            'mayChange' => $this->member()?->role->mayChangeBooks() ?? false,
         ]);
 
         return Response::html($html, $error === null ? 200 : 422);
@@ -148,9 +171,96 @@ final readonly class App
         return Response::redirect('/');
     }
 
+    private function logIn(Request $request): Response
+    {
+        $member = $this->accounts->authenticate($request->field('name'), $request->secret('password'));
+        if ($member === null) {
+            $this->logger->warning('Failed login for {name}', ['name' => $request->field('name')]); // never the password
+
+            return $this->loginForm($request->field('name'), 'Wrong name or password.', 422);
+        }
+        $this->logger->info('{name} logged in', ['name' => $member->name]);
+        $this->session->regenerate(); // who the visitor is changes, so the session ID does too
+        $this->session->set('member', $member->name);
+        $this->session->set('flash', "Welcome, $member->name.");
+
+        return Response::redirect('/');
+    }
+
+    private function logOut(): Response
+    {
+        $this->session->pull('member');
+        $this->session->regenerate();
+        $this->session->set('flash', 'You are logged out.');
+
+        return Response::redirect('/');
+    }
+
+    private function loginForm(string $name, ?string $error, int $status = 200): Response
+    {
+        $html = $this->page('Log in · Shelf', 'login', ['name' => $name, 'error' => $error, 'token' => $this->csrf->token(), 'flash' => $this->session->pull('flash')]);
+
+        return Response::html($html, $status);
+    }
+
+    private function loans(): Response
+    {
+        $member = $this->member() ?? throw new LogicException('refused() lets only members in');
+
+        return Response::html($this->page('My loans · Shelf', 'loans', $this->library->loansOf($member->name)));
+    }
+
+    /**
+     * Whether this path is closed to the visitor: a visitor who isn't logged in is sent to the login,
+     * a member without the role gets 403. Checked for every request, before the route runs.
+     */
+    private function refused(string $path): ?Response
+    {
+        if (!in_array($path, self::MEMBERS_ONLY, true)) {
+            return null;
+        }
+        $member = $this->member();
+        if ($member === null) {
+            $this->session->set('flash', 'Log in first.');
+
+            return Response::redirect('/login');
+        }
+        if (in_array($path, self::STAFF_ONLY, true) && !$member->role->mayChangeBooks()) {
+            $this->logger->warning('{name} was refused {path}', ['name' => $member->name, 'path' => $path]);
+
+            return Response::html($this->page('Not allowed · Shelf', 'forbidden', []), 403);
+        }
+
+        return null;
+    }
+
+    /**
+     * The member who is logged in, read again on every request: a member who was removed, or lost
+     * a role, loses it at once.
+     */
+    private function member(): ?Member
+    {
+        $name = $this->session->get('member');
+
+        return $name === null ? null : $this->library->findMember($name);
+    }
+
+    /**
+     * A whole page, with the bar that shows who is logged in. The token for the logout form is
+     * made only for a member: a visitor who only reads still gets no session cookie.
+     *
+     * @param array<mixed> $data the template's arguments
+     */
+    private function page(string $title, string $name, array $data): string
+    {
+        $member = $this->member();
+
+        return $this->templates->page($title, $name, $data, ['member' => $member, 'token' => $member === null ? '' : $this->csrf->token()]);
+    }
+
     private function missing(): Response
     {
-        return Response::html($this->templates->page('Not found · Shelf', 'missing', []), 404);
+        return Response::html($this->page('Not found · Shelf', 'missing', []), 404);
     }
 
     private function cover(string $title): Response
@@ -168,7 +278,7 @@ final readonly class App
     /** @param array{title: string, author: string, year: string, isbn: string} $fields */
     private function form(array $fields, ?string $error, int $status = 200): Response
     {
-        $html = $this->templates->page('Add a book · Shelf', 'add', [...$fields, 'error' => $error, 'token' => $this->csrf->token()]);
+        $html = $this->page('Add a book · Shelf', 'add', [...$fields, 'error' => $error, 'token' => $this->csrf->token()]);
 
         return Response::html($html, $status);
     }

@@ -6,3 +6,5 @@
 /storage/
 # The database (chapter 54): data, made by Shelf the first time it runs.
 /var/
+# Settings for one computer only (chapter 65), which may hold a password.
+/.env.local

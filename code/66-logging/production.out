@@ -1,0 +1,2 @@
+2026-03-16T10:00:00+00:00 ERROR Uncaught PDOException, reference c0ffee42 {"exception":"PDOException: SQLSTATE[HY000]: General error: 1 no such table: books"}
+Something went wrong. It has been noted, reference c0ffee42.

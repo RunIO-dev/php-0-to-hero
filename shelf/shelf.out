@@ -1,14 +1,8 @@
-$ php shelf.php migrations
-001-books.sql
-002-members-and-loans.sql
-003-loan-indexes.sql
 $ php shelf.php import
 Imported 4 books and 4 members
-$ php shelf.php loans Amira
-Amira has no books on loan
-$ php shelf.php
-- Kindred (Octavia E. Butler, 1979): all copies on loan
-- Kitchen (Banana Yoshimoto, 1988): available
-- Parable of the Sower (Octavia E. Butler, 1993): available
-- Things Fall Apart (Chinua Achebe, 1958): available
-4 books
+$ php shelf.php password Amira < amira-password.txt
+Saved a new password for Amira
+$ php shelf.php password Amira < short-password.txt
+A password needs at least 15 characters. A few words together are long and easy to remember.
+$ php shelf.php password Nobody < amira-password.txt
+There is no member named "Nobody"

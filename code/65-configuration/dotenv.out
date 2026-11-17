@@ -1,0 +1,8 @@
+array(3) {
+  ["LIBRARY_NAME"]=>
+  string(13) "North Library"
+  ["LIBRARY_DATABASE"]=>
+  string(18) "var/library.sqlite"
+  ["LIBRARY_DEBUG"]=>
+  string(3) "yes"
+}

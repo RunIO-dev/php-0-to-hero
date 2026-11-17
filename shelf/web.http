@@ -1,18 +1,61 @@
 # Shelf's web pages, served as by: docker compose up web
-# The database is new, so the shelf is empty (chapter 54).
+# Chapter 63: the database gets the books and members of the JSON files, and passwords for Amira
+# and Jonas, as you would set it up (chapters 54 and 61).
 # docroot public
+# run php shelf.php import
+# run php shelf.php password Amira < amira-password.txt
+# run php shelf.php password Jonas < jonas-password.txt
+# A visitor sees the books, and no "Add a book".
 GET /
+
+###
+# A page that changes the library sends a visitor to the login.
+GET /add
 
 ###
 # The form's hidden field holds the token; the requests below send it back as {{token}}.
 # capture token /name="_token" value="([^"]+)"/
+GET /login
+
+###
+# A wrong password (chapter 62).
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle&_token={{token}}
+
+###
+# Amira is a reader.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+GET /
+
+###
+# She may borrow books, not change them.
 GET /add
 
 ###
-POST /add
+GET /loans
+
+###
+POST /logout
 Content-Type: application/x-www-form-urlencoded
 
-title=Kindred&author=Octavia+E.+Butler&year=1979&isbn=9780807083697&_token={{token}}
+_token={{token}}
+
+###
+# Jonas is staff.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+###
+GET /add
 
 ###
 # Nothing filled in: Library::add refuses, and the form comes back.
@@ -151,6 +194,10 @@ GET /cover?title=Sula
 ###
 # Removing needs a POST: a link can't remove a book.
 GET /remove?title=Kindred
+
+###
+# Logging out takes a POST with the token; a link can't do it.
+GET /logout
 
 ###
 # Addresses that don't exist, and a method the page doesn't take.

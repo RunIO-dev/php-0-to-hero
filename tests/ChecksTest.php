@@ -9,6 +9,7 @@ use Tools\Analysis;
 use Tools\Chapters;
 use Tools\Database;
 use Tools\Examples;
+use Tools\Web;
 use Tools\Exercises;
 use Tools\Glossary;
 use Tools\Shelf;
@@ -125,6 +126,28 @@ final class ChecksTest extends TestCase
         self::assertSame($first, $again);
         self::assertFileDoesNotExist($this->root . '/code/54-pdo/count.txt');
         self::assertSame(['php count.php 2', 'php count.php 3'], Examples::session($file));
+    }
+
+    public function testASessionLineCanReadAFile(): void
+    {
+        $this->put('code/54-pdo/echo.php', "<?php\necho strtoupper((string) fgets(STDIN));\n");
+        $this->put('code/54-pdo/word.txt', "kindred\n");
+        $this->put('code/54-pdo/echo.run', "php echo.php < word.txt\nphp echo.php\n");
+
+        self::assertSame("$ php echo.php < word.txt\nKINDRED\n$ php echo.php\n", Examples::output($this->root, $this->root . '/code/54-pdo/echo.php'));
+    }
+
+    public function testAWebCheckCanRunCommandsBeforeTheRequests(): void
+    {
+        $this->put('code/63-roles/setup.php', "<?php\nfile_put_contents('name.txt', trim((string) fgets(STDIN)));\necho \"Saved\\n\";\n");
+        $this->put('code/63-roles/name.in', "Amira\n");
+        $this->put('code/63-roles/page.php', "<?php\necho 'Hello, ', file_get_contents(__DIR__ . '/name.txt');\n");
+
+        $result = Web::exchange($this->root . '/code/63-roles', "# run php setup.php < name.in\nGET /page.php\n");
+
+        self::assertSame('Hello, Amira', $result['responses'][0]['body']);
+        self::assertStringStartsWith("$ php setup.php < name.in\nSaved\n\n> GET /page.php", $result['out']);
+        self::assertFileDoesNotExist($this->root . '/code/63-roles/name.txt');
     }
 
     public function testASessionRunsOnlyItsOwnFile(): void

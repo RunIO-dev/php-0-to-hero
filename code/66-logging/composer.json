@@ -1,0 +1,10 @@
+{
+    "name": "learner/logging",
+    "description": "Chapter 66's examples: logging with PSR-3.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "psr/log": "^3.0"
+    }
+}

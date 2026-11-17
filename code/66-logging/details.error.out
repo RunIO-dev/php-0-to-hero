@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught PDOException: SQLSTATE[HY000]: General error: 1 no such table: books in details.error.php:10
+Stack trace:
+#0 details.error.php(10): PDO->query('SELECT * FROM b...')
+#1 {main}
+  thrown in details.error.php on line 10

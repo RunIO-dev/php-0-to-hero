@@ -1,0 +1,106 @@
+> GET /books.php
+
+< HTTP/1.1 200 OK
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Content-Type: text/plain; charset=UTF-8
+
+Visitor: not logged in, role: none
+- Kindred
+- Sula
+
+> POST /remove.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred
+
+< HTTP/1.1 303 See Other
+< Location: /login.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /login.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/login.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <input name="name" value="">
+    <input type="password" name="password">
+    <button>Log in</button>
+</form>
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /books.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /books.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Visitor: Amira, role: reader
+- Kindred
+- Sula
+
+> POST /remove.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&_token={{token}}
+
+< HTTP/1.1 403 Forbidden
+< Content-type: text/html; charset=UTF-8
+
+Not allowed.
+
+> GET /loans.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Loans of Amira:
+- Kindred, due 2026-03-16
+
+> POST /logout.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /books.php
+< Content-type: text/html; charset=UTF-8
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /books.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /books.php
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Visitor: Jonas, role: staff
+- Kindred   [Remove]
+- Sula   [Remove]
+
+> POST /remove.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&_token={{token}}
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Removed Kindred

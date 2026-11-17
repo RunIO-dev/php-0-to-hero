@@ -10,7 +10,7 @@
 ## Before you start
 
 - Chapter 56: *Shelf*'s loans, which change two tables.
-- Chapter 18: exceptions, `try`, `catch` and `finally`.
+- Chapter 19: exceptions, `try`, `catch` and `finally`.
 
 ## The idea
 

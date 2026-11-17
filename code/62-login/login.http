@@ -1,0 +1,37 @@
+GET /home.php
+
+###
+# capture token /name="_token" value="([^"]+)"/
+GET /login.php
+
+###
+# The right name, the wrong password.
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle&_token={{token}}
+
+###
+# A name that doesn't exist: the same answer.
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Nobody&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+GET /home.php
+
+###
+POST /logout.php
+Content-Type: application/x-www-form-urlencoded
+
+_token={{token}}
+
+###
+GET /home.php

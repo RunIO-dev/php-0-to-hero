@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Shelf\Tests\Web;
 
 use PHPUnit\Framework\TestCase;
+use Shelf\Accounts;
 use Shelf\Book;
 use DateTimeImmutable;
 use Shelf\Library;
 use Shelf\Member;
 use Shelf\Role;
+use Shelf\Tests\ArrayLogger;
 use Shelf\Tests\InMemoryBookRepository;
 use Shelf\Tests\InMemoryLoanRepository;
 use Shelf\Tests\InMemoryMemberRepository;
@@ -26,14 +28,19 @@ final class AppTest extends TestCase
     private Library $library;
     private ArraySession $session;
     private string $covers;
+    private ArrayLogger $log;
 
     protected function setUp(): void
     {
         $books = new InMemoryBookRepository([new Book('Kindred', 'Octavia E. Butler', 1979)]);
-        $this->library = new Library($books, new InMemoryMemberRepository([new Member('Amira', Role::Reader)]), new InMemoryLoanRepository($books));
-        $this->session = new ArraySession(['csrf' => 'the-token']);
+        $members = new InMemoryMemberRepository([new Member('Amira', Role::Reader), new Member('Jonas', Role::Staff)]);
+        $this->library = new Library($books, $members, new InMemoryLoanRepository($books));
+        $accounts = new Accounts($members, ['cost' => 4]);
+        $accounts->setPassword('Amira', 'tea kettle under the lemon tree');
+        $this->session = new ArraySession(['csrf' => 'the-token', 'member' => 'Jonas']); // staff: may change books (chapter 63)
         $this->covers = sys_get_temp_dir() . '/shelf-covers-' . bin2hex(random_bytes(4));
-        $this->app = new App($this->library, new Templates(__DIR__ . '/../../templates'), $this->session, new Covers($this->covers));
+        $this->log = new ArrayLogger();
+        $this->app = new App($this->library, $accounts, new Templates(__DIR__ . '/../../templates'), $this->session, new Covers($this->covers), $this->log);
     }
 
     protected function tearDown(): void
@@ -209,5 +216,128 @@ final class AppTest extends TestCase
 
         self::assertSame(405, $response->status);
         self::assertSame(['Allow' => 'GET, POST'], $response->headers);
+    }
+
+    public function testTheRightPasswordLogsInWithANewSessionId(): void
+    {
+        $this->session->pull('member');
+        $response = $this->app->handle(new Request('POST', '/login', form: ['name' => 'amira', 'password' => 'tea kettle under the lemon tree', '_token' => 'the-token']));
+
+        self::assertSame([303, ['Location' => '/']], [$response->status, $response->headers]);
+        self::assertSame('Amira', $this->session->values['member'] ?? null);
+        self::assertSame(1, $this->session->regenerated);
+    }
+
+    public function testAWrongPasswordComesBackWithoutIt(): void
+    {
+        $this->session->pull('member');
+        $response = $this->app->handle(new Request('POST', '/login', form: ['name' => 'Amira', 'password' => 'tea kettle', '_token' => 'the-token']));
+
+        self::assertSame(422, $response->status);
+        self::assertStringContainsString('<p class="error" role="alert">Wrong name or password.</p>', $response->body);
+        self::assertStringContainsString('<input name="name" value="Amira"', $response->body);
+        self::assertStringNotContainsString('tea kettle', $response->body);
+        self::assertArrayNotHasKey('member', $this->session->values);
+        self::assertSame(0, $this->session->regenerated);
+        self::assertSame(['warning Failed login for Amira'], $this->log->lines, 'Logged, without the password');
+    }
+
+    public function testThePasswordIsNotTrimmed(): void
+    {
+        $response = $this->app->handle(new Request('POST', '/login', form: ['name' => 'Amira', 'password' => ' tea kettle under the lemon tree ', '_token' => 'the-token']));
+
+        self::assertSame(422, $response->status);
+    }
+
+    public function testTheBarShowsWhoIsLoggedIn(): void
+    {
+        $this->session->pull('member');
+        self::assertStringContainsString('<a href="/login">Log in</a>', $this->app->handle(new Request('GET', '/'))->body);
+
+        $this->session->set('member', 'Amira');
+        $page = $this->app->handle(new Request('GET', '/'))->body;
+
+        self::assertStringContainsString('<span>Amira</span> <button class="link">Log out</button>', $page);
+        self::assertStringNotContainsString('href="/login"', $page);
+    }
+
+    public function testLoggingOutForgetsTheMember(): void
+    {
+        $this->session->set('member', 'Amira');
+
+        $response = $this->app->handle(new Request('POST', '/logout', form: ['_token' => 'the-token']));
+
+        self::assertSame(303, $response->status);
+        self::assertArrayNotHasKey('member', $this->session->values);
+        self::assertSame(1, $this->session->regenerated);
+    }
+
+    public function testLoggingOutNeedsAPost(): void
+    {
+        self::assertSame(405, $this->app->handle(new Request('GET', '/logout'))->status);
+    }
+
+    public function testAVisitorIsSentToTheLogin(): void
+    {
+        $this->session->pull('member');
+
+        foreach ([new Request('GET', '/add'), new Request('GET', '/loans'), new Request('POST', '/remove', form: ['title' => 'Kindred', '_token' => 'the-token'])] as $request) {
+            $response = $this->app->handle($request);
+            self::assertSame([303, ['Location' => '/login']], [$response->status, $response->headers], $request->path);
+        }
+        self::assertCount(1, $this->library->books());
+        self::assertStringContainsString('<p class="flash" role="status">Log in first.</p>', $this->app->handle(new Request('GET', '/login'))->body);
+    }
+
+    public function testAReaderMayNotChangeBooks(): void
+    {
+        $this->session->set('member', 'Amira');
+
+        $add = $this->app->handle(new Request('POST', '/add', form: ['title' => 'Sula', 'author' => 'Toni Morrison', 'year' => '1973', '_token' => 'the-token']));
+        $remove = $this->app->handle(new Request('POST', '/remove', form: ['title' => 'Kindred', '_token' => 'the-token']));
+
+        self::assertSame([403, 403], [$add->status, $remove->status]);
+        self::assertSame(['warning Amira was refused /add', 'warning Amira was refused /remove'], $this->log->lines);
+        self::assertStringContainsString('Only the library\'s staff may change books.', $add->body);
+        self::assertCount(1, $this->library->books());
+    }
+
+    public function testOnlyStaffSeeTheFormsToChangeBooks(): void
+    {
+        $staff = $this->app->handle(new Request('GET', '/book', query: ['title' => 'Kindred']))->body;
+        $this->session->set('member', 'Amira');
+        $reader = $this->app->handle(new Request('GET', '/book', query: ['title' => 'Kindred']))->body;
+
+        self::assertStringContainsString('action="/remove"', $staff);
+        self::assertStringContainsString('<a class="button" href="/add">Add a book</a>', $staff);
+        self::assertStringNotContainsString('action="/remove"', $reader);
+        self::assertStringNotContainsString('href="/add"', $reader);
+    }
+
+    public function testAMemberSeesTheirOwnLoans(): void
+    {
+        $this->session->set('member', 'Amira');
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+
+        $page = $this->app->handle(new Request('GET', '/loans'))->body;
+
+        self::assertStringContainsString('<a href="/book?title=Kindred">Kindred</a>, due back on Monday, 16 March 2026', $page);
+    }
+
+    public function testARemovedMemberIsLoggedInNoMore(): void
+    {
+        $this->session->set('member', 'Kenji'); // not a member (any more)
+
+        self::assertSame(303, $this->app->handle(new Request('GET', '/loans'))->status);
+    }
+
+    public function testEveryPageCarriesTheSecurityHeaders(): void
+    {
+        foreach (['/', '/login', '/nowhere'] as $path) {
+            $headers = $this->app->handle(new Request('GET', $path))->headers;
+
+            self::assertStringContainsString("script-src 'none'", $headers['Content-Security-Policy'] ?? '', $path);
+            self::assertSame('nosniff', $headers['X-Content-Type-Options'] ?? null, $path);
+        }
     }
 }

@@ -20,10 +20,11 @@ final readonly class Templates
      * A whole page: the template $name inside the layout.
      *
      * @param array<mixed> $data the template's arguments
+     * @param array<string, mixed> $frame more arguments for the layout, such as who is logged in (chapter 62)
      */
-    public function page(string $title, string $name, array $data): string
+    public function page(string $title, string $name, array $data, array $frame = []): string
     {
-        return $this->render('layout', ['title' => $title, 'content' => $this->render($name, $data)]);
+        return $this->render('layout', ['title' => $title, 'content' => $this->render($name, $data), ...$frame]);
     }
 
     /** @param array<mixed> $data */

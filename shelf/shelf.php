@@ -8,11 +8,15 @@ declare(strict_types=1);
 // Chapter 56: members and loans are in the database too; "loans" lists a member's loans.
 // Chapter 57: "import" runs in one transaction, so a mistake in the files imports nothing.
 // Chapter 58: the tables come from migrations/; "migrations" lists the ones this database has run.
+// Chapter 61: "password" sets a member's password, typed as the input, and stores only its hash.
+// Chapter 65: where the database is comes from the settings, in .env and the environment.
 // Once, in the folder shelf/: composer dump-autoload
-// Run: php shelf/shelf.php [list | search <text> [<author>] | lend <title> <member> | add <title> <author> <year> [<isbn>] | remove <title> | loans <member> | import | migrations]
+// Run: php shelf/shelf.php [list | search <text> [<author>] | lend <title> <member> | add <title> <author> <year> [<isbn>] | remove <title> | loans <member> | import | migrations | password <member>]
 
+use Shelf\Accounts;
 use Shelf\Book;
 use Shelf\BookRepository;
+use Shelf\Config;
 use Shelf\Library;
 use Shelf\Loan;
 use Shelf\Member;
@@ -39,6 +43,7 @@ const USAGE = <<<TXT
            php shelf/shelf.php loans <member>
            php shelf/shelf.php import
            php shelf/shelf.php migrations
+           php shelf/shelf.php password <member>
     TXT;
 
 /**
@@ -93,6 +98,17 @@ function import(array $books, array $members, BookRepository $bookRepository, Me
     return 'Imported ' . count($books) . ' books and ' . count($members) . " members\n";
 }
 
+/** Sets a member's password to the first line of the input: typed, or from a file with < file. */
+function setPassword(Accounts $accounts, string $name): string
+{
+    if (stream_isatty(STDIN)) {
+        fwrite(STDERR, "New password for $name: ");
+    }
+    $accounts->setPassword($name, rtrim((string) fgets(STDIN), "\r\n"));
+
+    return "Saved a new password for $name\n";
+}
+
 /** @param list<Loan> $loans */
 function loansText(string $name, array $loans): string
 {
@@ -125,11 +141,13 @@ function run(array $args, Library $library, DateTimeImmutable $today): string
 }
 
 try {
-    $db = openDatabase(__DIR__ . '/var/shelf.sqlite');
+    $db = openDatabase(Config::load(__DIR__)->database);
     $books = new PdoBookRepository($db);
     $members = new PdoMemberRepository($db);
     if (($argv[1] ?? '') === 'migrations') {
         echo implode("\n", new Migrations($db, __DIR__ . '/migrations')->ran()), "\n";
+    } elseif (($argv[1] ?? '') === 'password') {
+        echo setPassword(new Accounts($members), required(array_slice($argv, 1), 1));
     } elseif (($argv[1] ?? '') === 'import') {
         $fileBooks = array_map(Book::fromArray(...), readList(__DIR__ . '/books.json'));
         $fileMembers = loadMembers(__DIR__ . '/members.json');
@@ -138,7 +156,7 @@ try {
         $library = new Library($books, $members, new PdoLoanRepository($db));
         echo run(array_slice($argv, 1), $library, new DateTimeImmutable('today'));
     }
-} catch (InvalidArgumentException|ShelfException $e) {
+} catch (InvalidArgumentException|UnexpectedValueException|ShelfException $e) {
     fwrite(STDERR, $e->getMessage() . "\n");
     exit(1);
 }

@@ -1,0 +1,14 @@
+A hash, 60 characters
+It starts with: $2y$12$
+The same password, hashed again, gives the same hash: no
+array(3) {
+  ["algo"]=>
+  string(2) "2y"
+  ["algoName"]=>
+  string(6) "bcrypt"
+  ["options"]=>
+  array(1) {
+    ["cost"]=>
+    int(12)
+  }
+}

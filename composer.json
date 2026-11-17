@@ -37,6 +37,7 @@
         "league/commonmark": "^2.10",
         "phpstan/phpstan": "^2.3",
         "phpunit/phpunit": "^13.4",
+        "psr/log": "^3.0",
         "tempest/highlight": "^2.30"
     }
 }

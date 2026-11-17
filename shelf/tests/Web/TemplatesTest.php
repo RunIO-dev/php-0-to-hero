@@ -45,6 +45,7 @@ final class TemplatesTest extends TestCase
             'copies' => '"><script>',
             'error' => 'Copies must be a whole number from 0 to 999.',
             'token' => 'the-token',
+            'mayChange' => true,
         ]);
 
         self::assertStringContainsString('<h1>Tom &amp; Jerry</h1>', $html);

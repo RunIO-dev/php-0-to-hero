@@ -1,0 +1,4 @@
+LIBRARY_NAME = North Library
+LIBRARY_DATABASE = /srv/library/library.sqlite
+LIBRARY_DEBUG = no
+LIBRARY_MAIL_PASSWORD = (hidden)

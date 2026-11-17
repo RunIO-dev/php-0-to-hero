@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught TypeError: PDO::__construct(): Argument #1 ($dsn) must be of type string, false given in missing.error.php:7
+Stack trace:
+#0 missing.error.php(7): PDO->__construct(false)
+#1 {main}
+  thrown in missing.error.php on line 7

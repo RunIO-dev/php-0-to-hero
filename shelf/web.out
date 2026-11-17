@@ -1,7 +1,17 @@
+$ php shelf.php import
+Imported 4 books and 4 members
+$ php shelf.php password Amira < amira-password.txt
+Saved a new password for Amira
+$ php shelf.php password Jonas < jonas-password.txt
+Saved a new password for Jonas
+
 > GET /
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -14,20 +24,297 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/login">Log in</a>
+        </nav>
     </header>
     <main>
     <h1>Books</h1>
-    <p class="empty">No books yet. <a href="/add">Add the first one.</a></p>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kindred">Kindred</a></h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">4 books</p>
     </main>
 </body>
 </html>
 
 > GET /add
 
-< HTTP/1.1 200 OK
+< HTTP/1.1 303 See Other
 < Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /login
+< Content-type: text/html; charset=UTF-8
+
+> GET /login
+
+< HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/login">Log in</a>
+        </nav>
+    </header>
+    <main>
+    <h1>Log in</h1>
+    <p class="flash" role="status">Log in first.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="{{token}}">
+        <label>Name <input name="name" value="" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle&_token={{token}}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/login">Log in</a>
+        </nav>
+    </header>
+    <main>
+    <h1>Log in</h1>
+    <p class="error" role="alert">Wrong name or password.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="{{token}}">
+        <label>Name <input name="name" value="Amira" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Amira</span> <button class="link">Log out</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+    <h1>Books</h1>
+    <p class="flash" role="status">Welcome, Amira.</p>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kindred">Kindred</a></h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">4 books</p>
+    </main>
+</body>
+</html>
+
+> GET /add
+
+< HTTP/1.1 403 Forbidden
+< Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not allowed · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Amira</span> <button class="link">Log out</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+    <h1>Not allowed</h1>
+    <p>Only the library's staff may change books. <a href="/">Back to the books</a></p>
+    </main>
+</body>
+</html>
+
+> GET /loans
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My loans · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Amira</span> <button class="link">Log out</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+    <h1>My loans</h1>
+    <p class="empty">You have no books on loan.</p>
+    </main>
+</body>
+</html>
+
+> POST /logout
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> GET /add
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -40,7 +327,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Add a book</h1>
@@ -61,19 +356,13 @@
 > POST /add
 > Content-Type: application/x-www-form-urlencoded
 >
-> title=Kindred&author=Octavia+E.+Butler&year=1979&isbn=9780807083697&_token={{token}}
-
-< HTTP/1.1 303 See Other
-< Location: /
-< Content-type: text/html; charset=UTF-8
-
-> POST /add
-> Content-Type: application/x-www-form-urlencoded
->
 > title=&author=&year=&_token={{token}}
 
 < HTTP/1.1 422 Unknown Status Code
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -86,7 +375,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Add a book</h1>
@@ -112,6 +409,9 @@
 
 < HTTP/1.1 422 Unknown Status Code
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -124,7 +424,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Add a book</h1>
@@ -150,6 +458,9 @@
 
 < HTTP/1.1 422 Unknown Status Code
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -162,7 +473,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Add a book</h1>
@@ -189,6 +508,9 @@
 
 < HTTP/1.1 403 Forbidden
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -201,7 +523,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>This form has expired</h1>
@@ -239,6 +569,9 @@
 
 < HTTP/1.1 422 Unknown Status Code
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -251,7 +584,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Add a book</h1>
@@ -304,6 +645,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -316,7 +660,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Books</h1>
@@ -326,6 +678,18 @@
             <span class="cover" aria-hidden="true">K</span>
             <h2><a href="/book?title=Kindred">Kindred</a></h2>
             <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
@@ -334,8 +698,14 @@
             <p>Toni Morrison, 1973</p>
             <p class="status">Available</p>
         </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
     </ul>
-    <p class="count">2 books</p>
+    <p class="count">5 books</p>
     </main>
 </body>
 </html>
@@ -344,6 +714,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -356,7 +729,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Books</h1>
@@ -365,6 +746,18 @@
             <span class="cover" aria-hidden="true">K</span>
             <h2><a href="/book?title=Kindred">Kindred</a></h2>
             <p>Octavia E. Butler, 1979</p>
+            <p class="status on-loan">All copies on loan</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
@@ -373,8 +766,14 @@
             <p>Toni Morrison, 1973</p>
             <p class="status">Available</p>
         </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
     </ul>
-    <p class="count">2 books</p>
+    <p class="count">5 books</p>
     </main>
 </body>
 </html>
@@ -391,6 +790,9 @@
 
 < HTTP/1.1 404 Not Found
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -403,7 +805,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Not found</h1>
@@ -416,6 +826,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -428,7 +841,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <p class="back"><a href="/">← All books</a></p>
@@ -437,13 +858,12 @@
         <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
-            <p>ISBN 9780807083697</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
         <input type="hidden" name="_token" value="{{token}}">
         <input type="hidden" name="title" value="Kindred">
-        <label>Copies in the library <input name="copies" value="1" required inputmode="numeric"></label>
+        <label>Copies in the library <input name="copies" value="0" required inputmode="numeric"></label>
         <p class="actions"><button>Save</button></p>
     </form>
     <form class="card" method="post" action="/remove">
@@ -463,6 +883,9 @@
 
 < HTTP/1.1 422 Unknown Status Code
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -475,7 +898,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <p class="back"><a href="/">← All books</a></p>
@@ -485,7 +916,6 @@
         <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
-            <p>ISBN 9780807083697</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
@@ -517,6 +947,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -529,7 +962,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <p class="back"><a href="/">← All books</a></p>
@@ -539,7 +980,6 @@
         <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
-            <p>ISBN 9780807083697</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
@@ -562,6 +1002,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -574,7 +1017,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <p class="back"><a href="/">← All books</a></p>
@@ -614,6 +1065,9 @@
 
 < HTTP/1.1 200 OK
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -626,7 +1080,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Books</h1>
@@ -638,8 +1100,26 @@
             <p>Octavia E. Butler, 1979</p>
             <p class="status">Available</p>
         </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+            <p>Banana Yoshimoto, 1988</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">P</span>
+            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <p>Octavia E. Butler, 1993</p>
+            <p class="status">Available</p>
+        </li>
+        <li class="book">
+            <span class="cover" aria-hidden="true">T</span>
+            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <p>Chinua Achebe, 1958</p>
+            <p class="status">Available</p>
+        </li>
     </ul>
-    <p class="count">1 book</p>
+    <p class="count">4 books</p>
     </main>
 </body>
 </html>
@@ -648,6 +1128,9 @@
 
 < HTTP/1.1 404 Not Found
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -660,7 +1143,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Not found</h1>
@@ -675,10 +1166,19 @@
 < Allow: POST
 < Content-type: text/html; charset=UTF-8
 
+> GET /logout
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: POST
+< Content-type: text/html; charset=UTF-8
+
 > GET /add.php
 
 < HTTP/1.1 404 Not Found
 < Content-Type: text/html; charset=UTF-8
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
 
 <!doctype html>
 <html lang="en">
@@ -691,7 +1191,15 @@
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="{{token}}">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
     </header>
     <main>
     <h1>Not found</h1>

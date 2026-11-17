@@ -11,7 +11,7 @@
 
 - Chapter 53: tables and SQL.
 - Chapter 33: interfaces, and *Shelf*'s `BookRepository`.
-- Chapter 18: exceptions.
+- Chapter 19: exceptions.
 
 ## The idea
 

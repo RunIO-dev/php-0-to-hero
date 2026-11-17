@@ -1,0 +1,8 @@
+$ php shelf.php import
+Imported 4 books and 4 members
+$ php shelf.php password Amira < amira-password.txt
+Saved a new password for Amira
+$ php shelf.php password Amira < short-password.txt
+A password needs at least 15 characters. A few words together are long and easy to remember.
+$ php shelf.php password Nobody < amira-password.txt
+There is no member named "Nobody"

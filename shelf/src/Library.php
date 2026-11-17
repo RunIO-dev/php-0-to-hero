@@ -130,6 +130,12 @@ final readonly class Library
         return new Book($title, $author, $year, isbn: isset($fields[3]) ? new Isbn($fields[3]) : null);
     }
 
+    /** The member with this name, or null: for the website, which knows a member by the name in the session (chapter 63). */
+    public function findMember(string $name): ?Member
+    {
+        return $this->members->find($name);
+    }
+
     private function member(string $name): Member
     {
         return $this->members->find($name) ?? throw new MemberNotFound("There is no member named \"$name\"");

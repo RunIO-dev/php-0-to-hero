@@ -13,4 +13,7 @@ interface Session
 
     /** The value, removed: for a message that is shown once. */
     public function pull(string $key): ?string;
+
+    /** A new session ID, with the same values: at every change of who the visitor is (chapters 50 and 62). */
+    public function regenerate(): void;
 }

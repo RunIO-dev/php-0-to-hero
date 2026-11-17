@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 // One book's page (chapter 55): its details, a form for how many copies the library has, and one
 // to remove it. $copies is the form's value; $error, if set, says what was wrong with a form. Chapter 56:
-// the message is above both forms, as removing a book on loan can be refused too.
+// the message is above both forms, as removing a book on loan can be refused too. Chapter 63: the
+// forms only for a member who may change books.
 
 use Shelf\Book;
 
 use function Shelf\e;
 
-return static function (Book $book, bool $hasCover, ?string $flash, string $copies, ?string $error, string $token): void { ?>
+return static function (Book $book, bool $hasCover, ?string $flash, string $copies, ?string $error, string $token, bool $mayChange = false): void { ?>
     <p class="back"><a href="/">← All books</a></p>
     <h1><?= e($book->title) ?></h1>
 <?php if ($flash !== null): ?>
@@ -32,6 +33,7 @@ return static function (Book $book, bool $hasCover, ?string $flash, string $copi
 <?php endif; ?>
         </div>
     </div>
+<?php if ($mayChange): ?>
     <form class="card" method="post" action="/copies">
         <input type="hidden" name="_token" value="<?= e($token) ?>">
         <input type="hidden" name="title" value="<?= e($book->title) ?>">
@@ -44,4 +46,5 @@ return static function (Book $book, bool $hasCover, ?string $flash, string $copi
         <p>Removing a book takes it off the shelf for good, with its cover.</p>
         <p class="actions"><button class="danger">Remove this book</button></p>
     </form>
+<?php endif; ?>
 <?php };

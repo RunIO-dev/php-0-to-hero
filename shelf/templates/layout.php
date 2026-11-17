@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 // Shelf's page frame: the bar at the top, the stylesheet, and the page's own content in <main>.
 // $content is HTML that another template has rendered, with its values escaped there: the one
-// value printed as it is.
+// value printed as it is. Chapter 62: the bar shows who is logged in, with a form to log out.
+// Chapter 63: "Add a book" only for staff, "My loans" for every member. Hiding a link is a
+// convenience; App checks every request.
+
+use Shelf\Member;
 
 use function Shelf\e;
 
-return static function (string $title, string $content): void { ?>
+return static function (string $title, string $content, ?Member $member = null, string $token = ''): void { ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,7 +24,21 @@ return static function (string $title, string $content): void { ?>
 <body>
     <header class="site">
         <a class="brand" href="/">Shelf</a>
-        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+        <nav>
+            <a href="/">Books</a>
+<?php if ($member === null): ?>
+            <a href="/login">Log in</a>
+<?php else: ?>
+            <a href="/loans">My loans</a>
+<?php if ($member->role->mayChangeBooks()): ?>
+            <a class="button" href="/add">Add a book</a>
+<?php endif; ?>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="<?= e($token) ?>">
+                <span><?= e($member->name) ?></span> <button class="link">Log out</button>
+            </form>
+<?php endif; ?>
+        </nav>
     </header>
     <main>
 <?= $content ?>

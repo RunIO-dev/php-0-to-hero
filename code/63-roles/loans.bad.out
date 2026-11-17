@@ -1,0 +1,30 @@
+> GET /login.php
+
+< HTTP/1.1 200 OK
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/login.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <input name="name" value="">
+    <input type="password" name="password">
+    <button>Log in</button>
+</form>
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /books.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /loans.bad.php?member=Jonas
+
+< HTTP/1.1 200 OK
+< Content-Type: text/plain; charset=UTF-8
+
+Loans of Jonas:
+- Sula, due 2026-03-30

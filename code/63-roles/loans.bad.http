@@ -1,0 +1,12 @@
+# capture token /name="_token" value="([^"]+)"/
+GET /login.php
+
+###
+POST /login.php
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+# Amira changes the name in the address.
+GET /loans.bad.php?member=Jonas

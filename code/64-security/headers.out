@@ -1,0 +1,9 @@
+> GET /headers.php?name=%3Cscript%3Ealert(1)%3C%2Fscript%3E
+
+< HTTP/1.1 200 OK
+< Content-Security-Policy: default-src 'self'; script-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< X-Content-Type-Options: nosniff
+< Referrer-Policy: same-origin
+< Content-type: text/html; charset=UTF-8
+
+<p>Hello, &lt;script&gt;alert(1)&lt;/script&gt;</p>

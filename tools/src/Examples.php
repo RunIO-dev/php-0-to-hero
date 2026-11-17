@@ -149,17 +149,7 @@ final class Examples
             return ['line' => "php $name", 'args' => [], 'stdin' => null, 'custom' => false];
         }
         $line = trim((string) file_get_contents($runFile));
-        $words = self::words($line);
-        $stdin = null;
-        $at = array_search('<', $words, true);
-        if ($at !== false) {
-            $input = $words[$at + 1] ?? '';
-            if (count($words) !== $at + 2 || preg_match('~^[\w.-]+$~', $input) !== 1 || !is_file(dirname($file) . '/' . $input)) {
-                throw new \RuntimeException(basename($runFile) . ': "< file" must be last and name a file in the same folder');
-            }
-            $stdin = dirname($file) . '/' . $input;
-            $words = array_slice($words, 0, $at);
-        }
+        [$words, $stdin] = self::input(self::words($line), dirname($file), basename($runFile));
         if (($words[0] ?? '') !== 'php' || ($words[1] ?? '') !== $name) {
             throw new \RuntimeException(basename($runFile) . ": the command must start with: php $name");
         }
@@ -168,10 +158,30 @@ final class Examples
     }
 
     /**
+     * A command's words without a final "< file", and that file, which must be in $dir.
+     *
+     * @param list<string> $words
+     * @return array{list<string>, ?string}
+     */
+    private static function input(array $words, string $dir, string $runName): array
+    {
+        $at = array_search('<', $words, true);
+        if ($at === false) {
+            return [$words, null];
+        }
+        $input = $words[$at + 1] ?? '';
+        if (count($words) !== $at + 2 || preg_match('~^[\w.-]+$~', $input) !== 1 || !is_file("$dir/$input")) {
+            throw new \RuntimeException($runName . ': "< file" must be last and name a file in the same folder');
+        }
+
+        return [array_slice($words, 0, $at), "$dir/$input"];
+    }
+
+    /**
      * The commands of a session (chapter 54 on): a .run file with one command per line, such as
      * php shelf.php import, then php shelf.php list. They change files (a database), so they run in
      * order in a copy of the folder, and the .out holds each command, with "$ " before it, and what
-     * it printed. Each line is "php <file> [arguments]", without "< input".
+     * it printed. Each line is "php <file> [arguments]", and may end in "< file" with a file of the folder.
      *
      * @return list<string>|null the command lines, or null for an example with one command
      */
@@ -200,13 +210,14 @@ final class Examples
             }
             $out = '';
             foreach (self::session($file) ?? [] as $line) {
-                $words = self::words($line);
-                if (($words[0] ?? '') !== 'php' || ($words[1] ?? '') !== basename($file) || in_array('<', $words, true)) {
-                    throw new \RuntimeException(basename($file, '.php') . '.run: each line must be: php ' . basename($file) . " [arguments]: $line");
+                [$words, $stdin] = self::input(self::words($line), $copy, basename($file, '.php') . '.run');
+                if (($words[0] ?? '') !== 'php' || ($words[1] ?? '') !== basename($file)) {
+                    throw new \RuntimeException(basename($file, '.php') . '.run: each line must be: php ' . basename($file) . " [arguments] [< file]: $line");
                 }
                 $run = Run::capture(
                     [PHP_BINARY, '-d', 'display_errors=stdout', '-d', 'error_reporting=-1', '-d', 'html_errors=0', ...array_slice($words, 1)],
                     $copy,
+                    stdin: $stdin,
                 );
                 $out .= "$ $line\n" . str_replace($copy . '/', '', $run['out'] . $run['err']);
             }

@@ -24,6 +24,9 @@ namespace Tools;
  *   # docroot public                    serve this folder (php -S ... -t public)
  *   # router public/index.php           send every request to this script
  *   # env LIBRARY_NAME=North Library    an environment variable for the server, as Docker sets them
+ *   # run php shelf.php import          a command run in the folder before the server starts (chapter 63),
+ *                                       as a learner would: "php <file> [arguments] [< file]"; the .out
+ *                                       starts with each command and what it printed
  *   # capture token /name="_token" value="([^"]+)"/   remember group 1 of the response (headers and body)
  * In a multipart/form-data body, a line "< cover.png" sends the bytes of that file (an upload).
  * {{token}} in a later request is replaced by the remembered value, and the value is shown
@@ -34,7 +37,7 @@ final class Web
 {
     /** Response headers worth reading; Date, Host and X-Powered-By change and would make noise. */
     private const array SHOWN = ['content-type', 'location', 'allow', 'set-cookie', 'content-disposition',
-        'content-security-policy', 'x-content-type-options', 'x-frame-options'];
+        'content-security-policy', 'x-content-type-options', 'x-frame-options', 'referrer-policy'];
 
     public static function has(string $file): bool
     {
@@ -42,13 +45,14 @@ final class Web
     }
 
     /**
-     * @return array{docroot: string, router: ?string, env: array<string, string>, requests: list<array{method: non-empty-string, path: string, headers: list<string>, body: string, captures: array<string, string>}>}
+     * @return array{docroot: string, router: ?string, env: array<string, string>, runs: list<string>, requests: list<array{method: non-empty-string, path: string, headers: list<string>, body: string, captures: array<string, string>}>}
      */
     public static function parse(string $text): array
     {
         $docroot = '.';
         $router = null;
         $env = [];
+        $runs = [];
         $requests = [];
         foreach (preg_split('/^###.*$/m', $text) ?: [] as $block) {
             $lines = explode("\n", str_replace("\r\n", "\n", $block));
@@ -64,6 +68,8 @@ final class Web
                         $router = $m[1];
                     } elseif (preg_match('/^# env ([A-Z][A-Z0-9_]*)=(.*)$/', $line, $m) === 1) {
                         $env[$m[1]] = $m[2];
+                    } elseif (preg_match('/^# run (php .+)$/', $line, $m) === 1) {
+                        $runs[] = $m[1];
                     } elseif (preg_match('/^# capture (\w+) (.+)$/', $line, $m) === 1) {
                         $captures[$m[1]] = $m[2];
                     } elseif (preg_match('~^(GET|POST|PUT|PATCH|DELETE|HEAD) (/\S*)$~', $line, $m) === 1) {
@@ -94,7 +100,7 @@ final class Web
             }
         }
 
-        return ['docroot' => $docroot, 'router' => $router, 'env' => $env, 'requests' => $requests];
+        return ['docroot' => $docroot, 'router' => $router, 'env' => $env, 'runs' => $runs, 'requests' => $requests];
     }
 
     /** The command a learner types to serve the example, from its folder. */
@@ -122,6 +128,10 @@ final class Web
         $site = self::parse($http);
         $copy = sys_get_temp_dir() . '/web-' . bin2hex(random_bytes(4));
         Run::copy($dir, $copy);
+        $ran = '';
+        foreach ($site['runs'] as $line) {
+            $ran .= self::run($line, $copy, $site['env']);
+        }
         [$server, $port] = self::serve($copy, $site['docroot'], $site['router'], $site['env']);
         try {
             $cookies = [];
@@ -149,7 +159,7 @@ final class Web
                 $blocks[] = self::format($request, $response);
                 $responses[] = self::structured($response);
             }
-            $out = implode("\n", $blocks);
+            $out = ($ran === '' ? '' : "$ran\n") . implode("\n", $blocks);
             foreach ($values as $name => $value) {
                 $out = str_replace($value, '{{' . $name . '}}', $out);
             }
@@ -197,6 +207,33 @@ final class Web
         }
 
         return ['status' => (int) (explode(' ', $response['status'])[1] ?? 0), 'headers' => $headers, 'body' => $response['body']];
+    }
+
+    /**
+     * Runs one "# run" command in the copy, without a shell, and returns it with what it printed.
+     * A command that fails stops the check: the requests after it would test the wrong thing.
+     *
+     * @param array<string, string> $env
+     */
+    private static function run(string $line, string $dir, array $env): string
+    {
+        $words = Examples::words($line);
+        $stdin = null;
+        if (count($words) >= 2 && $words[count($words) - 2] === '<') {
+            $stdin = "$dir/" . array_pop($words);
+            array_pop($words);
+        }
+        $script = $words[1] ?? '';
+        if (preg_match('~^[\w.-]+(/[\w.-]+)*$~', $script) !== 1 || str_contains($script, '..') || !is_file("$dir/$script")
+            || ($stdin !== null && (preg_match('~/[\w.-]+$~', $stdin) !== 1 || !is_file($stdin)))) {
+            throw new \RuntimeException("# run: only php <file of the folder> [arguments] [< file of the folder]: $line");
+        }
+        $run = Run::capture([PHP_BINARY, ...array_slice($words, 1)], $dir, $env, stdin: $stdin);
+        if ($run['code'] !== 0) {
+            throw new \RuntimeException("# run $line failed:\n" . $run['out'] . $run['err']);
+        }
+
+        return "$ $line\n" . $run['out'] . $run['err'];
     }
 
     /**

@@ -1,0 +1,89 @@
+> GET /home.php
+
+< HTTP/1.1 200 OK
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Content-type: text/html; charset=UTF-8
+
+<p>Not logged in. <a href="/login.php">Log in</a></p>
+
+> GET /login.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<form method="post" action="/login.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <label>Name <input name="name" value="" autocomplete="username"></label>
+    <label>Password <input type="password" name="password" autocomplete="current-password"></label>
+    <button>Log in</button>
+</form>
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle&_token={{token}}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<p role="alert">Wrong name or password.</p>
+<form method="post" action="/login.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <label>Name <input name="name" value="Amira" autocomplete="username"></label>
+    <label>Password <input type="password" name="password" autocomplete="current-password"></label>
+    <button>Log in</button>
+</form>
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Nobody&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-type: text/html; charset=UTF-8
+
+<p role="alert">Wrong name or password.</p>
+<form method="post" action="/login.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <label>Name <input name="name" value="Nobody" autocomplete="username"></label>
+    <label>Password <input type="password" name="password" autocomplete="current-password"></label>
+    <button>Log in</button>
+</form>
+
+> POST /login.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /home.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /home.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<p>Logged in as Amira</p>
+<form method="post" action="/logout.php">
+    <input type="hidden" name="_token" value="{{token}}">
+    <button>Log out</button>
+</form>
+
+> POST /logout.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token={{token}}
+
+< HTTP/1.1 303 See Other
+< Set-Cookie: PHPSESSID=…; path=/; secure; HttpOnly; SameSite=Lax
+< Location: /home.php
+< Content-type: text/html; charset=UTF-8
+
+> GET /home.php
+
+< HTTP/1.1 200 OK
+< Content-type: text/html; charset=UTF-8
+
+<p>Not logged in. <a href="/login.php">Log in</a></p>
