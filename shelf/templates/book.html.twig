@@ -1,0 +1,37 @@
+{# One book's page (chapter 55): its details, and for staff a form for its copies and one to remove it.
+   copies is the form's value; error, if set, says what was wrong with a form. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ book.title }} · Shelf{% endblock %}
+
+{% block main %}
+    <p class="back"><a href="{{ path('books') }}">← All books</a></p>
+    <h1>{{ book.title }}</h1>
+{% include '_flash.html.twig' %}
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <div class="card details">
+{% include '_cover.html.twig' %}
+        <div>
+            <p>{{ book.author }}, {{ book.year }}</p>
+{% if book.isbn %}
+            <p>ISBN {{ book.isbn.digits }}</p>
+{% endif %}
+        </div>
+    </div>
+{% if is_granted('CHANGE_BOOKS') %}
+    <form class="card" method="post" action="{{ path('copies') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <input type="hidden" name="title" value="{{ book.title }}">
+        <label>Copies in the library <input name="copies" value="{{ copies }}" required inputmode="numeric"></label>
+        <p class="actions"><button>Save</button></p>
+    </form>
+    <form class="card" method="post" action="{{ path('remove') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <input type="hidden" name="title" value="{{ book.title }}">
+        <p>Removing a book takes it off the shelf for good, with its cover.</p>
+        <p class="actions"><button class="danger">Remove this book</button></p>
+    </form>
+{% endif %}
+{% endblock %}

@@ -7,13 +7,15 @@ namespace Shelf\Web;
 use finfo;
 use InvalidArgumentException;
 use RuntimeException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use function Shelf\tidy;
 
 /**
  * Book covers: PNG or JPEG images of up to 2 MB, checked by their content, and stored in a folder
  * outside public/, under a name made from the book's title. Nothing the visitor sent, not the
- * file's name nor its claimed type, decides where or how a file is stored.
+ * file's name nor its claimed type, decides where or how a file is stored. From chapter 73, an upload
+ * is Symfony's UploadedFile.
  */
 final readonly class Covers
 {
@@ -25,24 +27,24 @@ final readonly class Covers
     public function __construct(private string $dir) {}
 
     /** Throws an InvalidArgumentException with a reason for the visitor if $upload can't be a cover. */
-    public function check(Upload $upload): void
+    public function check(UploadedFile $upload): void
     {
-        if ($upload->error === UPLOAD_ERR_INI_SIZE || $upload->error === UPLOAD_ERR_FORM_SIZE) {
+        if ($upload->getError() === UPLOAD_ERR_INI_SIZE || $upload->getError() === UPLOAD_ERR_FORM_SIZE) {
             throw new InvalidArgumentException('The cover is larger than 2 MB.');
         }
-        if ($upload->error !== UPLOAD_ERR_OK || !is_file($upload->path)) {
+        if (!$upload->isValid() || !is_file($upload->getPathname())) {
             throw new InvalidArgumentException('The cover could not be uploaded. Please try again.');
         }
-        if (filesize($upload->path) > self::MAX_BYTES) {
+        if (filesize($upload->getPathname()) > self::MAX_BYTES) {
             throw new InvalidArgumentException('The cover is larger than 2 MB.');
         }
-        if ($this->extension($upload->path) === null || getimagesize($upload->path) === false) {
+        if ($this->extension($upload->getPathname()) === null || getimagesize($upload->getPathname()) === false) {
             throw new InvalidArgumentException('A cover must be a PNG or JPEG image.');
         }
     }
 
     /** Stores a checked upload as the cover of $title, in place of an earlier one. */
-    public function save(string $title, Upload $upload): void
+    public function save(string $title, UploadedFile $upload): void
     {
         $this->check($upload);
         if (!is_dir($this->dir) && !mkdir($this->dir, 0o750, true)) {
@@ -53,7 +55,7 @@ final readonly class Covers
                 unlink($this->base($title) . ".$extension");
             }
         }
-        if (!copy($upload->path, $this->base($title) . '.' . $this->extension($upload->path))) {
+        if (!copy($upload->getPathname(), $this->base($title) . '.' . $this->extension($upload->getPathname()))) {
             throw new RuntimeException("Cannot save the cover of $title");
         }
     }

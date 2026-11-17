@@ -7,7 +7,8 @@ $finder = (new PhpCsFixer\Finder())
     // only folders that exist yet: git keeps no empty folders
     ->in(array_values(array_filter(['code', 'exercises', 'solutions', 'shelf', 'tools', 'tests'], 'is_dir')))
     ->append(['tools/verify', 'tools/exercise', 'tools/book', 'tools/out'])
-    ->exclude('vendor')
+    ->exclude(['vendor', 'var']) // var/: Symfony's cache (chapter 72 on)
+    ->notPath('config/reference.php') // made by Symfony in debug mode (chapter 72 on)
     ->notName('check.php') // old-style on purpose, so it runs on old PHP and can say: upgrade
     ->notName('*.error.php') // shows an error on purpose
     // chapter 39: messy on purpose, to show what the fixer changes, and the starter of its exercise

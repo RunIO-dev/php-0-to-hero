@@ -1,0 +1,322 @@
+# Shelf's web pages, served as by: docker compose up web
+# Chapter 63: the database gets the books and members of the JSON files, and passwords for Amira
+# and Jonas, as you would set it up (chapters 54 and 61). Chapter 74: Doctrine makes the tables, and
+# Symfony's commands fill them.
+# docroot public
+# run php bin/console doctrine:migrations:migrate --no-interaction --quiet
+# run php bin/console shelf:import
+# run php bin/console shelf:password Amira < amira-password.txt
+# run php bin/console shelf:password Jonas < jonas-password.txt
+# run php bin/console shelf:books
+# Chapter 72: Symfony answers now. Chapter 73: every page has its route and its controller.
+# run php bin/console debug:router
+# A visitor sees the books, and no "Add a book".
+GET /
+
+###
+# A page that changes the library sends a visitor to the login.
+GET /add
+
+###
+# The form's hidden field holds the token; the requests below send it back as {{token}}.
+# capture token /name="_token" value="([^"]+)"/
+GET /login
+
+###
+# A wrong password (chapter 62).
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle&_token={{token}}
+
+###
+# Chapter 76: Symfony's security sends the visitor back to the form, which says why, with the name.
+GET /login
+
+###
+# Amira is a reader.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+###
+# Logging in ends the CSRF tokens of before (chapter 76): the first page after it holds a new one.
+# capture token /name="_token" value="([^"]+)"/
+GET /
+
+###
+# She may borrow books, not change them.
+GET /add
+
+###
+GET /loans
+
+###
+POST /logout
+Content-Type: application/x-www-form-urlencoded
+
+_token={{token}}
+
+###
+# Logging out ends them too: the login form holds a new one.
+# capture token /name="_token" value="([^"]+)"/
+GET /login
+
+###
+# Jonas is staff.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+###
+# capture token /name="_token" value="([^"]+)"/
+GET /add
+
+###
+# Nothing filled in: Library::add refuses, and the form comes back.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=&author=&year=&_token={{token}}
+
+###
+# A book that is already on the shelf, in other letters.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=kindred&author=Octavia+E.+Butler&year=1979&_token={{token}}
+
+###
+# Escaped when it comes back: the quote and the tag stay text.
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000&_token={{token}}
+
+###
+# The same book from another site's form, without the token: refused.
+POST /add
+Origin: https://stranger.example
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula&author=Toni+Morrison&year=1973
+
+###
+# A cover that is PHP code, sent as image/png: the content decides, and the book isn't added.
+POST /add
+Content-Type: multipart/form-data; boundary=ShelfBoundary
+
+--ShelfBoundary
+Content-Disposition: form-data; name="_token"
+
+{{token}}
+--ShelfBoundary
+Content-Disposition: form-data; name="title"
+
+Sula
+--ShelfBoundary
+Content-Disposition: form-data; name="author"
+
+Toni Morrison
+--ShelfBoundary
+Content-Disposition: form-data; name="year"
+
+1973
+--ShelfBoundary
+Content-Disposition: form-data; name="cover"; filename="sula.png"
+Content-Type: image/png
+
+< tests/Web/not-a-cover.png
+--ShelfBoundary--
+
+###
+# The same book with a real cover.
+POST /add
+Content-Type: multipart/form-data; boundary=ShelfBoundary
+
+--ShelfBoundary
+Content-Disposition: form-data; name="_token"
+
+{{token}}
+--ShelfBoundary
+Content-Disposition: form-data; name="title"
+
+Sula
+--ShelfBoundary
+Content-Disposition: form-data; name="author"
+
+Toni Morrison
+--ShelfBoundary
+Content-Disposition: form-data; name="year"
+
+1973
+--ShelfBoundary
+Content-Disposition: form-data; name="cover"; filename="sula.png"
+Content-Type: image/png
+
+< tests/Web/cover.png
+--ShelfBoundary--
+
+###
+GET /
+
+###
+# Reloaded: the message was shown once.
+GET /
+
+###
+GET /cover?title=Sula
+
+###
+GET /cover?title=Kindred
+
+###
+# Programs read the books as JSON (chapter 67): the same data, and where each cover is.
+GET /api/books
+
+###
+# A page at a time, and filtered (chapter 70): the Link header names the other pages.
+GET /api/books?per_page=2&page=2
+
+###
+GET /api/books?author=butler&available=true
+
+###
+GET /api/books?per_page=1000
+
+###
+# One book (chapter 68), and the errors of the API: problem details, for programs.
+GET /api/book?title=kitchen
+
+###
+GET /api/book?title=Nowhere
+
+###
+PUT /api/books
+
+###
+GET /api/nowhere
+
+###
+# Programs log in with a token (chapter 69), never a cookie. A wrong password gets none.
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Amira", "password": "tea kettle"}
+
+###
+# The token is shown once, with how many seconds it lasts: 30 days.
+# capture amiratoken /"token": "([0-9a-f]{64})"/
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Amira", "password": "tea kettle under the lemon tree"}
+
+###
+# Her loans, by her token; without one, the API asks for it.
+GET /api/loans
+Authorization: Bearer {{amiratoken}}
+
+###
+GET /api/loans
+
+###
+# A reader may not add books.
+POST /api/books
+Authorization: Bearer {{amiratoken}}
+Content-Type: application/json
+
+{"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# capture jonastoken /"token": "([0-9a-f]{64})"/
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Jonas", "password": "river stones in the morning light"}
+
+###
+# Staff may: no CSRF token, because no cookie is involved.
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# The same book again: 409 Conflict (chapter 71).
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# Chapter 75: the form's rules check the API's JSON too, and name every mistake at once.
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "", "author": "Toni Morrison", "year": "1973", "isbn": "978-0-14-118"}
+
+###
+# Logging out ends the token at once.
+DELETE /api/tokens
+Authorization: Bearer {{amiratoken}}
+
+###
+GET /api/loans
+Authorization: Bearer {{amiratoken}}
+
+###
+# Kindred's own page (chapter 55), found in any case.
+GET /book?title=kindred
+
+###
+# A wrong number of copies: the page comes back with the mistake.
+POST /copies
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&copies=-1&_token={{token}}
+
+###
+POST /copies
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&copies=3&_token={{token}}
+
+###
+GET /book?title=Kindred
+
+###
+GET /book?title=Sula
+
+###
+# Removing Sula removes its cover too.
+POST /remove
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula&_token={{token}}
+
+###
+GET /
+
+###
+GET /cover?title=Sula
+
+###
+# Removing needs a POST: a link can't remove a book.
+GET /remove?title=Kindred
+
+###
+# Logging out takes a POST with the token; a link can't do it.
+GET /logout
+
+###
+# Addresses that don't exist, and a method the page doesn't take.
+GET /add.php
+
+###
+DELETE /add

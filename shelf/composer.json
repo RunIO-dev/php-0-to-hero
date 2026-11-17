@@ -7,7 +7,23 @@
         "php": ">=8.5",
         "ext-mbstring": "*",
         "ext-pdo_sqlite": "*",
-        "psr/log": "^3.0"
+        "psr/log": "^3.0",
+        "symfony/flex": "^2.12",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/runtime": "7.4.*",
+        "symfony/console": "7.4.*",
+        "symfony/dotenv": "7.4.*",
+        "symfony/yaml": "7.4.*",
+        "symfony/twig-bundle": "7.4.*",
+        "symfony/security-csrf": "7.4.*",
+        "doctrine/doctrine-bundle": "^3.4",
+        "doctrine/orm": "^3.8",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "symfony/form": "7.4.*",
+        "symfony/validator": "7.4.*",
+        "symfony/mime": "7.4.*",
+        "symfony/security-bundle": "7.4.*",
+        "symfony/rate-limiter": "7.4.*"
     },
     "autoload": {
         "psr-4": {
@@ -21,5 +37,22 @@
         "psr-4": {
             "Shelf\\Tests\\": "tests/"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    },
+    "extra": {
+        "symfony": {
+            "require": "7.4.*",
+            "docker": "false"
+        }
+    },
+    "require-dev": {
+        "symfony/browser-kit": "7.4.*",
+        "symfony/css-selector": "7.4.*",
+        "dama/doctrine-test-bundle": "^8.8"
     }
 }

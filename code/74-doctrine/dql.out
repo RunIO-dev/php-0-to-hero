@@ -1,0 +1,18 @@
+SELECT l0_.id AS id_0, l0_.member AS member_1, l0_.due AS due_2, b1_.id AS id_3, b1_.title AS title_4, b1_.author AS author_5, b1_.copies AS copies_6, l0_.book_id AS book_id_7 FROM loans l0_ INNER JOIN books b1_ ON l0_.book_id = b1_.id WHERE l0_.member = ? ORDER BY l0_.due ASC
+Sula, due 2026-11-20
+Kindred, due 2026-12-01
+Array
+(
+    [0] => Array
+        (
+            [title] => Sula
+            [loans] => 2
+        )
+
+    [1] => Array
+        (
+            [title] => Kindred
+            [loans] => 1
+        )
+
+)

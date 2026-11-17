@@ -1,0 +1,7 @@
+# Twig (chapter 73): the templates are in templates/. From chapter 76, app.user is the logged-in member.
+twig:
+    file_name_pattern: '*.twig'
+
+when@test:
+    twig:
+        strict_variables: true

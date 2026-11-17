@@ -41,7 +41,8 @@ final class Batches
     }
 
     /**
-     * The files, one per unit, except that a folder with a require in it, and a Composer project, are one unit each.
+     * The files, one per unit, except that a folder with a require in it, a Composer project, and the folder of one
+     * exercise level in solutions/ (its files are loaded by its test, not by each other) are one unit each.
      *
      * @param list<string> $files
      * @return list<list<string>>
@@ -51,7 +52,9 @@ final class Batches
         $units = [];
         foreach ($files as $file) {
             $dir = dirname($file);
-            $key = Projects::of($file) ?? (Examples::required($dir) === [] ? $file : $dir);
+            $key = Projects::of($file)
+                ?? (preg_match('~^(.*/solutions/[^/]+/[^/]+)/~', $file, $m) === 1 ? $m[1] : null)
+                ?? (Examples::required($dir) === [] ? $file : $dir);
             $units[$key][] = $file;
         }
 

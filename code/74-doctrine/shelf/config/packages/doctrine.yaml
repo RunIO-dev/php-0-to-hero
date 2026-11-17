@@ -1,0 +1,34 @@
+# Doctrine (chapter 74): the connection, our own column type, and where the entities are. Each class in
+# src/ with #[ORM\Entity] is one; the attributes on it say which table and columns hold it.
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        types:
+            isbn: Shelf\Doctrine\IsbnType
+    orm:
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        mappings:
+            Shelf:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src'
+                prefix: 'Shelf'
+
+# On a server, Doctrine keeps what it learned from the attributes and the queries in Symfony's cache.
+when@prod:
+    doctrine:
+        orm:
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

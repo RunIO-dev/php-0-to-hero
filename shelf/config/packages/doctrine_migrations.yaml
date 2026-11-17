@@ -1,0 +1,5 @@
+# Doctrine Migrations (chapter 74), in place of chapter 58's: each change to the tables is a class in migrations/.
+doctrine_migrations:
+    migrations_paths:
+        'DoctrineMigrations': '%kernel.project_dir%/migrations'
+    enable_profiler: false

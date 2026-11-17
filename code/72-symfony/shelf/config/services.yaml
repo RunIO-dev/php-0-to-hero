@@ -1,0 +1,11 @@
+# Shelf's services (chapter 72): every class in src/ can be made by the container, which passes each
+# constructor what its types ask for (autowiring).
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Shelf\:
+        resource: '../src/'
+        exclude:
+            - '../src/functions.php'

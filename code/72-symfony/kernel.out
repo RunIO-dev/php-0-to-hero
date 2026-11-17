@@ -1,0 +1,2 @@
+GET /books/12: 200 Book 12
+GET /books/kindred: 404 Not Found

@@ -1,0 +1,18 @@
+# The framework's settings (chapter 72). The secret signs what Symfony gives out, such as links
+# that can't be changed; .env.dev holds one for developers' computers, and a server sets its own.
+framework:
+    secret: '%env(APP_SECRET)%'
+    # Chapter 73: Symfony's session, with chapter 62's cookie. It starts only when a page uses it.
+    session:
+        name: shelf
+        cookie_secure: true
+        cookie_httponly: true
+        cookie_samesite: lax
+    # Chapter 51's tokens, from symfony/security-csrf: csrf_token() in the templates, CheckCsrf on every POST.
+    csrf_protection: true
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file

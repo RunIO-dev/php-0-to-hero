@@ -1,0 +1,36 @@
+{# Shelf's page frame (chapter 73, from chapter 49's layout.php): the bar at the top, the stylesheet,
+   and each page's own content in the block "main". Twig escapes every {{ value }} for HTML on its own.
+   Hiding a link is a convenience; the listeners check every request. #}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Shelf{% endblock %}</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="{{ path('books') }}">Shelf</a>
+        <nav>
+            <a href="{{ path('books') }}">Books</a>
+{% set member = current.member %}
+{% if member is null %}
+            <a href="{{ path('login') }}">Log in</a>
+{% else %}
+            <a href="{{ path('loans') }}">My loans</a>
+{% if member.role.mayChangeBooks %}
+            <a class="button" href="{{ path('add') }}">Add a book</a>
+{% endif %}
+            <form class="who" method="post" action="{{ path('logout') }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                <span>{{ member.name }}</span> <button class="link">Log out</button>
+            </form>
+{% endif %}
+        </nav>
+    </header>
+    <main>
+{% block main %}{% endblock %}
+    </main>
+</body>
+</html>

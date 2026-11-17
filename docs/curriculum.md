@@ -108,12 +108,12 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 71. Testing an API: the contract (shapes, statuses, headers, refusals), without a server; few real HTTP checks. ◆ `ApiContractTest`; a duplicate book is now `409`.
 
 ## Part 11: Symfony (6)
-72. Why a framework, and what Symfony gives us. Installing it, and its structure. *(the stable version of the day)*
+72. Why a framework, and what Symfony gives us. Installing it, and its structure. *(Symfony 7.4 LTS, chosen 2026-11-17)* ◆ *Shelf* becomes a Symfony app, with the old App behind a bridge controller.
 73. Routing, controllers and Twig. ◆ *Shelf* moves to Symfony, mapped to what we built by hand.
 74. Doctrine ORM vs the PDO we wrote. ◆ entities for book, member, loan.
-75. Forms and validation in Symfony.
-76. Security in Symfony: login and voters for roles.
-77. Testing a Symfony app.
+75. Forms and validation in Symfony. ◆ `BookData` and `ValidIsbn`; the add form and the API name every mistake.
+76. Security in Symfony: login and voters for roles. ◆ firewalls for pages and the API, `BookVoter`, throttled logins.
+77. Testing a Symfony app. ◆ `PagesTest`, `ApiContractTest` and command tests; a transaction per test. Found: lending a book with an ISBN failed.
 
 ## Part 12: Putting it online (2)
 78. Production setup: configuration, a production image, the cache, and HTTPS.

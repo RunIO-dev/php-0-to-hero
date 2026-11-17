@@ -1,17 +1,44 @@
-$ php shelf.php import
+$ php bin/console doctrine:migrations:migrate --no-interaction --quiet
+$ php bin/console shelf:import
 Imported 4 books and 4 members
-$ php shelf.php password Amira < amira-password.txt
+$ php bin/console shelf:password Amira < amira-password.txt
 Saved a new password for Amira
-$ php shelf.php password Jonas < jonas-password.txt
+$ php bin/console shelf:password Jonas < jonas-password.txt
 Saved a new password for Jonas
+$ php bin/console shelf:books
+- Kindred (Octavia E. Butler, 1979): all copies on loan
+- Kitchen (Banana Yoshimoto, 1988): available
+- Parable of the Sower (Octavia E. Butler, 1993): available
+- Things Fall Apart (Chinua Achebe, 1958): available
+4 books
+$ php bin/console debug:router
+ ---------------- ---------- -------------------------- 
+  Name             Method     Path                      
+ ---------------- ---------- -------------------------- 
+  _preview_error   ANY        /_error/{code}.{_format}  
+  _logout_main     ANY        /logout                   
+  login            GET|POST   /login                    
+  loans            GET        /loans                    
+  api_books        GET        /api/books                
+  api_book         GET        /api/book                 
+  api_add          POST       /api/books                
+  api_login        POST       /api/tokens               
+  api_logout       DELETE     /api/tokens               
+  api_loans        GET        /api/loans                
+  books            GET        /                         
+  book             GET        /book                     
+  add              GET|POST   /add                      
+  copies           POST       /copies                   
+  remove           POST       /remove                   
+  cover            GET        /cover                    
+ ---------------- ---------- -------------------------- 
+
 
 > GET /
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -46,13 +73,13 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">P</span>
-            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <h2><a href="/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
             <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">T</span>
-            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <h2><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></h2>
             <p>Chinua Achebe, 1958</p>
             <p class="status">Available</p>
         </li>
@@ -64,18 +91,32 @@ Saved a new password for Jonas
 
 > GET /add
 
-< HTTP/1.1 303 See Other
-< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
-< Location: /login
-< Content-type: text/html; charset=UTF-8
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/login
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/login'" />
+
+        <title>Redirecting to http://localhost:8000/login</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/login">http://localhost:8000/login</a>.
+    </body>
+</html>
 
 > GET /login
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -95,9 +136,8 @@ Saved a new password for Jonas
     </header>
     <main>
     <h1>Log in</h1>
-    <p class="flash" role="status">Log in first.</p>
     <form class="card narrow" method="post" action="/login">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <label>Name <input name="name" value="" required autocomplete="username"></label>
         <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
         <p class="actions"><button>Log in</button></p>
@@ -111,11 +151,31 @@ Saved a new password for Jonas
 >
 > name=Amira&password=tea+kettle&_token={{token}}
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/login
+< Content-Type: text/html; charset=utf-8
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/login'" />
+
+        <title>Redirecting to http://localhost:8000/login</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/login">http://localhost:8000/login</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -137,7 +197,7 @@ Saved a new password for Jonas
     <h1>Log in</h1>
     <p class="error" role="alert">Wrong name or password.</p>
     <form class="card narrow" method="post" action="/login">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <label>Name <input name="name" value="Amira" required autocomplete="username"></label>
         <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
         <p class="actions"><button>Log in</button></p>
@@ -151,18 +211,32 @@ Saved a new password for Jonas
 >
 > name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
 
-< HTTP/1.1 303 See Other
-< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
-< Location: /
-< Content-type: text/html; charset=UTF-8
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
 
 > GET /
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -179,7 +253,7 @@ Saved a new password for Jonas
             <a href="/">Books</a>
             <a href="/loans">My loans</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Amira</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -202,13 +276,13 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">P</span>
-            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <h2><a href="/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
             <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">T</span>
-            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <h2><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></h2>
             <p>Chinua Achebe, 1958</p>
             <p class="status">Available</p>
         </li>
@@ -221,10 +295,8 @@ Saved a new password for Jonas
 > GET /add
 
 < HTTP/1.1 403 Forbidden
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -241,7 +313,7 @@ Saved a new password for Jonas
             <a href="/">Books</a>
             <a href="/loans">My loans</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Amira</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -256,10 +328,8 @@ Saved a new password for Jonas
 > GET /loans
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -276,7 +346,7 @@ Saved a new password for Jonas
             <a href="/">Books</a>
             <a href="/loans">My loans</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Amira</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -293,28 +363,93 @@ Saved a new password for Jonas
 >
 > _token={{token}}
 
-< HTTP/1.1 303 See Other
-< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
-< Location: /
-< Content-type: text/html; charset=UTF-8
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/login">Log in</a>
+        </nav>
+    </header>
+    <main>
+    <h1>Log in</h1>
+    <p class="flash" role="status">You are logged out.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button></p>
+    </form>
+    </main>
+</body>
+</html>
 
 > POST /login
 > Content-Type: application/x-www-form-urlencoded
 >
 > name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
 
-< HTTP/1.1 303 See Other
-< Set-Cookie: shelf=…; path=/; secure; HttpOnly; SameSite=Lax
-< Location: /
-< Content-type: text/html; charset=UTF-8
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
 
 > GET /add
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -339,16 +474,15 @@ Saved a new password for Jonas
     </header>
     <main>
     <h1>Add a book</h1>
-    <form class="card" method="post" action="/add" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="{{token}}">
-        <label>Title <input name="title" value="" required maxlength="200"></label>
-        <label>Author <input name="author" value="" required maxlength="200"></label>
-        <label>Year <input name="year" value="" required inputmode="numeric"></label>
-        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
-            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
         <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
-    </form>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
     </main>
 </body>
 </html>
@@ -358,11 +492,9 @@ Saved a new password for Jonas
 >
 > title=&author=&year=&_token={{token}}
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -380,24 +512,25 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
     </header>
     <main>
     <h1>Add a book</h1>
-    <p class="error" role="alert">A book needs a title, an author and a year from 1 to 2100.</p>
-    <form class="card" method="post" action="/add" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="{{token}}">
-        <label>Title <input name="title" value="" required maxlength="200"></label>
-        <label>Author <input name="author" value="" required maxlength="200"></label>
-        <label>Year <input name="year" value="" required inputmode="numeric"></label>
-        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" /></label>
+    <p class="error" role="alert">A book needs a title.</p>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" /></label>
+    <p class="error" role="alert">A book needs an author.</p>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" /></label>
+    <p class="error" role="alert">A book needs a year.</p>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
-            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
         <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
-    </form>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
     </main>
 </body>
 </html>
@@ -407,11 +540,9 @@ Saved a new password for Jonas
 >
 > title=kindred&author=Octavia+E.+Butler&year=1979&_token={{token}}
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -429,7 +560,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -437,16 +568,15 @@ Saved a new password for Jonas
     <main>
     <h1>Add a book</h1>
     <p class="error" role="alert">&quot;Kindred&quot; is already on the shelf</p>
-    <form class="card" method="post" action="/add" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="{{token}}">
-        <label>Title <input name="title" value="kindred" required maxlength="200"></label>
-        <label>Author <input name="author" value="Octavia E. Butler" required maxlength="200"></label>
-        <label>Year <input name="year" value="1979" required inputmode="numeric"></label>
-        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="kindred" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Octavia E. Butler" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="1979" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
-            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
         <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
-    </form>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
     </main>
 </body>
 </html>
@@ -456,11 +586,9 @@ Saved a new password for Jonas
 >
 > title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000&_token={{token}}
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -478,24 +606,23 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
     </header>
     <main>
     <h1>Add a book</h1>
-    <p class="error" role="alert">A book needs a title, an author and a year from 1 to 2100.</p>
-    <form class="card" method="post" action="/add" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="{{token}}">
-        <label>Title <input name="title" value="&quot;&gt;&lt;script&gt;x()&lt;/script&gt;" required maxlength="200"></label>
-        <label>Author <input name="author" value="Someone" required maxlength="200"></label>
-        <label>Year <input name="year" value="10000" required inputmode="numeric"></label>
-        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="&quot;&gt;&lt;script&gt;x()&lt;/script&gt;" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Someone" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="10000" /></label>
+    <p class="error" role="alert">The year is from 1 to 2100.</p>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
-            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
         <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
-    </form>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
     </main>
 </body>
 </html>
@@ -507,10 +634,8 @@ Saved a new password for Jonas
 > title=Sula&author=Toni+Morrison&year=1973
 
 < HTTP/1.1 403 Forbidden
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -528,7 +653,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -567,11 +692,9 @@ Saved a new password for Jonas
 > < tests/Web/not-a-cover.png
 > --ShelfBoundary--
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -589,24 +712,23 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
     </header>
     <main>
     <h1>Add a book</h1>
-    <p class="error" role="alert">A cover must be a PNG or JPEG image.</p>
-    <form class="card" method="post" action="/add" enctype="multipart/form-data">
-        <input type="hidden" name="_token" value="{{token}}">
-        <label>Title <input name="title" value="Sula" required maxlength="200"></label>
-        <label>Author <input name="author" value="Toni Morrison" required maxlength="200"></label>
-        <label>Year <input name="year" value="1973" required inputmode="numeric"></label>
-        <label>ISBN <small>optional</small> <input name="isbn" value=""></label>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="Sula" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Toni Morrison" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="1973" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
-            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+    <p class="error" role="alert">A cover must be a PNG or JPEG image.</p>
         <p class="actions"><button>Add the book</button> <a href="/">Cancel</a></p>
-    </form>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
     </main>
 </body>
 </html>
@@ -639,15 +761,29 @@ Saved a new password for Jonas
 
 < HTTP/1.1 303 See Other
 < Location: /
-< Content-type: text/html; charset=UTF-8
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/'" />
+
+        <title>Redirecting to /</title>
+    </head>
+    <body>
+        Redirecting to <a href="/">/</a>.
+    </body>
+</html>
 
 > GET /
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -665,7 +801,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -688,7 +824,7 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">P</span>
-            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <h2><a href="/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
             <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
@@ -700,7 +836,7 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">T</span>
-            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <h2><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></h2>
             <p>Chinua Achebe, 1958</p>
             <p class="status">Available</p>
         </li>
@@ -713,10 +849,8 @@ Saved a new password for Jonas
 > GET /
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -734,7 +868,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -756,7 +890,7 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">P</span>
-            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <h2><a href="/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
             <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
@@ -768,7 +902,7 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">T</span>
-            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <h2><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></h2>
             <p>Chinua Achebe, 1958</p>
             <p class="status">Available</p>
         </li>
@@ -789,10 +923,8 @@ Saved a new password for Jonas
 > GET /cover?title=Kindred
 
 < HTTP/1.1 404 Not Found
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -810,7 +942,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -825,9 +957,9 @@ Saved a new password for Jonas
 > GET /api/books
 
 < HTTP/1.1 200 OK
+< Link: </api/books?page=1&per_page=20>; rel="first", </api/books?page=1&per_page=20>; rel="last"
 < Content-Type: application/json
 < X-Content-Type-Options: nosniff
-< Link: </api/books?page=1&per_page=20>; rel="first", </api/books?page=1&per_page=20>; rel="last"
 
 [
     {
@@ -875,9 +1007,9 @@ Saved a new password for Jonas
 > GET /api/books?per_page=2&page=2
 
 < HTTP/1.1 200 OK
+< Link: </api/books?page=1&per_page=2>; rel="first", </api/books?page=1&per_page=2>; rel="prev", </api/books?page=3&per_page=2>; rel="next", </api/books?page=3&per_page=2>; rel="last"
 < Content-Type: application/json
 < X-Content-Type-Options: nosniff
-< Link: </api/books?page=1&per_page=2>; rel="first", </api/books?page=1&per_page=2>; rel="prev", </api/books?page=3&per_page=2>; rel="next", </api/books?page=3&per_page=2>; rel="last"
 
 [
     {
@@ -901,9 +1033,9 @@ Saved a new password for Jonas
 > GET /api/books?author=butler&available=true
 
 < HTTP/1.1 200 OK
+< Link: </api/books?author=butler&available=true&page=1&per_page=20>; rel="first", </api/books?author=butler&available=true&page=1&per_page=20>; rel="last"
 < Content-Type: application/json
 < X-Content-Type-Options: nosniff
-< Link: </api/books?author=butler&available=true&page=1&per_page=20>; rel="first", </api/books?author=butler&available=true&page=1&per_page=20>; rel="last"
 
 [
     {
@@ -961,8 +1093,8 @@ Saved a new password for Jonas
 
 < HTTP/1.1 405 Method Not Allowed
 < Content-Type: application/problem+json
-< X-Content-Type-Options: nosniff
 < Allow: GET, POST
+< X-Content-Type-Options: nosniff
 
 {
     "type": "about:blank",
@@ -991,8 +1123,8 @@ Saved a new password for Jonas
 
 < HTTP/1.1 401 Unauthorized
 < Content-Type: application/problem+json
-< X-Content-Type-Options: nosniff
 < WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
 
 {
     "type": "about:blank",
@@ -1028,8 +1160,8 @@ Saved a new password for Jonas
 
 < HTTP/1.1 401 Unauthorized
 < Content-Type: application/problem+json
-< X-Content-Type-Options: nosniff
 < WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
 
 {
     "type": "about:blank",
@@ -1076,9 +1208,9 @@ Saved a new password for Jonas
 > {"title": "Beloved", "author": "Toni Morrison", "year": 1987}
 
 < HTTP/1.1 201 Created
+< Location: /api/book?title=Beloved
 < Content-Type: application/json
 < X-Content-Type-Options: nosniff
-< Location: /api/book?title=Beloved
 
 {
     "title": "Beloved",
@@ -1106,19 +1238,50 @@ Saved a new password for Jonas
     "detail": "\"Beloved\" is already on the shelf"
 }
 
+> POST /api/books
+> Authorization: Bearer {{jonastoken}}
+> Content-Type: application/json
+>
+> {"title": "", "author": "Toni Morrison", "year": "1973", "isbn": "978-0-14-118"}
+
+< HTTP/1.1 422 Unprocessable Content
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "/problems/invalid-book",
+    "title": "Unprocessable Content",
+    "status": 422,
+    "detail": "The book has mistakes: errors names each one.",
+    "errors": [
+        {
+            "field": "year",
+            "message": "The year is a number, such as 1979."
+        },
+        {
+            "field": "title",
+            "message": "A book needs a title."
+        },
+        {
+            "field": "isbn",
+            "message": "\"978-0-14-118\" is not a valid ISBN-13."
+        }
+    ]
+}
+
 > DELETE /api/tokens
 > Authorization: Bearer {{amiratoken}}
 
 < HTTP/1.1 204 No Content
-< Content-type: text/html; charset=UTF-8
+< X-Content-Type-Options: nosniff
 
 > GET /api/loans
 > Authorization: Bearer {{amiratoken}}
 
 < HTTP/1.1 401 Unauthorized
 < Content-Type: application/problem+json
-< X-Content-Type-Options: nosniff
 < WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
 
 {
     "type": "about:blank",
@@ -1130,10 +1293,8 @@ Saved a new password for Jonas
 > GET /book?title=kindred
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1151,7 +1312,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1160,19 +1321,19 @@ Saved a new password for Jonas
     <p class="back"><a href="/">← All books</a></p>
     <h1>Kindred</h1>
     <div class="card details">
-        <span class="cover" aria-hidden="true">K</span>
+            <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <label>Copies in the library <input name="copies" value="0" required inputmode="numeric"></label>
         <p class="actions"><button>Save</button></p>
     </form>
     <form class="card" method="post" action="/remove">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <p>Removing a book takes it off the shelf for good, with its cover.</p>
         <p class="actions"><button class="danger">Remove this book</button></p>
@@ -1186,11 +1347,9 @@ Saved a new password for Jonas
 >
 > title=Kindred&copies=-1&_token={{token}}
 
-< HTTP/1.1 422 Unknown Status Code
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1208,7 +1367,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1218,19 +1377,19 @@ Saved a new password for Jonas
     <h1>Kindred</h1>
     <p class="error" role="alert">Copies must be a whole number from 0 to 999.</p>
     <div class="card details">
-        <span class="cover" aria-hidden="true">K</span>
+            <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <label>Copies in the library <input name="copies" value="-1" required inputmode="numeric"></label>
         <p class="actions"><button>Save</button></p>
     </form>
     <form class="card" method="post" action="/remove">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <p>Removing a book takes it off the shelf for good, with its cover.</p>
         <p class="actions"><button class="danger">Remove this book</button></p>
@@ -1246,15 +1405,29 @@ Saved a new password for Jonas
 
 < HTTP/1.1 303 See Other
 < Location: /book?title=Kindred
-< Content-type: text/html; charset=UTF-8
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/book?title=Kindred'" />
+
+        <title>Redirecting to /book?title=Kindred</title>
+    </head>
+    <body>
+        Redirecting to <a href="/book?title=Kindred">/book?title=Kindred</a>.
+    </body>
+</html>
 
 > GET /book?title=Kindred
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1272,7 +1445,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1282,19 +1455,19 @@ Saved a new password for Jonas
     <h1>Kindred</h1>
     <p class="flash" role="status">Saved: the library has 3 copies.</p>
     <div class="card details">
-        <span class="cover" aria-hidden="true">K</span>
+            <span class="cover" aria-hidden="true">K</span>
         <div>
             <p>Octavia E. Butler, 1979</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <label>Copies in the library <input name="copies" value="3" required inputmode="numeric"></label>
         <p class="actions"><button>Save</button></p>
     </form>
     <form class="card" method="post" action="/remove">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Kindred">
         <p>Removing a book takes it off the shelf for good, with its cover.</p>
         <p class="actions"><button class="danger">Remove this book</button></p>
@@ -1306,10 +1479,8 @@ Saved a new password for Jonas
 > GET /book?title=Sula
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1327,7 +1498,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1336,19 +1507,19 @@ Saved a new password for Jonas
     <p class="back"><a href="/">← All books</a></p>
     <h1>Sula</h1>
     <div class="card details">
-        <img class="cover" src="/cover?title=Sula" alt="">
+            <img class="cover" src="/cover?title=Sula" alt="">
         <div>
             <p>Toni Morrison, 1973</p>
         </div>
     </div>
     <form class="card" method="post" action="/copies">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Sula">
         <label>Copies in the library <input name="copies" value="1" required inputmode="numeric"></label>
         <p class="actions"><button>Save</button></p>
     </form>
     <form class="card" method="post" action="/remove">
-        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="_token" value="…">
         <input type="hidden" name="title" value="Sula">
         <p>Removing a book takes it off the shelf for good, with its cover.</p>
         <p class="actions"><button class="danger">Remove this book</button></p>
@@ -1364,15 +1535,29 @@ Saved a new password for Jonas
 
 < HTTP/1.1 303 See Other
 < Location: /
-< Content-type: text/html; charset=UTF-8
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/'" />
+
+        <title>Redirecting to /</title>
+    </head>
+    <body>
+        Redirecting to <a href="/">/</a>.
+    </body>
+</html>
 
 > GET /
 
 < HTTP/1.1 200 OK
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1390,7 +1575,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1419,13 +1604,13 @@ Saved a new password for Jonas
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">P</span>
-            <h2><a href="/book?title=Parable+of+the+Sower">Parable of the Sower</a></h2>
+            <h2><a href="/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
             <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
             <span class="cover" aria-hidden="true">T</span>
-            <h2><a href="/book?title=Things+Fall+Apart">Things Fall Apart</a></h2>
+            <h2><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></h2>
             <p>Chinua Achebe, 1958</p>
             <p class="status">Available</p>
         </li>
@@ -1438,10 +1623,8 @@ Saved a new password for Jonas
 > GET /cover?title=Sula
 
 < HTTP/1.1 404 Not Found
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1459,7 +1642,7 @@ Saved a new password for Jonas
             <a href="/loans">My loans</a>
             <a class="button" href="/add">Add a book</a>
             <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
+                <input type="hidden" name="_token" value="…">
                 <span>Jonas</span> <button class="link">Log out</button>
             </form>
         </nav>
@@ -1475,21 +1658,49 @@ Saved a new password for Jonas
 
 < HTTP/1.1 405 Method Not Allowed
 < Allow: POST
-< Content-type: text/html; charset=UTF-8
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=UTF-8
 
 > GET /logout
 
-< HTTP/1.1 405 Method Not Allowed
-< Allow: POST
-< Content-type: text/html; charset=UTF-8
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expired · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav>
+            <a href="/">Books</a>
+            <a href="/loans">My loans</a>
+            <a class="button" href="/add">Add a book</a>
+            <form class="who" method="post" action="/logout">
+                <input type="hidden" name="_token" value="…">
+                <span>Jonas</span> <button class="link">Log out</button>
+            </form>
+        </nav>
+    </header>
+    <main>
+    <h1>This form has expired</h1>
+    <p class="error" role="alert">Nothing was saved.</p>
+    <p>Please <a href="/add">open the form again</a> and send it once more.</p>
+    </main>
+</body>
+</html>
 
 > GET /add.php
 
 < HTTP/1.1 404 Not Found
-< Content-Type: text/html; charset=UTF-8
-< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < X-Content-Type-Options: nosniff
-< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
 <html lang="en">
@@ -1504,12 +1715,7 @@ Saved a new password for Jonas
         <a class="brand" href="/">Shelf</a>
         <nav>
             <a href="/">Books</a>
-            <a href="/loans">My loans</a>
-            <a class="button" href="/add">Add a book</a>
-            <form class="who" method="post" action="/logout">
-                <input type="hidden" name="_token" value="{{token}}">
-                <span>Jonas</span> <button class="link">Log out</button>
-            </form>
+            <a href="/login">Log in</a>
         </nav>
     </header>
     <main>
@@ -1523,4 +1729,5 @@ Saved a new password for Jonas
 
 < HTTP/1.1 405 Method Not Allowed
 < Allow: GET, POST
-< Content-type: text/html; charset=UTF-8
+< X-Content-Type-Options: nosniff
+< Content-Type: text/html; charset=UTF-8

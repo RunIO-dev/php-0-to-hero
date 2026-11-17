@@ -1,0 +1,11 @@
+{
+    "name": "learner/security",
+    "description": "Chapter 76's examples: Symfony's password hashers and voters, on their own.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/password-hasher": "7.4.*",
+        "symfony/security-core": "7.4.*"
+    }
+}

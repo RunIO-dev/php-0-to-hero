@@ -1,0 +1,5 @@
+# ✗ Only the first rule whose path matches counts: ^/ matches /admin too.
+security:
+    access_control:
+        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_ADMIN }

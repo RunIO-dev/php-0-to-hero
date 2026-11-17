@@ -1,0 +1,23 @@
+{# A member's loans, inside the layout. The page passes name, and loans: a list of {title, due}.
+   - the title: "Loans of <name> · North Library" (the layout's own title after the dot);
+   - a heading <h1>Loans of <name></h1>;
+   - one <li> per loan: "<title>, due <due>";
+   - no loans: <p>No loans.</p>, and no list at all;
+   - last, "1 loan" or "3 loans". #}
+{% extends 'layout.html.twig' %}
+
+{% block title %}Loans of {{ name }} · {{ parent() }}{% endblock %}
+
+{% block main %}
+<h1>Loans of {{ name }}</h1>
+{% if loans is empty %}
+<p>No loans.</p>
+{% else %}
+<ul>
+{% for loan in loans %}
+    <li>{{ loan.title }}, due {{ loan.due }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<p>{{ loans|length }} {{ loans|length == 1 ? 'loan' : 'loans' }}</p>
+{% endblock %}

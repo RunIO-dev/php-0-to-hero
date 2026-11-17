@@ -1,0 +1,26 @@
+{# The book list as cards (chapters 49 and 55): covered holds the titles that have a cover. #}
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h1>Books</h1>
+{% include '_flash.html.twig' %}
+{% if books is empty %}
+    <p class="empty">No books yet. <a href="{{ path('add') }}">Add the first one.</a></p>
+{% else %}
+    <ul class="books">
+{% for book in books %}
+        <li class="book">
+{% include '_cover.html.twig' with {hasCover: book.title in covered} %}
+            <h2><a href="{{ path('book', {title: book.title}) }}">{{ book.title }}</a></h2>
+            <p>{{ book.author }}, {{ book.year }}</p>
+{% if book.isAvailable %}
+            <p class="status">Available</p>
+{% else %}
+            <p class="status on-loan">All copies on loan</p>
+{% endif %}
+        </li>
+{% endfor %}
+    </ul>
+    <p class="count">{{ books|length }} {{ books|length == 1 ? 'book' : 'books' }}</p>
+{% endif %}
+{% endblock %}

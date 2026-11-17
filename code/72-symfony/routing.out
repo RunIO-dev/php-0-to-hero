@@ -1,0 +1,8 @@
+Array
+(
+    [id] => 12
+    [_route] => book
+)
+/books/kindred: no route, 404
+POST /books/12: 405, Allow: GET, DELETE
+/books/7

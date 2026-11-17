@@ -6,31 +6,16 @@ namespace Shelf\Tests\Web;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\TestCase;
-use Shelf\Accounts;
 use Shelf\ApiTokens;
-use Shelf\Book;
-use Shelf\Isbn;
 use Shelf\Library;
-use Shelf\Member;
-use Shelf\Role;
-use Shelf\Tests\ArrayLogger;
-use Shelf\Tests\InMemoryBookRepository;
-use Shelf\Tests\InMemoryLoanRepository;
-use Shelf\Tests\InMemoryMemberRepository;
-use Shelf\Tests\InMemoryTokenRepository;
 use Shelf\Tests\JsonShape;
-use Shelf\Web\App;
-use Shelf\Web\Covers;
-use Shelf\Web\Request;
-use Shelf\Web\Response;
-use Shelf\Web\Templates;
 
 /**
- * The API's contract (chapter 71): what programs rely on. If a field disappears or changes its type,
- * an error stops being problem details, or an address forgets its token check, a test here fails.
+ * The API's contract (chapter 71), back in chapter 77 for the Symfony version: what programs rely on.
+ * If a field disappears or changes its type, an error stops being problem details, or an address
+ * forgets its token check, a test here fails.
  */
-final class ApiContractTest extends TestCase
+final class ApiContractTest extends ShelfWebTestCase
 {
     private const array BOOK = ['title' => 'string', 'author' => 'string', 'year' => 'int', 'copies' => 'int', 'isbn' => '?string', 'cover' => '?string'];
 
@@ -40,100 +25,103 @@ final class ApiContractTest extends TestCase
 
     private const array PROBLEM = ['type' => 'string', 'title' => 'string', 'status' => 'int', 'detail' => 'string'];
 
-    private App $app;
-    private Library $library;
-    private ArraySession $session;
-
-    /** @var array<string, string> a token for each member, by name in lower case */
+    /** @var array<string, string> each member's token, issued at their first request */
     private array $tokens = [];
-
-    protected function setUp(): void
-    {
-        $books = new InMemoryBookRepository([new Book('Kindred', 'Octavia E. Butler', 1979, 2, new Isbn('9780807083697'))]);
-        $members = new InMemoryMemberRepository([new Member('Amira', Role::Reader), new Member('Jonas', Role::Staff)]);
-        $this->library = new Library($books, $members, new InMemoryLoanRepository($books));
-        $accounts = new Accounts($members, ['cost' => 4]);
-        $accounts->setPassword('Amira', 'tea kettle under the lemon tree');
-        $tokens = new ApiTokens(new InMemoryTokenRepository($members), $members);
-        foreach (['amira' => 'Amira', 'jonas' => 'Jonas'] as $key => $name) {
-            $this->tokens[$key] = $tokens->issue($name, new DateTimeImmutable())['token'];
-        }
-        $this->session = new ArraySession(['csrf' => 'the-token']);
-        $covers = new Covers(sys_get_temp_dir() . '/shelf-contract-' . bin2hex(random_bytes(4)));
-        $this->app = new App($this->library, $accounts, new Templates(__DIR__ . '/../../templates'), $this->session, $covers, $tokens, new ArrayLogger());
-    }
 
     public function testABookHasTheSameShapeEverywhere(): void
     {
         $list = $this->send('GET', '/api/books');
-        $one = $this->send('GET', '/api/book', query: ['title' => 'Kindred']);
-        $added = $this->send('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', 'jonas');
+        $one = $this->send('GET', '/api/book?title=Kindred');
+        $added = $this->send('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', 'Jonas');
 
-        self::assertSame([200, 200, 201], [$list->status, $one->status, $added->status]);
-        foreach ([...self::decoded($list), self::decoded($one), self::decoded($added)] as $book) {
+        self::assertCount(1, $list);
+        foreach ([...$list, $one, $added] as $book) {
             self::assertSame([], JsonShape::errors(self::BOOK, $book));
         }
+        self::assertResponseStatusCodeSame(201);
+        self::assertResponseHeaderSame('Location', '/api/book?title=Sula');
+    }
+
+    public function testAListHasItsLinks(): void
+    {
+        $this->send('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', 'Jonas');
+
+        $page = $this->send('GET', '/api/books?per_page=1');
+
+        self::assertSame(['Kindred'], array_column($page, 'title'));
+        self::assertStringContainsString('</api/books?page=2&per_page=1>; rel="next"', (string) $this->client->getResponse()->headers->get('Link'));
     }
 
     public function testALoanHasItsShapeAndADate(): void
     {
-        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        self::service(Library::class)->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
 
-        $loans = self::decoded($this->send('GET', '/api/loans', token: 'amira'));
+        $loans = $this->send('GET', '/api/loans', member: 'Amira');
 
         self::assertCount(1, $loans);
         self::assertSame([], JsonShape::errors(self::LOAN, $loans[0]));
-        self::assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', is_array($loans[0]) && is_string($loans[0]['due'] ?? null) ? $loans[0]['due'] : '');
+        self::assertIsArray($loans[0]);
+        self::assertSame('2026-03-16', $loans[0]['due'], 'Two weeks, as a date');
     }
 
-    public function testATokenHasItsShape(): void
+    public function testATokenHasItsShapeAndWorks(): void
     {
-        $answer = $this->send('POST', '/api/tokens', '{"name": "Amira", "password": "tea kettle under the lemon tree"}');
+        $answer = $this->send('POST', '/api/tokens', json_encode(['name' => 'Amira', 'password' => self::AMIRA], JSON_THROW_ON_ERROR));
 
-        self::assertSame(201, $answer->status);
-        self::assertSame([], JsonShape::errors(self::TOKEN, self::decoded($answer)));
+        self::assertResponseStatusCodeSame(201);
+        self::assertSame([], JsonShape::errors(self::TOKEN, $answer));
+        self::assertIsString($answer['token']);
+        $this->client->request('GET', '/api/loans', server: ['HTTP_AUTHORIZATION' => 'Bearer ' . $answer['token']]);
+        self::assertResponseIsSuccessful();
     }
 
-    /**
-     * Every way a request can go wrong: the status, as problem details.
-     *
-     * @param array<string, string> $query
-     */
+    public function testATokenThatWasRevokedIsRefused(): void
+    {
+        $this->send('DELETE', '/api/tokens', member: 'Amira');
+        self::assertResponseStatusCodeSame(204);
+
+        $this->send('GET', '/api/loans', member: 'Amira');
+        self::assertResponseStatusCodeSame(401);
+    }
+
+    /** Every way a request can go wrong: the status, as problem details. */
     #[DataProvider('mistakes')]
-    public function testEveryMistakeIsAProblem(string $method, string $path, array $query, string $body, ?string $token, int $status): void
+    public function testEveryMistakeIsAProblem(string $method, string $path, string $body, ?string $token, int $status): void
     {
-        $answer = $this->send($method, $path, $body, $token, $query);
-        $problem = self::decoded($answer);
+        $problem = $this->send($method, $path, $body, $token);
 
-        self::assertSame([$status, 'application/problem+json'], [$answer->status, $answer->headers['Content-Type'] ?? null]);
-        self::assertSame([], JsonShape::errors(self::PROBLEM, $problem));
+        self::assertResponseStatusCodeSame($status);
+        self::assertResponseHeaderSame('Content-Type', 'application/problem+json');
+        self::assertSame([], JsonShape::errors(self::PROBLEM + ($status === 422 ? ['errors' => 'array'] : []), $problem));
         self::assertSame($status, $problem['status'] ?? null, 'The body says the same status');
     }
 
-    /** @return iterable<string, array{string, string, array<string, string>, string, ?string, int}> */
+    /** @return iterable<string, array{string, string, string, ?string, int}> */
     public static function mistakes(): iterable
     {
         $book = '{"title": "Sula", "author": "Toni Morrison", "year": 1973}';
-        yield 'an unknown address' => ['GET', '/api/authors', [], '', null, 404];
-        yield 'a method the address does not take' => ['PUT', '/api/books', [], '', null, 405];
-        yield 'an unknown book' => ['GET', '/api/book', ['title' => 'Sula'], '', null, 404];
-        yield 'a page that does not exist' => ['GET', '/api/books', ['page' => '0'], '', null, 400];
-        yield 'a page too long' => ['GET', '/api/books', ['per_page' => '101'], '', null, 400];
-        yield 'a wrong password' => ['POST', '/api/tokens', [], '{"name": "Amira", "password": "tea kettle"}', null, 401];
-        yield 'no token' => ['GET', '/api/loans', [], '', null, 401];
-        yield 'a reader adding a book' => ['POST', '/api/books', [], $book, 'amira', 403];
-        yield 'a body that is not JSON' => ['POST', '/api/books', [], '{"title": ', 'jonas', 400];
-        yield 'a year as text' => ['POST', '/api/books', [], '{"title": "Sula", "author": "Toni Morrison", "year": "1973"}', 'jonas', 422];
-        yield 'a book that is there' => ['POST', '/api/books', [], '{"title": "kindred", "author": "Octavia E. Butler", "year": 1979}', 'jonas', 409];
+        yield 'an unknown address' => ['GET', '/api/authors', '', null, 404];
+        yield 'a method the address does not take' => ['PUT', '/api/books', '', null, 405];
+        yield 'an unknown book' => ['GET', '/api/book?title=Sula', '', null, 404];
+        yield 'a page that does not exist' => ['GET', '/api/books?page=0', '', null, 400];
+        yield 'a page too long' => ['GET', '/api/books?per_page=101', '', null, 400];
+        yield 'a wrong password' => ['POST', '/api/tokens', '{"name": "Amira", "password": "tea kettle"}', null, 401];
+        yield 'no token' => ['GET', '/api/loans', '', null, 401];
+        yield 'an unknown token' => ['GET', '/api/loans', '', 'Nobody', 401];
+        yield 'a reader adding a book' => ['POST', '/api/books', $book, 'Amira', 403];
+        yield 'a body that is not JSON' => ['POST', '/api/books', '{"title": ', 'Jonas', 400];
+        yield 'a year as text' => ['POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": "1973"}', 'Jonas', 422];
+        yield 'a book that is there' => ['POST', '/api/books', '{"title": "kindred", "author": "Octavia E. Butler", "year": 1979}', 'Jonas', 409];
     }
 
     /** Every address that isn't public asks for a token: a new one that forgets its check fails here. */
     #[DataProvider('protectedAddresses')]
     public function testAnAddressThatIsNotPublicNeedsAToken(string $method, string $path): void
     {
-        $answer = $this->send($method, $path, '{}');
+        $this->send($method, $path, '{}');
 
-        self::assertSame([401, 'Bearer'], [$answer->status, $answer->headers['WWW-Authenticate'] ?? null]);
+        self::assertResponseStatusCodeSame(401);
+        self::assertResponseHeaderSame('WWW-Authenticate', 'Bearer');
     }
 
     /** @return iterable<string, array{string, string}> */
@@ -144,27 +132,33 @@ final class ApiContractTest extends TestCase
         }
     }
 
-    public function testTheApiLeavesTheSessionAlone(): void
+    public function testTheApiStartsNoSession(): void
     {
         $this->send('GET', '/api/books');
-        $this->send('GET', '/api/loans', token: 'amira');
-        $this->send('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', 'jonas');
+        $this->send('GET', '/api/loans', member: 'Amira');
+        $this->send('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', 'Jonas');
 
-        self::assertSame(['csrf' => 'the-token'], $this->session->values, 'No cookie, no session: programs use tokens');
+        self::assertSame([], $this->client->getCookieJar()->all(), 'No cookie: programs use tokens');
     }
 
-    /** @param array<string, string> $query */
-    private function send(string $method, string $path, string $body = '', ?string $token = null, array $query = []): Response
+    /**
+     * Sends a request as a program does, with the token of $member when there is one, and decodes the answer.
+     *
+     * @return array<mixed>
+     */
+    private function send(string $method, string $path, string $body = '', ?string $member = null): array
     {
-        $headers = ['content-type' => 'application/json', ...$token === null ? [] : ['authorization' => 'Bearer ' . $this->tokens[$token]]];
-
-        return $this->app->handle(new Request($method, $path, query: $query, headers: $headers, body: $body));
-    }
-
-    /** @return array<mixed> */
-    private static function decoded(Response $answer): array
-    {
-        $data = json_decode($answer->body, true, flags: JSON_THROW_ON_ERROR);
+        $server = ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'];
+        if ($member !== null) {
+            $this->tokens[$member] ??= $member === 'Nobody' ? 'not-a-token' : self::service(ApiTokens::class)->issue($member, new DateTimeImmutable())['token'];
+            $server['HTTP_AUTHORIZATION'] = 'Bearer ' . $this->tokens[$member];
+        }
+        $this->client->request($method, $path, server: $server, content: $body);
+        $content = (string) $this->client->getResponse()->getContent();
+        if ($content === '') {
+            return [];
+        }
+        $data = json_decode($content, true, flags: JSON_THROW_ON_ERROR);
         self::assertIsArray($data);
 
         return $data;

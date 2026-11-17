@@ -1,0 +1,8 @@
+POST /book
+title: Kindred
+note: Signed copy
+page: 1
+token: Bearer 8a5770ac
+201 Created
+Location: /book?title=Kindred
+<h1>Kindred</h1>

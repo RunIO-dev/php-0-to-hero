@@ -1,0 +1,12 @@
+{# A member's loans, inside the layout. The page passes name, and loans: a list of {title, due}.
+   - the title: "Loans of <name> · North Library" (the layout's own title after the dot);
+   - a heading <h1>Loans of <name></h1>;
+   - one <li> per loan: "<title>, due <due>";
+   - no loans: <p>No loans.</p>, and no list at all;
+   - last, "1 loan" or "3 loans". #}
+<h1>Loans of {{ name }}</h1>
+<ul>
+{% for loan in loans %}
+    <li>{{ loan.title }}</li>
+{% endfor %}
+</ul>

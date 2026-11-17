@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+// Symfony's command line (chapter 72): php bin/console list
+
+use Shelf\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
+
+return static function (array $context): Application {
+    /** @var array{APP_ENV: string, APP_DEBUG: string} $context the settings from .env and the environment */
+    return new Application(new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']));
+};

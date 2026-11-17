@@ -1,10 +1,15 @@
 # Shelf's web pages, served as by: docker compose up web
 # Chapter 63: the database gets the books and members of the JSON files, and passwords for Amira
-# and Jonas, as you would set it up (chapters 54 and 61).
+# and Jonas, as you would set it up (chapters 54 and 61). Chapter 74: Doctrine makes the tables, and
+# Symfony's commands fill them.
 # docroot public
-# run php shelf.php import
-# run php shelf.php password Amira < amira-password.txt
-# run php shelf.php password Jonas < jonas-password.txt
+# run php bin/console doctrine:migrations:migrate --no-interaction --quiet
+# run php bin/console shelf:import
+# run php bin/console shelf:password Amira < amira-password.txt
+# run php bin/console shelf:password Jonas < jonas-password.txt
+# run php bin/console shelf:books
+# Chapter 72: Symfony answers now. Chapter 73: every page has its route and its controller.
+# run php bin/console debug:router
 # A visitor sees the books, and no "Add a book".
 GET /
 
@@ -25,6 +30,10 @@ Content-Type: application/x-www-form-urlencoded
 name=Amira&password=tea+kettle&_token={{token}}
 
 ###
+# Chapter 76: Symfony's security sends the visitor back to the form, which says why, with the name.
+GET /login
+
+###
 # Amira is a reader.
 POST /login
 Content-Type: application/x-www-form-urlencoded
@@ -32,6 +41,8 @@ Content-Type: application/x-www-form-urlencoded
 name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
 
 ###
+# Logging in ends the CSRF tokens of before (chapter 76): the first page after it holds a new one.
+# capture token /name="_token" value="([^"]+)"/
 GET /
 
 ###
@@ -48,6 +59,11 @@ Content-Type: application/x-www-form-urlencoded
 _token={{token}}
 
 ###
+# Logging out ends them too: the login form holds a new one.
+# capture token /name="_token" value="([^"]+)"/
+GET /login
+
+###
 # Jonas is staff.
 POST /login
 Content-Type: application/x-www-form-urlencoded
@@ -55,6 +71,7 @@ Content-Type: application/x-www-form-urlencoded
 name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
 
 ###
+# capture token /name="_token" value="([^"]+)"/
 GET /add
 
 ###
@@ -235,6 +252,14 @@ Authorization: Bearer {{jonastoken}}
 Content-Type: application/json
 
 {"title": "beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# Chapter 75: the form's rules check the API's JSON too, and name every mistake at once.
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "", "author": "Toni Morrison", "year": "1973", "isbn": "978-0-14-118"}
 
 ###
 # Logging out ends the token at once.

@@ -1,0 +1,3 @@
+# Shelf's routes (chapter 72): the #[Route] attributes of the controllers in src/Controller/.
+controllers:
+    resource: routing.controllers

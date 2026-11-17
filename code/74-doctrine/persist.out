@@ -1,0 +1,7 @@
+persist, then flush:
+  SQL: INSERT INTO books (title, author, copies) VALUES (?, ?, ?) ["Kindred","Octavia E. Butler",2]
+  SQL: INSERT INTO books (title, author, copies) VALUES (?, ?, ?) ["Sula","Toni Morrison",1]
+Kindred got the ID 1
+find by a column:
+  SQL: SELECT t0.id AS id_1, t0.title AS title_2, t0.author AS author_3, t0.copies AS copies_4 FROM books t0 WHERE t0.title = ? LIMIT 1 ["Sula"]
+Found: Sula by Toni Morrison

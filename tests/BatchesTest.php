@@ -44,6 +44,27 @@ final class BatchesTest extends TestCase
         }
     }
 
+    /** A solution's files are loaded by its test, not by each other: one exercise level is one unit, with its subfolders. */
+    public function testTheFilesOfOneExerciseStayTogether(): void
+    {
+        $dir = sys_get_temp_dir() . '/batches-' . bin2hex(random_bytes(4));
+        $level = "$dir/solutions/76-security/intermediate";
+        mkdir("$level/entities", 0o777, true);
+        try {
+            file_put_contents("$dir/a.php", "<?php\nfinal class Review {}\n");
+            file_put_contents("$level/Review.php", "<?php\nfinal class Review {}\n");
+            file_put_contents("$level/ReviewVoter.php", "<?php\nfinal class ReviewVoter { public function f(Review \$r): void {} }\n");
+            file_put_contents("$level/entities/Book.php", "<?php\nfinal class Book {}\n");
+
+            self::assertSame(
+                [["$dir/a.php"], ["$level/Review.php", "$level/ReviewVoter.php", "$level/entities/Book.php"]],
+                Batches::split(["$dir/a.php", "$level/Review.php", "$level/ReviewVoter.php", "$level/entities/Book.php"]),
+            );
+        } finally {
+            \Tools\Run::remove($dir);
+        }
+    }
+
     public function testFilesThatRequireEachOtherStayTogether(): void
     {
         $dir = sys_get_temp_dir() . '/batches-' . bin2hex(random_bytes(4));

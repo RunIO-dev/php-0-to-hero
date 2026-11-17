@@ -1,0 +1,7 @@
+{# One book. Every value in double braces is escaped for HTML; a tag in braces and percent signs is logic. #}
+<h1>{{ book.title }}</h1>
+<p>{{ book.author }}, {{ book.year }}</p>
+{% if book.isbn %}
+<p>ISBN {{ book.isbn }}</p>
+{% endif %}
+<p>{{ book.copies }} {{ book.copies == 1 ? 'copy' : 'copies' }}</p>

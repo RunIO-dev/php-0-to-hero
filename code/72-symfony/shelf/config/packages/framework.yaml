@@ -1,0 +1,8 @@
+# The framework's settings (chapter 72). The secret signs what Symfony gives out, such as links
+# that can't be changed; .env.dev holds one for developers' computers, and a server sets its own.
+framework:
+    secret: '%env(APP_SECRET)%'
+
+when@test:
+    framework:
+        test: true

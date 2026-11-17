@@ -1,0 +1,10 @@
+{
+    "name": "learner/twig",
+    "description": "Chapter 73's examples: Twig, on its own.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "twig/twig": "^3.22"
+    }
+}

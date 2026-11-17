@@ -1,0 +1,19 @@
+{# The logged-in member's own loans (chapter 63). #}
+{% extends 'base.html.twig' %}
+
+{% block title %}My loans · Shelf{% endblock %}
+
+{% block main %}
+    <h1>My loans</h1>
+{% for loan in loans %}
+{% if loop.first %}
+    <ul class="loans">
+{% endif %}
+        <li><a href="{{ path('book', {title: loan.book.title}) }}">{{ loan.book.title }}</a>, due back on {{ loan.due|date('l, j F Y', false) }}</li>
+{% if loop.last %}
+    </ul>
+{% endif %}
+{% else %}
+    <p class="empty">You have no books on loan.</p>
+{% endfor %}
+{% endblock %}

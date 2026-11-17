@@ -1,0 +1,15 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Books by {{ author }} · {{ parent() }}{% endblock %}
+
+{% block main %}
+<h1>Books by {{ author }}</h1>
+<ul>
+{% for book in books %}
+    <li><a href="/book?title={{ book.title|url_encode }}">{{ book.title }}</a>, {{ book.year }}</li>
+{% else %}
+    <li>No books yet.</li>
+{% endfor %}
+</ul>
+<p>{{ books|length }} {{ books|length == 1 ? 'book' : 'books' }}, the newest from {{ max(books|map(b => b.year)) }}.</p>
+{% endblock %}

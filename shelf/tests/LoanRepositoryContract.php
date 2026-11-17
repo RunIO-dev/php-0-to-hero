@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Shelf\Book;
 use Shelf\BookRepository;
+use Shelf\Isbn;
 use Shelf\Loan;
 use Shelf\LoanRepository;
 use Shelf\Member;
@@ -47,6 +48,18 @@ abstract class LoanRepositoryContract extends TestCase
 
         self::assertSame(1, $books->find('Sula')?->copies);
         self::assertTrue($loans->isOnLoan('sula'));
+    }
+
+    /** Chapter 77: a book with an ISBN, an object, which Doctrine reads again after the loan. */
+    public function testABookWithAnIsbnIsLentToo(): void
+    {
+        $kindred = new Book('Kindred', 'Octavia E. Butler', 1979, 2, new Isbn('9780807083697'));
+        [$books, $loans] = $this->repositories($kindred);
+
+        $loans->add($this->loan($kindred, $this->amira, '2026-03-16'));
+
+        self::assertSame(1, $books->find('Kindred')?->copies);
+        self::assertSame('9780807083697', $kindred->isbn?->digits);
     }
 
     public function testTheLastCopyGoesOnce(): void

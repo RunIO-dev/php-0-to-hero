@@ -1,0 +1,10 @@
+{# A form without the right CSRF token (chapter 51): sent by another site, or opened before the session ended. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Expired · Shelf{% endblock %}
+
+{% block main %}
+    <h1>This form has expired</h1>
+    <p class="error" role="alert">Nothing was saved.</p>
+    <p>Please <a href="{{ path('add') }}">open the form again</a> and send it once more.</p>
+{% endblock %}

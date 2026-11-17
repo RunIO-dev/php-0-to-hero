@@ -1,0 +1,12 @@
+{
+    "name": "learner/testing-symfony",
+    "description": "Chapter 77's examples: a browser for tests, and reading HTML with a crawler, on their own.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/http-kernel": "7.4.*",
+        "symfony/browser-kit": "7.4.*",
+        "symfony/css-selector": "7.4.*"
+    }
+}

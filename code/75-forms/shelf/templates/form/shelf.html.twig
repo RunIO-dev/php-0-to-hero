@@ -1,0 +1,8 @@
+{# Shelf's form theme (chapter 75): Symfony draws each field with blocks like these; this file changes
+   only how mistakes look, as the paragraphs the stylesheet knows, each on a line of its own. #}
+{% block form_errors -%}
+{% for error in errors %}
+
+    <p class="error" role="alert">{{ error.message }}</p>
+{%- endfor %}
+{%- endblock %}

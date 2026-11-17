@@ -1,0 +1,9 @@
+{# One book's card. The page passes book: title, author, year, isbn (or null) and copiesLeft.
+   - the title as the heading <h2>, and "author, year" below it;
+   - "ISBN ..." only when the book has one;
+   - "Available" when copies are left, otherwise "All copies on loan";
+   - every value escaped: never |raw. #}
+<article class="book">
+    <h2>{{ book.title|raw }}</h2>
+    <p>{{ book.author }}</p>
+</article>

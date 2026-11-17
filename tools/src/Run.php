@@ -59,7 +59,12 @@ final class Run
         return ['code' => proc_close($process), 'out' => $text[1], 'err' => $text[2]];
     }
 
-    /** @return list<string> every file under $dir whose name ends in $suffix, sorted, without vendor/ */
+    /**
+     * Every file under $dir whose name ends in $suffix, sorted. Without vendor/, var/ and
+     * config/reference.php: what Composer and Symfony make (chapter 72), and Git ignores.
+     *
+     * @return list<string>
+     */
     public static function files(string $dir, string $suffix): array
     {
         if (!is_dir($dir)) {
@@ -70,7 +75,8 @@ final class Run
         foreach ($items as $item) {
             $path = (string) $item;
             $inside = substr($path, strlen($dir));
-            if (str_ends_with($path, $suffix) && !str_contains($inside, '/vendor/')) {
+            if (str_ends_with($path, $suffix) && !str_contains($inside, '/vendor/') && !str_contains($inside, '/var/')
+                && !str_ends_with($inside, '/config/reference.php')) {
                 $found[] = $path;
             }
         }

@@ -1,0 +1,6 @@
+{# A book's cover, or its first letter when it has none (chapter 52). #}
+{% if hasCover %}
+            <img class="cover" src="{{ path('cover', {title: book.title}) }}" alt="">
+{% else %}
+            <span class="cover" aria-hidden="true">{{ book.title|slice(0, 1) }}</span>
+{% endif %}

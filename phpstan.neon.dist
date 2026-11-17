@@ -10,6 +10,9 @@ parameters:
         - '*.bad.php'       # "don't do this", only linted
         - 'shelf/vendor/*'  # Shelf's generated autoloader (chapter 36 on)
         - 'code/*/vendor/*'
+        - 'shelf/var/*'     # Symfony's cache (chapter 72 on)
+        - '*/config/reference.php' # made by Symfony in debug mode
+        - 'code/*/var/*'
     ignoreErrors:
         # Before functions (chapter 15), examples decide on fixed values, so every
         # condition's answer is known in advance. That is the lesson, not a bug.

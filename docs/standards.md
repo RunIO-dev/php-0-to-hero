@@ -103,6 +103,11 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - in a `multipart/form-data` body, a line `< samples/cover.png` sends that file's bytes (an upload);
   - cookies are kept between the requests of one file; long cookie values and dates are shown as `…`, and a binary answer as its size.
   A page that only an `.http` file requests (in its folder, or one folder up) is checked through the requests, not run on its own. Exercise tests send requests with `responses_of($dir, $http)` (`tools/bootstrap.php`).
+- **Symfony** (Part 11, Symfony 7.4 LTS): *Shelf* is a Symfony app from chapter 72.
+  - Generated files never count: `var/` (cache, logs, the SQLite databases), `vendor/`, and `config/reference.php` (made in debug mode) are skipped by the checks, PHPStan and PHP-CS-Fixer.
+  - Flex writes `config/bundles.php` again on every `composer require`, without our comment and `declare(strict_types=1);`: put them back each time. A bundle whose recipe isn't one of Symfony's own (chapter 77's `dama/doctrine-test-bundle`) is added by hand.
+  - Web transcripts: Symfony's CSRF tokens change on every page, so the `value` of a `_token` field shows as `…`; the test server's address in whole URLs (redirects) shows as `http://localhost:8000`. A `# capture` reads the token again after each login and logout, which change it.
+  - *Shelf*'s tests run with `APP_ENV=test` (`.env.test`), against their own SQLite database in `var/`, migrated once by `tests/bootstrap.php`; each test runs in a transaction that is rolled back.
 - **Removed files:** a *Shelf* file that a chapter deletes gets an empty `X.removed` in that chapter's snapshot; from then on, `Shelf::state` leaves it out, and the check refuses it in `shelf/`.
 - **Course files in the text:** `compose.yaml`, `Dockerfile` and `docker/db/users.sh` may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
 

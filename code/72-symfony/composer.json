@@ -1,0 +1,12 @@
+{
+    "name": "learner/components",
+    "description": "Chapter 72's examples: three of Symfony's components, on their own.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/http-foundation": "7.4.*",
+        "symfony/routing": "7.4.*",
+        "symfony/http-kernel": "7.4.*"
+    }
+}

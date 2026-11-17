@@ -4,21 +4,42 @@ declare(strict_types=1);
 
 namespace Shelf;
 
+use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use Shelf\Doctrine\IsbnType;
 use UnexpectedValueException;
 
-/** One book on the shelf. Only the book changes its number of copies, so it never goes below 0. */
+/**
+ * One book on the shelf. Only the book changes its number of copies, so it never goes below 0.
+ * Chapter 74: an entity. The attributes tell Doctrine which table and columns hold it; the class
+ * itself, with its rules, stays as it was. The title is unique in any case (NOCASE, SQLite's own).
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'books')]
 final class Book
 {
     public const int FIRST_YEAR = 1;
     public const int LAST_YEAR = 2100;
 
+    /** The row's number, which the database gives a new book; null until it is stored. */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     public function __construct(
+        #[ORM\Column(unique: true, options: ['collation' => 'NOCASE'])]
         public readonly string $title,
+        #[ORM\Column]
         public readonly string $author,
+        #[ORM\Column]
         public readonly int $year,
+        #[ORM\Column]
         public private(set) int $copies = 1,
-        public readonly ?Isbn $isbn = null,
+        // Chapter 77: not readonly. Doctrine's refresh() sets every column again, and an equal Isbn is
+        // still another object, which a readonly property refuses. private(set): only Book can change it.
+        #[ORM\Column(type: IsbnType::NAME, nullable: true, unique: true)]
+        public private(set) ?Isbn $isbn = null,
     ) {
         if ($copies < 0) {
             throw new InvalidArgumentException("\"$title\" can't have $copies copies");

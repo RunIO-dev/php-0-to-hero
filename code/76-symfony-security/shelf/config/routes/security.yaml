@@ -1,0 +1,4 @@
+# The firewall's logout address (chapter 76), /logout, as a route: its name is _logout_main.
+_security_logout:
+    resource: security.route_loader.logout
+    type: service

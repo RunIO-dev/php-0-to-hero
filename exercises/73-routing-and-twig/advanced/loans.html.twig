@@ -1,0 +1,7 @@
+{# A member's loans, rendered by LoanController::list(). #}
+<h1>Loans of {{ name }}</h1>
+<ul>
+{% for loan in loans %}
+    <li>{{ loan.title }}, due {{ loan.due }}</li>
+{% endfor %}
+</ul>

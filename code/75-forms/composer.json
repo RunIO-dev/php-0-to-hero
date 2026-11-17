@@ -1,0 +1,12 @@
+{
+    "name": "learner/forms",
+    "description": "Chapter 75's examples: Symfony's validator and forms, on their own.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/validator": "7.4.*",
+        "symfony/form": "7.4.*",
+        "symfony/http-foundation": "7.4.*"
+    }
+}

@@ -1,0 +1,9 @@
+# Twig (chapter 73): the templates are in templates/. Every template knows the logged-in member as current.
+twig:
+    file_name_pattern: '*.twig'
+    globals:
+        current: '@Shelf\Web\CurrentMember'
+
+when@test:
+    twig:
+        strict_variables: true

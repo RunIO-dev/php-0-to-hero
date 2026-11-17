@@ -1,0 +1,32 @@
+# Shelf's services (chapter 72): every class in src/ can be made by the container, which passes each
+# constructor what its types ask for (autowiring).
+# Chapter 73: what front controller and App made by hand. Paths in .env are relative to shelf/.
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Shelf\:
+        resource: '../src/'
+        exclude:
+            - '../src/functions.php'
+
+    # The database (chapter 54): made by openDatabase(), which also runs the migrations.
+    PDO:
+        class: PDO
+        factory: 'Shelf\openDatabase'
+        arguments: ['%kernel.project_dir%/%env(SHELF_DATABASE)%']
+
+    # Where an interface is asked for, the class that answers for it.
+    Shelf\BookRepository: '@Shelf\PdoBookRepository'
+    Shelf\MemberRepository: '@Shelf\PdoMemberRepository'
+    Shelf\LoanRepository: '@Shelf\PdoLoanRepository'
+    Shelf\TokenRepository: '@Shelf\PdoTokenRepository'
+
+    Shelf\Web\Covers:
+        arguments: ['%kernel.project_dir%/%env(SHELF_COVERS)%']
+
+    # Shelf's own log (chapter 66), for Shelf's classes; Symfony's own messages go to the server's console.
+    Shelf\FileLogger:
+        arguments: ['%kernel.project_dir%/%env(SHELF_LOG)%']
+    Psr\Log\LoggerInterface: '@Shelf\FileLogger'

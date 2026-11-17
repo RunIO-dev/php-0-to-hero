@@ -1,0 +1,5 @@
+Books
+2 books
+Sula is on loan
+https://localhost/book?title=Sula
+POST https://localhost/login name=Amira

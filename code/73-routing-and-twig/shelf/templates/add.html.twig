@@ -1,0 +1,22 @@
+{# The form to add a book, empty or with what was typed and the reason it was refused (chapter 47).
+   The hidden field carries the CSRF token (chapter 51). #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Add a book · Shelf{% endblock %}
+
+{% block main %}
+    <h1>Add a book</h1>
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <form class="card" method="post" action="{{ path('add') }}" enctype="multipart/form-data">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <label>Title <input name="title" value="{{ title }}" required maxlength="200"></label>
+        <label>Author <input name="author" value="{{ author }}" required maxlength="200"></label>
+        <label>Year <input name="year" value="{{ year }}" required inputmode="numeric"></label>
+        <label>ISBN <small>optional</small> <input name="isbn" value="{{ isbn }}"></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" name="cover" accept="image/png, image/jpeg"></label>
+        <p class="actions"><button>Add the book</button> <a href="{{ path('books') }}">Cancel</a></p>
+    </form>
+{% endblock %}

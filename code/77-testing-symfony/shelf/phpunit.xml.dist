@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Shelf's tests (chapter 41). From the course folder: vendor/bin/phpunit -c shelf
+     Chapter 77: in Symfony's test environment, with its own settings (.env.test) and database. -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         cacheDirectory=".phpunit.cache"
+         failOnWarning="true"
+         failOnRisky="true"
+         failOnDeprecation="true"
+         colors="true">
+    <php>
+        <!-- force: a test never runs against the dev database, whatever the shell has set -->
+        <server name="APP_ENV" value="test" force="true"/>
+        <server name="KERNEL_CLASS" value="Shelf\Kernel"/>
+    </php>
+    <extensions>
+        <!-- dama/doctrine-test-bundle: every test runs in a transaction, rolled back at its end -->
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
+    </extensions>
+    <testsuites>
+        <testsuite name="shelf">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+</phpunit>

@@ -8,7 +8,7 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shelf\Web\Covers;
-use Shelf\Web\Upload;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 final class CoversTest extends TestCase
 {
@@ -33,7 +33,7 @@ final class CoversTest extends TestCase
 
     public function testAnImageIsStoredUnderAHashOfTheTitle(): void
     {
-        $this->covers->save('Kindred', new Upload(UPLOAD_ERR_OK, __DIR__ . '/cover.png'));
+        $this->covers->save('Kindred', self::upload(__DIR__ . '/cover.png'));
 
         $cover = $this->covers->find('  KINDRED ');
         self::assertNotNull($cover);
@@ -42,17 +42,16 @@ final class CoversTest extends TestCase
         self::assertNull($this->covers->find('Sula'));
     }
 
-    /** @return iterable<string, array{Upload, string}> */
+    /** @return iterable<string, array{UploadedFile, string}> */
     public static function refused(): iterable
     {
-        yield 'code named .png' => [new Upload(UPLOAD_ERR_OK, __DIR__ . '/not-a-cover.png'), 'A cover must be a PNG or JPEG image.'];
-        yield 'too large for PHP' => [new Upload(UPLOAD_ERR_INI_SIZE), 'The cover is larger than 2 MB.'];
-        yield 'cut off' => [new Upload(UPLOAD_ERR_PARTIAL), 'The cover could not be uploaded. Please try again.'];
-        yield 'no file there' => [new Upload(UPLOAD_ERR_OK, __DIR__ . '/missing.png'), 'The cover could not be uploaded. Please try again.'];
+        yield 'code named .png' => [self::upload(__DIR__ . '/not-a-cover.png'), 'A cover must be a PNG or JPEG image.'];
+        yield 'too large for PHP' => [self::upload('', UPLOAD_ERR_INI_SIZE), 'The cover is larger than 2 MB.'];
+        yield 'cut off' => [self::upload('', UPLOAD_ERR_PARTIAL), 'The cover could not be uploaded. Please try again.'];
     }
 
     #[DataProvider('refused')]
-    public function testOnlyImagesAreAccepted(Upload $upload, string $reason): void
+    public function testOnlyImagesAreAccepted(UploadedFile $upload, string $reason): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage($reason);
@@ -66,12 +65,18 @@ final class CoversTest extends TestCase
         self::assertIsString($big);
         file_put_contents($big, (string) file_get_contents(__DIR__ . '/cover.png') . str_repeat("\0", Covers::MAX_BYTES));
         try {
-            $this->covers->check(new Upload(UPLOAD_ERR_OK, $big));
+            $this->covers->check(self::upload($big));
             self::fail('A file over 2 MB should be refused');
         } catch (InvalidArgumentException $e) {
             self::assertSame('The cover is larger than 2 MB.', $e->getMessage());
         } finally {
             unlink($big);
         }
+    }
+
+    /** A file as PHP would hand it over; test: true, as it didn't come with a real request. */
+    private static function upload(string $path, int $error = UPLOAD_ERR_OK): UploadedFile
+    {
+        return new UploadedFile($path, 'cover.png', null, $error, test: true);
     }
 }

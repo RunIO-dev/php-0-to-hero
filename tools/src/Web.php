@@ -31,7 +31,9 @@ namespace Tools;
  * In a multipart/form-data body, a line "< cover.png" sends the bytes of that file (an upload).
  * {{token}} in a later request is replaced by the remembered value, and the value is shown
  * as {{token}} in the output, so a random token gives the same .out every time. Cookies are
- * kept between the requests of one file, like a browser does; long cookie values are shown as ….
+ * kept between the requests of one file, like a browser does; long cookie values are shown as …,
+ * and so are the CSRF tokens in forms that weren't captured: Symfony writes them anew on every page.
+ * The test server's own address is shown as http://localhost:8000.
  */
 final class Web
 {
@@ -163,6 +165,11 @@ final class Web
             foreach ($values as $name => $value) {
                 $out = str_replace($value, '{{' . $name . '}}', $out);
             }
+            // Symfony writes the CSRF token differently on every page (chapter 73), so a form's other ones show as ….
+            // Its security redirects to whole addresses (chapter 76): the server's port changes with every run,
+            // so the address is shown as the one docker compose up web uses.
+            $out = str_replace("http://127.0.0.1:$port", 'http://localhost:8000', $out);
+            $out = (string) preg_replace('/(name="_token"[^>]*? value=")(?!\{\{)[^"]+"/', '$1…"', $out);
 
             return ['responses' => $responses, 'out' => str_replace([$copy . '/', $dir . '/'], '', $out)];
         } finally {

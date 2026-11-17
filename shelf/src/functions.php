@@ -6,21 +6,13 @@ declare(strict_types=1);
 
 namespace Shelf;
 
-use PDO;
 use RuntimeException;
-use Throwable;
 use UnexpectedValueException;
 
 /** Two titles are the same in any case, and with spaces around them. */
 function sameTitle(string $a, string $b): bool
 {
     return mb_strtolower(trim($a)) === mb_strtolower(trim($b));
-}
-
-/** Text made safe to put into HTML: between tags, or in an attribute in double or single quotes. */
-function e(string $text): string
-{
-    return htmlspecialchars($text, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
 /** Text as typed, trimmed, and with every run of spaces made one space. */
@@ -56,77 +48,4 @@ function readList(string $path): array
 function loadMembers(string $path): array
 {
     return array_map(fn(mixed $item): Member => Member::fromArray($item), readList($path));
-}
-
-/**
- * Shelf's SQLite database in the file at $path, with its tables (chapter 54). The folder and the
- * file are made the first time. Chapter 56: foreign keys are checked. Chapter 58: the migrations
- * that haven't run in this database run now; ':memory:' gives a new database, for tests.
- */
-function openDatabase(string $path): PDO
-{
-    $dir = dirname($path);
-    if ($path !== ':memory:' && !is_dir($dir) && !mkdir($dir, 0o700, true)) {
-        throw new RuntimeException("Cannot make the folder $dir");
-    }
-    $db = new PDO("sqlite:$path", options: [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-    $db->exec('PRAGMA foreign_keys = ON'); // SQLite checks REFERENCES only when asked, on each connection
-    new Migrations($db, __DIR__ . '/../migrations')->apply();
-
-    return $db;
-}
-
-/**
- * Runs $work in a transaction (chapter 57): everything it changes is saved together at the end,
- * or, if it throws, nothing is, and the exception goes on.
- *
- * @template T
- *
- * @param callable(): T $work
- *
- * @return T
- */
-function inTransaction(PDO $db, callable $work): mixed
-{
-    $db->beginTransaction();
-    try {
-        $result = $work();
-        $db->commit();
-
-        return $result;
-    } catch (Throwable $e) {
-        $db->rollBack();
-
-        throw $e;
-    }
-}
-
-/**
- * The settings in a .env file (chapter 65): one NAME=value per line, empty lines and lines that
- * start with # skipped, quotes around a value dropped.
- *
- * @return array<string, string>
- */
-function readEnvFile(string $file): array
-{
-    $lines = file($file, FILE_IGNORE_NEW_LINES);
-    if ($lines === false) {
-        throw new RuntimeException("Could not read $file");
-    }
-    $settings = [];
-    foreach ($lines as $number => $line) {
-        $line = trim($line);
-        if ($line === '' || str_starts_with($line, '#')) {
-            continue;
-        }
-        if (preg_match('/^([A-Z][A-Z0-9_]*)=(.*)$/', $line, $m) !== 1) {
-            throw new UnexpectedValueException(basename($file) . ' line ' . ($number + 1) . ": expected NAME=value: $line");
-        }
-        $settings[$m[1]] = trim($m[2], '"');
-    }
-
-    return $settings;
 }
