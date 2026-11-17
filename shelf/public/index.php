@@ -6,12 +6,14 @@ declare(strict_types=1);
 // server sends a path without a file, such as /add, to index.php. App decides what to answer.
 
 use Shelf\Accounts;
+use Shelf\ApiTokens;
 use Shelf\Config;
 use Shelf\FileLogger;
 use Shelf\Library;
 use Shelf\PdoBookRepository;
 use Shelf\PdoLoanRepository;
 use Shelf\PdoMemberRepository;
+use Shelf\PdoTokenRepository;
 use Shelf\Web\App;
 use Shelf\Web\Covers;
 use Shelf\Web\PhpSession;
@@ -31,14 +33,16 @@ ini_set('display_errors', $config->isProduction() ? '0' : '1');
 ini_set('log_errors', '1');
 ini_set('error_log', $config->log);
 
+$request = Request::fromGlobals();
 try {
     $db = openDatabase($config->database);
     $members = new PdoMemberRepository($db);
     $library = new Library(new PdoBookRepository($db), $members, new PdoLoanRepository($db));
     $templates = new Templates(__DIR__ . '/../templates');
-    $app = new App($library, new Accounts($members), $templates, new PhpSession(), new Covers($config->covers), $logger);
-    $response = $app->handle(Request::fromGlobals());
+    $tokens = new ApiTokens(new PdoTokenRepository($db), $members); // chapter 69
+    $app = new App($library, new Accounts($members), $templates, new PhpSession(), new Covers($config->covers), $tokens, $logger);
+    $response = $app->handle($request);
 } catch (Throwable $e) {
-    $response = Response::error($e, $logger, showDetails: !$config->isProduction());
+    $response = Response::error($e, $logger, showDetails: !$config->isProduction(), api: str_starts_with($request->path, '/api/'));
 }
 $response->send();

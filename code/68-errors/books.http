@@ -1,0 +1,43 @@
+GET /book.php?id=2
+
+###
+GET /book.php?id=9
+
+###
+# Removed: nothing to send.
+DELETE /book.php?id=2
+
+###
+PUT /book.php?id=2
+
+###
+# A form, not JSON.
+POST /books.php
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula&author=Toni+Morrison&year=1973
+
+###
+POST /books.php
+Content-Type: application/json
+
+{"title": "Sula", "author": "Toni Morrison", "year": 1973,}
+
+###
+# Every mistake, at once.
+POST /books.php
+Content-Type: application/json
+
+{"title": "Sula", "year": "1973"}
+
+###
+POST /books.php
+Content-Type: application/json
+
+{"title": "kindred", "author": "Octavia E. Butler", "year": 1979}
+
+###
+POST /books.php
+Content-Type: application/json
+
+{"title": "Sula", "author": "Toni Morrison", "year": 1973}

@@ -1,0 +1,33 @@
+# The whole list.
+GET /books.php
+
+###
+# One book.
+GET /book.php?id=2
+
+###
+GET /book.php?id=9
+
+###
+# A new book, sent as JSON: 201 Created, and where to find it.
+POST /books.php
+Content-Type: application/json
+
+{"title": "Parable of the Sower", "author": "Octavia E. Butler", "year": 1993}
+
+###
+# Not JSON at all.
+POST /books.php
+Content-Type: application/json
+
+{"title": "Kitchen",
+
+###
+# JSON, but the year is text.
+POST /books.php
+Content-Type: application/json
+
+{"title": "Kitchen", "author": "Banana Yoshimoto", "year": "1988"}
+
+###
+DELETE /books.php

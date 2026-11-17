@@ -14,6 +14,17 @@ interface BookRepository
     /** @return list<Book> */
     public function all(): array;
 
+    /**
+     * One page of the books that match the query, sorted by title (chapter 70): $offset of them
+     * skipped, then at most $limit.
+     *
+     * @return list<Book>
+     */
+    public function page(BookQuery $query, int $offset, int $limit): array;
+
+    /** How many books match the query. */
+    public function count(BookQuery $query): int;
+
     public function find(string $title): ?Book;
 
     public function add(Book $book): void;

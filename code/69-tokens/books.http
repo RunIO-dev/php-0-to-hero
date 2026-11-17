@@ -1,0 +1,28 @@
+# No token: who is this?
+GET /loans.php
+
+###
+# A token that the API never gave out.
+GET /loans.php
+Authorization: Bearer 0000000000000000000000000000000000000000000000000000000000000000
+
+###
+# Amira's token: her loans.
+GET /loans.php
+Authorization: Bearer 8a5770ac735337001a23e4459d91f5375e5921bfc3d5761e81a03fe652ce6622
+
+###
+# Amira is a reader.
+POST /books.php
+Authorization: Bearer 8a5770ac735337001a23e4459d91f5375e5921bfc3d5761e81a03fe652ce6622
+Content-Type: application/json
+
+{"title": "Sula"}
+
+###
+# Jonas is staff.
+POST /books.php
+Authorization: Bearer a7718969db50b2a7e121b28e5b2dd8141699f77cfcf69878e5c791e0dc811ec0
+Content-Type: application/json
+
+{"title": "Sula"}

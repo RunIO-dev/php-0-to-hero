@@ -1,0 +1,102 @@
+> GET /books.php
+
+< HTTP/1.1 200 OK
+< Link: </books.php?page=1&per_page=3>; rel="first", </books.php?page=2&per_page=3>; rel="next", </books.php?page=3&per_page=3>; rel="last"
+< Content-Type: application/json
+
+[
+    {
+        "title": "Beloved",
+        "author": "Toni Morrison",
+        "year": 1987
+    },
+    {
+        "title": "Dawn",
+        "author": "Octavia E. Butler",
+        "year": 1987
+    },
+    {
+        "title": "Kindred",
+        "author": "Octavia E. Butler",
+        "year": 1979
+    }
+]
+
+> GET /books.php?page=3
+
+< HTTP/1.1 200 OK
+< Link: </books.php?page=1&per_page=3>; rel="first", </books.php?page=2&per_page=3>; rel="prev", </books.php?page=3&per_page=3>; rel="last"
+< Content-Type: application/json
+
+[
+    {
+        "title": "Things Fall Apart",
+        "author": "Chinua Achebe",
+        "year": 1958
+    }
+]
+
+> GET /books.php?author=butler&sort=year&per_page=2
+
+< HTTP/1.1 200 OK
+< Link: </books.php?author=butler&sort=year&page=1&per_page=2>; rel="first", </books.php?author=butler&sort=year&page=2&per_page=2>; rel="next", </books.php?author=butler&sort=year&page=2&per_page=2>; rel="last"
+< Content-Type: application/json
+
+[
+    {
+        "title": "Kindred",
+        "author": "Octavia E. Butler",
+        "year": 1979
+    },
+    {
+        "title": "Dawn",
+        "author": "Octavia E. Butler",
+        "year": 1987
+    }
+]
+
+> GET /books.php?author=butler&sort=year&per_page=2&page=2
+
+< HTTP/1.1 200 OK
+< Link: </books.php?author=butler&sort=year&page=1&per_page=2>; rel="first", </books.php?author=butler&sort=year&page=1&per_page=2>; rel="prev", </books.php?author=butler&sort=year&page=2&per_page=2>; rel="last"
+< Content-Type: application/json
+
+[
+    {
+        "title": "Parable of the Sower",
+        "author": "Octavia E. Butler",
+        "year": 1993
+    }
+]
+
+> GET /books.php?page=9
+
+< HTTP/1.1 200 OK
+< Link: </books.php?page=1&per_page=3>; rel="first", </books.php?page=3&per_page=3>; rel="prev", </books.php?page=3&per_page=3>; rel="last"
+< Content-Type: application/json
+
+[]
+
+> GET /books.php?per_page=100000
+
+< HTTP/1.1 400 Bad Request
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "page is a number from 1, per_page a number from 1 to 50."
+}
+
+> GET /books.php?sort=title;DROP%20TABLE%20books
+
+< HTTP/1.1 400 Bad Request
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "sort is title or year."
+}

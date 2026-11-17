@@ -101,11 +101,11 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 66. Logging (PSR-3) and errors in production: show little, log much; log injection. ◆ `psr/log`, the first package; `FileLogger`; an error page with a reference.
 
 ## Part 10: APIs (5)
-67. REST in plain words, and JSON responses. ◆ `GET /api/books`.
-68. Status codes and error responses (problem details).
-69. API authentication with tokens. ◆ a member's own loans.
-70. Pagination and filters.
-71. Testing an API.
+67. REST in plain words, and JSON responses: resources, methods, `201` with `Location`, reading a JSON body; never JSON by hand. ◆ `Response::json()`, `GET /api/books`.
+68. Status codes and error responses: problem details (RFC 9457), `400`/`415`/`422`/`409`, every mistake at once, errors under `/api/` never HTML. ◆ `Response::problem()`, `GET /api/book`, a `500` with a reference.
+69. API authentication with tokens: `Authorization: Bearer`, random tokens stored as SHA-256, `401` vs `403`, no cookies so no CSRF. ◆ migration 005, `ApiTokens`, `POST`/`DELETE /api/tokens`, a member's own loans, staff add books.
+70. Pagination and filters: `LIMIT`/`OFFSET`, the `Link` header, filters through placeholders, sorts from a list; add, don't break. ◆ `BookQuery`, `?page`, `?per_page`, `?author`, `?available`.
+71. Testing an API: the contract (shapes, statuses, headers, refusals), without a server; few real HTTP checks. ◆ `ApiContractTest`; a duplicate book is now `409`.
 
 ## Part 11: Symfony (6)
 72. Why a framework, and what Symfony gives us. Installing it, and its structure. *(the stable version of the day)*

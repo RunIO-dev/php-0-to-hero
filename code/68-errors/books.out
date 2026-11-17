@@ -1,0 +1,126 @@
+> GET /book.php?id=2
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+
+{
+    "id": 2,
+    "title": "Kindred",
+    "author": "Octavia E. Butler",
+    "year": 1979
+}
+
+> GET /book.php?id=9
+
+< HTTP/1.1 404 Not Found
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Not Found",
+    "status": 404,
+    "detail": "There is no book with the ID 9."
+}
+
+> DELETE /book.php?id=2
+
+< HTTP/1.1 204 No Content
+
+> PUT /book.php?id=2
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: GET, DELETE
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Method Not Allowed",
+    "status": 405,
+    "detail": "Use GET or DELETE."
+}
+
+> POST /books.php
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&author=Toni+Morrison&year=1973
+
+< HTTP/1.1 415 Unsupported Media Type
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Unsupported Media Type",
+    "status": 415,
+    "detail": "Send the book as application/json."
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Sula", "author": "Toni Morrison", "year": 1973,}
+
+< HTTP/1.1 400 Bad Request
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "The body is not valid JSON."
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Sula", "year": "1973"}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: application/problem+json
+
+{
+    "type": "/problems/invalid-book",
+    "title": "The book is not valid",
+    "status": 422,
+    "detail": "2 fields are wrong.",
+    "errors": [
+        {
+            "field": "author",
+            "detail": "An author is needed, as text."
+        },
+        {
+            "field": "year",
+            "detail": "The year must be a number, such as 1988."
+        }
+    ]
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "kindred", "author": "Octavia E. Butler", "year": 1979}
+
+< HTTP/1.1 409 Conflict
+< Content-Type: application/problem+json
+
+{
+    "type": "/problems/duplicate-book",
+    "title": "The book is already there",
+    "status": 409,
+    "detail": "\"kindred\" is already on the shelf."
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Sula", "author": "Toni Morrison", "year": 1973}
+
+< HTTP/1.1 201 Created
+< Location: /book.php?id=4
+< Content-Type: application/json
+
+{
+    "id": 4,
+    "title": "Sula",
+    "author": "Toni Morrison",
+    "year": 1973
+}

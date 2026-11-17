@@ -58,7 +58,10 @@ final class Batches
         return array_values($units);
     }
 
-    /** @return list<string> the lower-case names of the functions and classes the code declares */
+    /**
+     * @return list<string> the lower-case names of the functions and classes the code declares, and its
+     *                      global constants as "const name" (const BOOKS in two examples clash the same way)
+     */
     public static function declared(string $code): array
     {
         $tokens = array_values(array_filter(
@@ -66,8 +69,17 @@ final class Batches
             static fn(\PhpToken $t): bool => !$t->is([T_WHITESPACE, T_COMMENT, T_DOC_COMMENT]),
         ));
         $names = [];
+        $depth = 0;
         foreach ($tokens as $i => $t) {
             $next = $tokens[$i + 1] ?? null;
+            if ($t->text === '{' || $t->is([T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES])) {
+                $depth++;
+            } elseif ($t->text === '}') {
+                $depth--;
+            }
+            if ($t->is(T_CONST) && $depth === 0 && $next?->is(T_STRING) === true) {
+                $names[] = 'const ' . strtolower($next->text);
+            }
             if ($t->is([T_FUNCTION, T_CLASS, T_INTERFACE, T_TRAIT, T_ENUM]) && $next?->is(T_STRING) === true
                 && ($tokens[$i - 1] ?? null)?->is(T_DOUBLE_COLON) !== true) {
                 $names[] = strtolower($next->text);

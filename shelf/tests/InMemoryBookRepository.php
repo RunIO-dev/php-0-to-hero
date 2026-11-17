@@ -6,6 +6,7 @@ namespace Shelf\Tests;
 
 use Shelf\Book;
 use Shelf\BookNotFound;
+use Shelf\BookQuery;
 use Shelf\BookRepository;
 
 use function Shelf\sameTitle;
@@ -22,6 +23,19 @@ final class InMemoryBookRepository implements BookRepository
     public function all(): array
     {
         return array_map(fn(Book $book): Book => clone $book, $this->books);
+    }
+
+    public function page(BookQuery $query, int $offset, int $limit): array
+    {
+        $found = array_values(array_filter($this->all(), $query->matches(...)));
+        usort($found, fn(Book $a, Book $b): int => strcasecmp($a->title, $b->title));
+
+        return array_slice($found, $offset, $limit);
+    }
+
+    public function count(BookQuery $query): int
+    {
+        return count(array_filter($this->books, $query->matches(...)));
     }
 
     public function find(string $title): ?Book

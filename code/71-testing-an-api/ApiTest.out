@@ -1,0 +1,15 @@
+..........                                                        10 / 10 (100%)
+
+Api
+ ✔ The list is json of books
+ ✔ One book has the same shape
+ ✔ A new book is where location says
+ ✔ Every mistake is a problem with data set "an unknown book"
+ ✔ Every mistake is a problem with data set "an unknown address"
+ ✔ Every mistake is a problem with data set "a method the address does not take"
+ ✔ Every mistake is a problem with data set "a body that is not JSON"
+ ✔ Every mistake is a problem with data set "a year as text"
+ ✔ Every mistake is a problem with data set "a missing author"
+ ✔ A 405 says what is allowed
+
+OK (10 tests, 30 assertions)

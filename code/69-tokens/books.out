@@ -1,0 +1,68 @@
+> GET /loans.php
+
+< HTTP/1.1 401 Unauthorized
+< WWW-Authenticate: Bearer
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Unauthorized",
+    "status": 401,
+    "detail": "Send a valid token: Authorization: Bearer <token>."
+}
+
+> GET /loans.php
+> Authorization: Bearer 0000000000000000000000000000000000000000000000000000000000000000
+
+< HTTP/1.1 401 Unauthorized
+< WWW-Authenticate: Bearer
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Unauthorized",
+    "status": 401,
+    "detail": "Send a valid token: Authorization: Bearer <token>."
+}
+
+> GET /loans.php
+> Authorization: Bearer 8a5770ac735337001a23e4459d91f5375e5921bfc3d5761e81a03fe652ce6622
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+
+[
+    {
+        "title": "Kindred",
+        "due": "2026-03-16"
+    }
+]
+
+> POST /books.php
+> Authorization: Bearer 8a5770ac735337001a23e4459d91f5375e5921bfc3d5761e81a03fe652ce6622
+> Content-Type: application/json
+>
+> {"title": "Sula"}
+
+< HTTP/1.1 403 Forbidden
+< Content-Type: application/problem+json
+
+{
+    "type": "about:blank",
+    "title": "Forbidden",
+    "status": 403,
+    "detail": "Only staff may do this."
+}
+
+> POST /books.php
+> Authorization: Bearer a7718969db50b2a7e121b28e5b2dd8141699f77cfcf69878e5c791e0dc811ec0
+> Content-Type: application/json
+>
+> {"title": "Sula"}
+
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+
+{
+    "title": "Sula"
+}

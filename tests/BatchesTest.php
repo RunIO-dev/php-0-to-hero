@@ -18,6 +18,13 @@ final class BatchesTest extends TestCase
         self::assertSame(['booknotfound', 'latefee'], Batches::declared($code));
     }
 
+    public function testFindsGlobalConstantsButNotClassConstants(): void
+    {
+        $code = "<?php\nconst BOOKS = [];\nfinal class Shelf { public const int SIZE = 3; }\nconst FLAGS = 1;\n";
+
+        self::assertSame(['const books', 'shelf', 'const flags'], Batches::declared($code));
+    }
+
     public function testSameNamesGoIntoDifferentBatches(): void
     {
         $dir = sys_get_temp_dir() . '/batches-' . bin2hex(random_bytes(4));

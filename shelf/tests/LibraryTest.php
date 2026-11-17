@@ -9,7 +9,9 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shelf\Book;
+use Shelf\BookExists;
 use Shelf\BookNotFound;
+use Shelf\BookQuery;
 use Shelf\Library;
 use Shelf\Loan;
 use Shelf\Member;
@@ -69,7 +71,7 @@ final class LibraryTest extends TestCase
 
     public function testATitleCanBeAddedOnlyOnceInAnyCase(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(BookExists::class);
         $this->expectExceptionMessage('"Kindred" is already on the shelf');
 
         $this->library->add(['  KINDRED ', 'Octavia E. Butler', '1979']);
@@ -149,5 +151,22 @@ final class LibraryTest extends TestCase
         $this->expectExceptionMessage('"Kindred" is on loan, so it can\'t be removed.');
 
         $this->library->remove('Kindred');
+    }
+
+    public function testAPageKnowsHowManyPagesThereAre(): void
+    {
+        $first = $this->library->page(new BookQuery(), 1, 1);
+        $last = $this->library->page(new BookQuery(), 2, 1);
+
+        self::assertSame([['Kindred'], 2], [array_column($first['books'], 'title'), $first['pages']]);
+        self::assertSame(['Things Fall Apart'], array_column($last['books'], 'title'));
+        self::assertSame(['books' => [], 'pages' => 1], $this->library->page(new BookQuery('Morrison'), 1, 20), 'Nothing found is still one page');
+    }
+
+    public function testPagesCountFromOne(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->library->page(new BookQuery(), 0, 20);
     }
 }

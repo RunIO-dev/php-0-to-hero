@@ -1,0 +1,4 @@
+The member gets: 64 characters, shown once
+The database keeps: 64 characters, the token's SHA-256
+The next request finds it: yes
+A token one character off: no

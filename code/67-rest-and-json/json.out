@@ -1,0 +1,16 @@
+[{"title":"Kitchen","author":"Banana Yoshimoto","year":1988,"cover":"\/cover?title=Kitchen"},{"title":"Cien a\u00f1os de soledad","author":"Gabriel Garc\u00eda M\u00e1rquez","year":1967,"cover":null}]
+
+[
+    {
+        "title": "Kitchen",
+        "author": "Banana Yoshimoto",
+        "year": 1988,
+        "cover": "/cover?title=Kitchen"
+    },
+    {
+        "title": "Cien años de soledad",
+        "author": "Gabriel García Márquez",
+        "year": 1967,
+        "cover": null
+    }
+]

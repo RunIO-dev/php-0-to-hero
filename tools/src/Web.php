@@ -37,7 +37,7 @@ final class Web
 {
     /** Response headers worth reading; Date, Host and X-Powered-By change and would make noise. */
     private const array SHOWN = ['content-type', 'location', 'allow', 'set-cookie', 'content-disposition',
-        'content-security-policy', 'x-content-type-options', 'x-frame-options', 'referrer-policy'];
+        'content-security-policy', 'x-content-type-options', 'x-frame-options', 'referrer-policy', 'www-authenticate', 'link', 'x-total-count'];
 
     public static function has(string $file): bool
     {

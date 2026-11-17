@@ -6,6 +6,7 @@ namespace Shelf\Tests\Web;
 
 use PHPUnit\Framework\TestCase;
 use Shelf\Accounts;
+use Shelf\ApiTokens;
 use Shelf\Book;
 use DateTimeImmutable;
 use Shelf\Library;
@@ -15,6 +16,7 @@ use Shelf\Tests\ArrayLogger;
 use Shelf\Tests\InMemoryBookRepository;
 use Shelf\Tests\InMemoryLoanRepository;
 use Shelf\Tests\InMemoryMemberRepository;
+use Shelf\Tests\InMemoryTokenRepository;
 use Shelf\Web\App;
 use Shelf\Web\Covers;
 use Shelf\Web\Request;
@@ -29,6 +31,8 @@ final class AppTest extends TestCase
     private ArraySession $session;
     private string $covers;
     private ArrayLogger $log;
+    private ApiTokens $tokens;
+    private InMemoryTokenRepository $tokenRows;
 
     protected function setUp(): void
     {
@@ -40,7 +44,9 @@ final class AppTest extends TestCase
         $this->session = new ArraySession(['csrf' => 'the-token', 'member' => 'Jonas']); // staff: may change books (chapter 63)
         $this->covers = sys_get_temp_dir() . '/shelf-covers-' . bin2hex(random_bytes(4));
         $this->log = new ArrayLogger();
-        $this->app = new App($this->library, $accounts, new Templates(__DIR__ . '/../../templates'), $this->session, new Covers($this->covers), $this->log);
+        $this->tokenRows = new InMemoryTokenRepository($members);
+        $this->tokens = new ApiTokens($this->tokenRows, $members);
+        $this->app = new App($this->library, $accounts, new Templates(__DIR__ . '/../../templates'), $this->session, new Covers($this->covers), $this->tokens, $this->log);
     }
 
     protected function tearDown(): void
@@ -339,5 +345,216 @@ final class AppTest extends TestCase
             self::assertStringContainsString("script-src 'none'", $headers['Content-Security-Policy'] ?? '', $path);
             self::assertSame('nosniff', $headers['X-Content-Type-Options'] ?? null, $path);
         }
+    }
+
+    public function testTheApiListsTheBooksAsJson(): void
+    {
+        $this->session->pull('member'); // programs don't log in to read the books
+
+        $response = $this->app->handle(new Request('GET', '/api/books'));
+
+        self::assertSame(200, $response->status);
+        self::assertSame('application/json', $response->headers['Content-Type'] ?? null);
+        self::assertSame(
+            [['title' => 'Kindred', 'author' => 'Octavia E. Butler', 'year' => 1979, 'copies' => 1, 'isbn' => null, 'cover' => null]],
+            json_decode($response->body, true, flags: JSON_THROW_ON_ERROR),
+        );
+    }
+
+    public function testTheApiGivesTheAddressOfACover(): void
+    {
+        $this->app->handle(new Request('POST', '/add', form: ['title' => 'Sula', 'author' => 'Toni Morrison', 'year' => '1973', '_token' => 'the-token'], files: ['cover' => new Upload(UPLOAD_ERR_OK, __DIR__ . '/cover.png')]));
+
+        $books = json_decode($this->app->handle(new Request('GET', '/api/books'))->body, true, flags: JSON_THROW_ON_ERROR);
+
+        self::assertSame([null, '/cover?title=Sula'], array_column(is_array($books) ? $books : [], 'cover'));
+    }
+
+    public function testTheApiFindsOneBookInAnyCase(): void
+    {
+        $response = $this->app->handle(new Request('GET', '/api/book', query: ['title' => 'kindred']));
+
+        self::assertSame([200, 'application/json'], [$response->status, $response->headers['Content-Type'] ?? null]);
+        self::assertSame('Kindred', self::decoded($response->body)['title'] ?? null);
+    }
+
+    public function testAnUnknownBookIsAProblem(): void
+    {
+        $response = $this->app->handle(new Request('GET', '/api/book', query: ['title' => 'Sula']));
+
+        self::assertSame([404, 'application/problem+json'], [$response->status, $response->headers['Content-Type'] ?? null]);
+        self::assertSame(
+            ['type' => 'about:blank', 'title' => 'Not Found', 'status' => 404, 'detail' => 'There is no book called "Sula".'],
+            self::decoded($response->body),
+        );
+    }
+
+    public function testTheApiAnswersEveryErrorAsAProblem(): void
+    {
+        $missing = $this->app->handle(new Request('GET', '/api/nowhere'));
+        $method = $this->app->handle(new Request('PUT', '/api/books'));
+
+        self::assertSame([404, 'application/problem+json'], [$missing->status, $missing->headers['Content-Type'] ?? null]);
+        self::assertSame([405, 'application/problem+json', 'GET, POST'], [$method->status, $method->headers['Content-Type'] ?? null, $method->headers['Allow'] ?? null]);
+        self::assertSame('Use GET, POST.', self::decoded($method->body)['detail'] ?? null);
+    }
+
+    public function testPagesStillAnswerErrorsWithPages(): void
+    {
+        $response = $this->app->handle(new Request('GET', '/nowhere'));
+
+        self::assertSame([404, 'text/html; charset=UTF-8'], [$response->status, $response->headers['Content-Type'] ?? null]);
+    }
+
+    public function testTheRightPasswordGetsAToken(): void
+    {
+        $response = $this->app->handle(self::json('POST', '/api/tokens', '{"name": "Amira", "password": "tea kettle under the lemon tree"}'));
+        $token = self::decoded($response->body)['token'] ?? null;
+
+        self::assertSame(201, $response->status);
+        self::assertSame(2592000, self::decoded($response->body)['expires_in'] ?? null);
+        self::assertIsString($token);
+        self::assertMatchesRegularExpression('/^[0-9a-f]{64}$/', $token);
+        self::assertSame([hash('sha256', $token)], array_keys($this->tokenRows->rows), 'Only the hash is stored');
+        self::assertSame(['info Amira got an API token'], $this->log->lines);
+    }
+
+    public function testAWrongPasswordGetsNoToken(): void
+    {
+        $response = $this->app->handle(self::json('POST', '/api/tokens', '{"name": "Amira", "password": "tea kettle"}'));
+
+        self::assertSame([401, 'Bearer'], [$response->status, $response->headers['WWW-Authenticate'] ?? null]);
+        self::assertSame('Wrong name or password.', self::decoded($response->body)['detail'] ?? null);
+        self::assertSame([], $this->tokenRows->rows);
+        self::assertSame(['warning Failed API login for Amira'], $this->log->lines);
+    }
+
+    public function testATokenShowsItsMembersLoans(): void
+    {
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        $token = $this->tokens->issue('Amira', new DateTimeImmutable())['token'];
+
+        $response = $this->app->handle(new Request('GET', '/api/loans', headers: ['authorization' => "Bearer $token"]));
+
+        self::assertSame(200, $response->status);
+        self::assertSame([['title' => 'Kindred', 'due' => '2026-03-16']], self::decoded($response->body));
+    }
+
+    public function testWithoutAValidTokenTheApiAsksForOne(): void
+    {
+        $old = $this->tokens->issue('Amira', new DateTimeImmutable('-31 days'))['token'];
+        $tries = [[], ['authorization' => 'Bearer ' . str_repeat('0', 64)], ['authorization' => "Bearer $old"], ['authorization' => 'Basic QW1pcmE6dGVh']];
+        foreach ($tries as $headers) {
+            $response = $this->app->handle(new Request('GET', '/api/loans', headers: $headers));
+
+            self::assertSame([401, 'Bearer'], [$response->status, $response->headers['WWW-Authenticate'] ?? null], (string) json_encode($headers));
+        }
+    }
+
+    public function testTheSessionDoesNotLogInToTheApi(): void
+    {
+        self::assertSame('Jonas', $this->session->get('member'));
+
+        self::assertSame(401, $this->app->handle(new Request('GET', '/api/loans'))->status);
+    }
+
+    public function testStaffAddABookWithJsonAndNoCsrfToken(): void
+    {
+        $token = $this->tokens->issue('Jonas', new DateTimeImmutable())['token'];
+
+        $response = $this->app->handle(self::json('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', $token));
+
+        self::assertSame([201, '/api/book?title=Sula'], [$response->status, $response->headers['Location'] ?? null]);
+        self::assertSame('Toni Morrison', self::decoded($response->body)['author'] ?? null);
+        self::assertSame('Sula', $this->library->find('Sula')->title);
+    }
+
+    public function testAReaderMayNotAddBooks(): void
+    {
+        $token = $this->tokens->issue('Amira', new DateTimeImmutable())['token'];
+
+        $response = $this->app->handle(self::json('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 1973}', $token));
+
+        self::assertSame(403, $response->status);
+        self::assertCount(1, $this->library->books());
+        self::assertSame(['warning Amira was refused POST /api/books'], $this->log->lines);
+    }
+
+    public function testAWrongBookGetsTheRightProblem(): void
+    {
+        $token = $this->tokens->issue('Jonas', new DateTimeImmutable())['token'];
+        $form = new Request('POST', '/api/books', form: ['title' => 'Sula'], headers: ['authorization' => "Bearer $token", 'content-type' => 'application/x-www-form-urlencoded']);
+
+        self::assertSame(415, $this->app->handle($form)->status);
+        self::assertSame(400, $this->app->handle(self::json('POST', '/api/books', '{"title": "Sula",', $token))->status);
+        self::assertSame(400, $this->app->handle(self::json('POST', '/api/books', '"Sula"', $token))->status);
+        self::assertSame(422, $this->app->handle(self::json('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": "1973"}', $token))->status);
+        $future = $this->app->handle(self::json('POST', '/api/books', '{"title": "Sula", "author": "Toni Morrison", "year": 3000}', $token));
+        self::assertSame([422, 'A book needs a title, an author and a year from 1 to 2100.'], [$future->status, self::decoded($future->body)['detail'] ?? null]);
+        self::assertCount(1, $this->library->books());
+    }
+
+    public function testLoggingOutEndsTheToken(): void
+    {
+        $token = $this->tokens->issue('Amira', new DateTimeImmutable())['token'];
+        $bearer = ['authorization' => "Bearer $token"];
+
+        self::assertSame(204, $this->app->handle(new Request('DELETE', '/api/tokens', headers: $bearer))->status);
+        self::assertSame(401, $this->app->handle(new Request('GET', '/api/loans', headers: $bearer))->status);
+        self::assertSame(401, $this->app->handle(new Request('DELETE', '/api/tokens', headers: $bearer))->status);
+    }
+
+    public function testTheApiGivesTheBooksAPageAtATime(): void
+    {
+        foreach (['Sula' => 'Toni Morrison', 'Beloved' => 'Toni Morrison', 'Dawn' => 'Octavia E. Butler'] as $title => $author) {
+            $this->library->add([$title, $author, '1980']);
+        }
+
+        $second = $this->app->handle(new Request('GET', '/api/books', query: ['page' => '2', 'per_page' => '2']));
+
+        self::assertSame(['Kindred', 'Sula'], array_column(self::decoded($second->body), 'title'));
+        self::assertSame(
+            '</api/books?page=1&per_page=2>; rel="first", </api/books?page=1&per_page=2>; rel="prev", </api/books?page=2&per_page=2>; rel="last"',
+            $second->headers['Link'] ?? null,
+        );
+    }
+
+    public function testTheApiFiltersTheBooks(): void
+    {
+        $this->library->add(['Dawn', 'Octavia E. Butler', '1987']);
+        $this->library->add(['Sula', 'Toni Morrison', '1973']);
+        $this->library->changeCopies('Kindred', '0');
+
+        $butler = $this->app->handle(new Request('GET', '/api/books', query: ['author' => 'butler']));
+        $available = $this->app->handle(new Request('GET', '/api/books', query: ['author' => 'butler', 'available' => 'true']));
+
+        self::assertSame(['Dawn', 'Kindred'], array_column(self::decoded($butler->body), 'title'));
+        self::assertSame(['Dawn'], array_column(self::decoded($available->body), 'title'));
+        self::assertSame('</api/books?author=butler&available=true&page=1&per_page=20>; rel="first", </api/books?author=butler&available=true&page=1&per_page=20>; rel="last"', $available->headers['Link'] ?? null);
+    }
+
+    public function testWrongPagesAndFiltersAre400(): void
+    {
+        foreach ([['page' => '0'], ['page' => 'two'], ['per_page' => '101'], ['per_page' => '-1'], ['available' => 'yes']] as $query) {
+            $response = $this->app->handle(new Request('GET', '/api/books', query: $query));
+
+            self::assertSame([400, 'application/problem+json'], [$response->status, $response->headers['Content-Type'] ?? null], (string) json_encode($query));
+        }
+    }
+
+    private static function json(string $method, string $path, string $body, ?string $token = null): Request
+    {
+        $headers = ['content-type' => 'application/json', ...$token === null ? [] : ['authorization' => "Bearer $token"]];
+
+        return new Request($method, $path, headers: $headers, body: $body);
+    }
+
+    /** @return array<mixed> */
+    private static function decoded(string $json): array
+    {
+        $data = json_decode($json, true, flags: JSON_THROW_ON_ERROR);
+        self::assertIsArray($data);
+
+        return $data;
     }
 }

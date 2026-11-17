@@ -1,0 +1,96 @@
+> GET /books.php
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+
+[
+    {
+        "id": 1,
+        "title": "Things Fall Apart",
+        "author": "Chinua Achebe",
+        "year": 1958
+    },
+    {
+        "id": 2,
+        "title": "Kindred",
+        "author": "Octavia E. Butler",
+        "year": 1979
+    },
+    {
+        "id": 3,
+        "title": "Kitchen",
+        "author": "Banana Yoshimoto",
+        "year": 1988
+    }
+]
+
+> GET /book.php?id=2
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+
+{
+    "id": 2,
+    "title": "Kindred",
+    "author": "Octavia E. Butler",
+    "year": 1979
+}
+
+> GET /book.php?id=9
+
+< HTTP/1.1 404 Not Found
+< Content-Type: application/json
+
+{
+    "error": "There is no such book."
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Parable of the Sower", "author": "Octavia E. Butler", "year": 1993}
+
+< HTTP/1.1 201 Created
+< Location: /book.php?id=4
+< Content-Type: application/json
+
+{
+    "id": 4,
+    "title": "Parable of the Sower",
+    "author": "Octavia E. Butler",
+    "year": 1993
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Kitchen",
+
+< HTTP/1.1 400 Bad Request
+< Content-Type: application/json
+
+{
+    "error": "The body must be JSON."
+}
+
+> POST /books.php
+> Content-Type: application/json
+>
+> {"title": "Kitchen", "author": "Banana Yoshimoto", "year": "1988"}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: application/json
+
+{
+    "error": "A book needs a title, an author and a year, as a number."
+}
+
+> DELETE /books.php
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: GET, POST
+< Content-Type: application/json
+
+{
+    "error": "Use GET or POST."
+}

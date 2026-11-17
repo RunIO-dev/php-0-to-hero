@@ -156,6 +156,96 @@ GET /cover?title=Sula
 GET /cover?title=Kindred
 
 ###
+# Programs read the books as JSON (chapter 67): the same data, and where each cover is.
+GET /api/books
+
+###
+# A page at a time, and filtered (chapter 70): the Link header names the other pages.
+GET /api/books?per_page=2&page=2
+
+###
+GET /api/books?author=butler&available=true
+
+###
+GET /api/books?per_page=1000
+
+###
+# One book (chapter 68), and the errors of the API: problem details, for programs.
+GET /api/book?title=kitchen
+
+###
+GET /api/book?title=Nowhere
+
+###
+PUT /api/books
+
+###
+GET /api/nowhere
+
+###
+# Programs log in with a token (chapter 69), never a cookie. A wrong password gets none.
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Amira", "password": "tea kettle"}
+
+###
+# The token is shown once, with how many seconds it lasts: 30 days.
+# capture amiratoken /"token": "([0-9a-f]{64})"/
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Amira", "password": "tea kettle under the lemon tree"}
+
+###
+# Her loans, by her token; without one, the API asks for it.
+GET /api/loans
+Authorization: Bearer {{amiratoken}}
+
+###
+GET /api/loans
+
+###
+# A reader may not add books.
+POST /api/books
+Authorization: Bearer {{amiratoken}}
+Content-Type: application/json
+
+{"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# capture jonastoken /"token": "([0-9a-f]{64})"/
+POST /api/tokens
+Content-Type: application/json
+
+{"name": "Jonas", "password": "river stones in the morning light"}
+
+###
+# Staff may: no CSRF token, because no cookie is involved.
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# The same book again: 409 Conflict (chapter 71).
+POST /api/books
+Authorization: Bearer {{jonastoken}}
+Content-Type: application/json
+
+{"title": "beloved", "author": "Toni Morrison", "year": 1987}
+
+###
+# Logging out ends the token at once.
+DELETE /api/tokens
+Authorization: Bearer {{amiratoken}}
+
+###
+GET /api/loans
+Authorization: Bearer {{amiratoken}}
+
+###
 # Kindred's own page (chapter 55), found in any case.
 GET /book?title=kindred
 

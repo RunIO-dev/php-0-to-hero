@@ -120,7 +120,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 1. Every `code/**.php` runs on 8.5 and 8.6 (Docker), and its output equals its `.out`.
 2. Every exercise test fails on the starter and passes on the solution.
 3. Shelf: every file in `shelf/` equals its newest snapshot in `code/NN-slug/shelf/`, every file of the newest state is in `shelf/`, and no chapter includes `shelf/` directly. Each script with a `.out` file is checked like an example. From chapter 41, its tests pass, in `shelf/` and in the state after every chapter that has them.
-4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function or class name repeats (`tools/src/Batches.php`). A folder whose files `require` each other, and a Composer project, stay in one batch.
+4. PHP-CS-Fixer (PER) reports nothing, and PHPStan passes at the levels in §4. Examples often define the same function (`lateFee`) in several files, so PHPStan runs on batches of files in which no function, class or global constant name repeats (`tools/src/Batches.php`). A folder whose files `require` each other, and a Composer project, stay in one batch.
 5. **Forbidden patterns,** outside `*.bad.php`:
    - SQL built by joining strings with variables;
    - `md5(` or `sha1(` near "password";

@@ -49,6 +49,24 @@ final readonly class Library
         return array_column($found, 'title');
     }
 
+    /**
+     * One page of the books that match the query, sorted by title (chapter 70), and how many pages
+     * there are. $page counts from 1.
+     *
+     * @return array{books: list<Book>, pages: int}
+     */
+    public function page(BookQuery $query, int $page, int $perPage): array
+    {
+        if ($page < 1 || $perPage < 1) {
+            throw new InvalidArgumentException('Pages count from 1, and hold at least one book');
+        }
+
+        return [
+            'books' => $this->books->page($query, ($page - 1) * $perPage, $perPage),
+            'pages' => max(1, (int) ceil($this->books->count($query) / $perPage)),
+        ];
+    }
+
     /** The book with this title, in any case. */
     public function find(string $title): Book
     {
@@ -108,7 +126,7 @@ final readonly class Library
         foreach ($books as $book) {
             $sameIsbn = $new->isbn !== null && $book->isbn !== null && $book->isbn->equals($new->isbn);
             if ($sameIsbn || sameTitle($book->title, $new->title)) {
-                throw new InvalidArgumentException("\"$book->title\" is already on the shelf");
+                throw new BookExists("\"$book->title\" is already on the shelf");
             }
         }
         $this->books->add($new);

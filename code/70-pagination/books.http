@@ -1,0 +1,22 @@
+# The first page: three books, sorted by title.
+GET /books.php
+
+###
+GET /books.php?page=3
+
+###
+# Octavia E. Butler's books, two at a time, the oldest first.
+GET /books.php?author=butler&sort=year&per_page=2
+
+###
+GET /books.php?author=butler&sort=year&per_page=2&page=2
+
+###
+# Past the last page: an empty list, and the links back.
+GET /books.php?page=9
+
+###
+GET /books.php?per_page=100000
+
+###
+GET /books.php?sort=title;DROP%20TABLE%20books
