@@ -1,0 +1,9 @@
+> ALTER TABLE books DROP COLUMN author
+Done
+
+> SELECT * FROM books
+id | title
+---+------------------
+1  | Things Fall Apart
+2  | Kindred
+

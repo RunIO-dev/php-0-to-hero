@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught PDOException: SQLSTATE[HY000] [2002] No such file or directory in localhost.error.php:7
+Stack trace:
+#0 localhost.error.php(7): PDO->__construct('mysql:host=loca...', 'shelf_app', Object(SensitiveParameterValue))
+#1 {main}
+  thrown in localhost.error.php on line 7

@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-// The book list as cards: a message shown once, or null; the titles that have a cover; one Book per argument. A book without a cover shows its first letter.
+// The book list as cards: a message shown once, or null; the titles that have a cover; one Book per argument.
+// A book without a cover shows its first letter. Each title links to the book's page (chapter 55).
 
 use Shelf\Book;
 
@@ -24,7 +25,7 @@ return static function (?string $flash, array $covered, Book ...$books): void { 
 <?php else: ?>
             <span class="cover" aria-hidden="true"><?= e(mb_substr($book->title, 0, 1)) ?></span>
 <?php endif; ?>
-            <h2><?= e($book->title) ?></h2>
+            <h2><a href="/book?title=<?= e(urlencode($book->title)) ?>"><?= e($book->title) ?></a></h2>
             <p><?= e($book->author) ?>, <?= $book->year ?></p>
 <?php if ($book->isAvailable()): ?>
             <p class="status">Available</p>
@@ -34,6 +35,6 @@ return static function (?string $flash, array $covered, Book ...$books): void { 
         </li>
 <?php endforeach; ?>
     </ul>
-    <p class="count"><?= count($books) ?> books</p>
+    <p class="count"><?= count($books) ?> <?= count($books) === 1 ? 'book' : 'books' ?></p>
 <?php endif; ?>
 <?php };

@@ -1,0 +1,9 @@
+-- Exercise 58, beginner: a migration for the members table (see ../library.php).
+--
+-- Members get two columns:
+--   email:  text, and empty (NULL) for the members who are there already;
+--   joined: the date they joined, as text, required. The members who are there already
+--           joined on '2026-01-01'.
+-- Every member who is there must still be there, with the same id and name.
+--
+-- Check your work: composer exercise 58 beginner

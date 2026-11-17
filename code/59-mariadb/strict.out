@@ -1,0 +1,4 @@
+Duplicate entry 'KINDRED' for key 'title'
+Incorrect integer value: 'last year' for column `shelf`.`books`.`year` at row 1
+Data too long for column 'title' at row 1
+CONSTRAINT `books.year` failed for `shelf`.`books`

@@ -1,0 +1,13 @@
+> SELECT COUNT(*) AS books, SUM(copies) AS copies FROM books
+books | copies
+------+-------
+6     | 8
+
+> SELECT author, COUNT(*) AS books FROM books GROUP BY author ORDER BY books DESC, author
+author            | books
+------------------+------
+Octavia E. Butler | 2
+Toni Morrison     | 2
+Banana Yoshimoto  | 1
+Chinua Achebe     | 1
+

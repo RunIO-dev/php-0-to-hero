@@ -2,10 +2,10 @@
 ARG PHP=8.6-rc-cli
 FROM php:${PHP}
 
-# mbstring for text in any language; git and unzip for Composer.
+# mbstring for text in any language; pdo_mysql for MariaDB and MySQL (chapter 59); git and unzip for Composer.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git unzip libonig-dev \
-    && docker-php-ext-install mbstring \
+    && docker-php-ext-install mbstring pdo_mysql \
     && rm -rf /var/lib/apt/lists/* \
     && git config --system --add safe.directory /app   # the mounted repo belongs to you, not the container
 

@@ -1,0 +1,21 @@
+.F                                                                  2 / 2 (100%)
+
+Shared Database
+ ✔ A note is kept
+ ✘ The note from before is not there
+   │
+   │ Failed asserting that two arrays are identical.
+   │ --- Expected
+   │ +++ Actual
+   │ @@ @@
+   │  Array &0 [
+   │ -    0 => 'Owes a fine',
+   │ +    0 => 'Wants the next Butler',
+   │ +    1 => 'Owes a fine',
+   │  ]
+   │
+   │ code/60-testing-databases/SharedDatabaseTest.php:37
+   │
+
+FAILURES!
+Tests: 2, Assertions: 2, Failures: 1.

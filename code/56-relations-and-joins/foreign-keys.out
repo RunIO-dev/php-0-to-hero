@@ -1,0 +1,16 @@
+> INSERT INTO loans (book_id, member_id, due) VALUES (99, 1, '2026-04-01')
+Error: FOREIGN KEY constraint failed
+
+> DELETE FROM books WHERE title = 'Kindred'
+Error: FOREIGN KEY constraint failed
+
+> DELETE FROM books WHERE title = 'Kitchen'
+1 row(s) changed
+
+> SELECT title FROM books
+title
+-----------------
+Kindred
+Sula
+Things Fall Apart
+

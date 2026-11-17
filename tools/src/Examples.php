@@ -42,6 +42,10 @@ final class Examples
             if (str_contains((string) file_get_contents($file), self::NEWER) && PHP_VERSION_ID < 80600) {
                 continue;
             }
+            if (Database::isNeeded($file) && !Database::isUp()) {
+                $problems[] = "$name: " . Database::START;
+                continue;
+            }
             $expected = substr($file, 0, -4) . '.out';
             if (!is_file($expected)) {
                 $problems[] = "$name: no .out file next to it";
@@ -106,6 +110,9 @@ final class Examples
         if (Web::has($file)) {
             return Web::output($file);
         }
+        if ($args === null && self::session($file) !== null) {
+            return self::sessionOutput($root, $file);
+        }
         if ($args === null) {
             ['args' => $args, 'stdin' => $stdin] = self::command($file);
         }
@@ -133,6 +140,10 @@ final class Examples
         if (Web::has($file)) {
             return ['line' => Web::command($file), 'args' => [], 'stdin' => null, 'custom' => true];
         }
+        $session = self::session($file);
+        if ($session !== null) {
+            return ['line' => implode("\n", $session), 'args' => [], 'stdin' => null, 'custom' => true];
+        }
         $runFile = substr($file, 0, -4) . '.run';
         if (!is_file($runFile)) {
             return ['line' => "php $name", 'args' => [], 'stdin' => null, 'custom' => false];
@@ -154,6 +165,56 @@ final class Examples
         }
 
         return ['line' => $line, 'args' => array_slice($words, 2), 'stdin' => $stdin, 'custom' => true];
+    }
+
+    /**
+     * The commands of a session (chapter 54 on): a .run file with one command per line, such as
+     * php shelf.php import, then php shelf.php list. They change files (a database), so they run in
+     * order in a copy of the folder, and the .out holds each command, with "$ " before it, and what
+     * it printed. Each line is "php <file> [arguments]", without "< input".
+     *
+     * @return list<string>|null the command lines, or null for an example with one command
+     */
+    public static function session(string $file): ?array
+    {
+        $runFile = substr($file, 0, -4) . '.run';
+        if (!is_file($runFile)) {
+            return null;
+        }
+        $lines = array_values(array_filter(array_map(trim(...), file($runFile) ?: []), static fn(string $l): bool => $l !== ''));
+
+        return count($lines) > 1 ? $lines : null;
+    }
+
+    /** What a session prints, run in a copy of the folder (of Shelf as it was after a snapshot's chapter). */
+    private static function sessionOutput(string $root, string $file): string
+    {
+        $dir = dirname($file);
+        $copy = sys_get_temp_dir() . '/session-' . bin2hex(random_bytes(4));
+        try {
+            if (preg_match('~/code/\d\d-[^/]+/shelf$~', $dir) === 1) {
+                Shelf::assemble($root, $dir, $copy);
+                Projects::dumpAutoload($copy);
+            } else {
+                Run::copy($dir, $copy);
+            }
+            $out = '';
+            foreach (self::session($file) ?? [] as $line) {
+                $words = self::words($line);
+                if (($words[0] ?? '') !== 'php' || ($words[1] ?? '') !== basename($file) || in_array('<', $words, true)) {
+                    throw new \RuntimeException(basename($file, '.php') . '.run: each line must be: php ' . basename($file) . " [arguments]: $line");
+                }
+                $run = Run::capture(
+                    [PHP_BINARY, '-d', 'display_errors=stdout', '-d', 'error_reporting=-1', '-d', 'html_errors=0', ...array_slice($words, 1)],
+                    $copy,
+                );
+                $out .= "$ $line\n" . str_replace($copy . '/', '', $run['out'] . $run['err']);
+            }
+
+            return $out;
+        } finally {
+            Run::remove($copy);
+        }
     }
 
     /** A template (chapter 49 on): a file in a templates/ folder, checked through the pages that render it. */

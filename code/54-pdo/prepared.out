@@ -1,0 +1,10 @@
+Toni Morrison: ["Sula"]
+' OR '1'='1: []
+Added book 5
+array(2) {
+  ["title"]=>
+  string(19) "Midnight's Children"
+  ["author"]=>
+  string(14) "Salman Rushdie"
+}
+bool(false)

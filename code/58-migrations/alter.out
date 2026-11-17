@@ -1,0 +1,16 @@
+> ALTER TABLE loans ADD COLUMN lent TEXT
+Done
+
+> UPDATE loans SET lent = date(due, '-14 days')
+2 row(s) changed
+
+> ALTER TABLE members RENAME COLUMN name TO full_name
+Done
+
+> SELECT books.title, members.full_name, loans.lent, loans.due
+    FROM loans JOIN books ON books.id = loans.book_id JOIN members ON members.id = loans.member_id
+title             | full_name | lent       | due
+------------------+-----------+------------+-----------
+Kindred           | Amira     | 2026-03-02 | 2026-03-16
+Things Fall Apart | Jonas     | 2026-03-06 | 2026-03-20
+

@@ -1,0 +1,11 @@
+> SELECT id, title FROM loans JOIN books ON books.id = loans.book_id
+Error: ambiguous column name: id
+
+> SELECT loans.id, books.title FROM loans JOIN books ON books.id = loans.book_id
+id | title
+---+------------------
+1  | Kindred
+2  | Things Fall Apart
+3  | Kindred
+4  | Sula
+

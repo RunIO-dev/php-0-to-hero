@@ -1,0 +1,14 @@
+$ php shelf.php import
+Imported 4 books from books.json
+$ php shelf.php add Americanah "Chimamanda Ngozi Adichie" 2013
+Added: Americanah
+$ php shelf.php remove "things fall apart"
+Removed: Things Fall Apart
+$ php shelf.php
+- Americanah (Chimamanda Ngozi Adichie, 2013): available
+- Kindred (Octavia E. Butler, 1979): all copies on loan
+- Kitchen (Banana Yoshimoto, 1988): available
+- Parable of the Sower (Octavia E. Butler, 1993): available
+4 books
+$ php shelf.php remove Dune
+There is no book titled "Dune"

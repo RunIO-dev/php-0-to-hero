@@ -2,12 +2,21 @@
 #   docker compose run --rm php php tools/check.php      PHP 8.6
 #   docker compose run --rm php85 composer verify        PHP 8.5
 #   docker compose up web                                Shelf in the browser (chapter 45)
+#   docker compose up -d --wait db                       MariaDB, for chapter 59 (stop it: docker compose stop db)
+
+# The database users' passwords (chapter 59). They are for the database in Docker on your computer,
+# which only these containers can reach; real secrets never go into a file in Git (chapter 65).
+x-db-passwords: &db-passwords
+  SHELF_ADMIN_PASSWORD: local-only-admin
+  SHELF_APP_PASSWORD: local-only-app
+
 x-php: &php
   # Files you create stay yours, not root's. On Linux, if `id -u` is not 1000:
   #   export HOST_UID=$(id -u) HOST_GID=$(id -g)
   user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
   volumes: [".:/app"]
   working_dir: /app
+  environment: *db-passwords
 
 services:
   php:
@@ -26,3 +35,20 @@ services:
     image: php-0-to-hero:8.6
     command: php -S 0.0.0.0:8000 -t shelf/public
     ports: ["127.0.0.1:8000:8000"]
+  # MariaDB (chapter 59), a database server, in its long-term support version. It has no ports:
+  # only the containers above can reach it, by the name db. The data stays in the volume db-data
+  # until: docker compose down -v
+  db:
+    image: mariadb:11.8
+    environment:
+      <<: *db-passwords
+      MARIADB_DATABASE: shelf
+      MARIADB_RANDOM_ROOT_PASSWORD: "1" # nobody needs root; docker/db/users.sh makes the two users
+    volumes: ["db-data:/var/lib/mysql", "./docker/db:/docker-entrypoint-initdb.d:ro"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      retries: 30
+
+volumes:
+  db-data:

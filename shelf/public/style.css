@@ -1,5 +1,5 @@
 /*
- * Shelf's stylesheet (chapter 49). Copy it as it is: the course teaches PHP, not CSS.
+ * Shelf's stylesheet (chapter 49; chapter 55 adds a book's page). Copy it as it is: the course teaches PHP, not CSS.
  * Plain CSS, no framework and no build step. Colours are variables, so dark mode only changes them.
  * Works on phones (one column) and wide screens (a grid of cards), and keeps focus outlines visible.
  */
@@ -197,6 +197,38 @@ span.cover {
     color: var(--muted);
 }
 
+/* one book's page (chapter 55) */
+.book h2 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.book h2 a:hover {
+    text-decoration: underline;
+}
+
+.back {
+    margin: 0;
+}
+
+.details {
+    display: flex;
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.details .cover {
+    flex: none;
+    width: 6rem;
+    height: 9rem;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.card + .card {
+    margin-top: 1rem;
+}
+
 /* forms */
 .card {
     max-width: 36rem;
@@ -253,6 +285,11 @@ button,
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+}
+
+button.danger {
+    background: var(--danger);
+    color: var(--surface);
 }
 
 button:hover,

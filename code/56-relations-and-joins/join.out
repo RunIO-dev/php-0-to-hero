@@ -1,0 +1,20 @@
+> SELECT * FROM loans
+id | book_id | member_id | due
+---+---------+-----------+-----------
+1  | 2       | 1         | 2026-03-16
+2  | 1       | 1         | 2026-03-20
+3  | 2       | 3         | 2026-03-12
+4  | 4       | 2         | 2026-03-30
+
+> SELECT books.title, members.name, loans.due
+    FROM loans
+    JOIN books ON books.id = loans.book_id
+    JOIN members ON members.id = loans.member_id
+    ORDER BY loans.due
+title             | name  | due
+------------------+-------+-----------
+Kindred           | Kenji | 2026-03-12
+Kindred           | Amira | 2026-03-16
+Things Fall Apart | Amira | 2026-03-20
+Sula              | Jonas | 2026-03-30
+

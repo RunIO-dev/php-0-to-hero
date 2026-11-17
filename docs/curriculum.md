@@ -83,14 +83,14 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 52. File uploads, done safely: content type by `finfo`, own names, stored outside `public/`, `nosniff`. ◆ book covers.
 
 ## Part 8: Databases (8)
-53. What a database is, and SQL basics with SQLite (no server needed).
-54. PDO and prepared statements, the only way we write queries. ◆ `PdoBookRepository` (the interface from chapter 33 pays off).
-55. CRUD: create, read, update, delete. ◆ books in the database.
-56. Relations and JOINs. ◆ members and loans.
-57. Transactions. ◆ lending a book is all-or-nothing.
-58. Migrations: changing the schema safely.
-59. MySQL/MariaDB with Docker, the same PDO code, and a database user with least privilege.
-60. Testing code that uses a database.
+53. What a database is, and SQL basics with SQLite (no server needed): SELECT, WHERE, INSERT, UPDATE, DELETE, NULL, constraints. ◆ `schema.sql`, the books table with its rules.
+54. PDO and prepared statements, the only way we write queries; SQL injection. ◆ `PdoBookRepository` (the interface from chapter 33 pays off), `openDatabase()`, `shelf.php import`.
+55. CRUD: create, read, update, delete; rows to objects; `rowCount()`; GET reads, POST changes. ◆ one method per operation; a page per book: change copies, remove.
+56. Relations and JOINs, foreign keys, LEFT JOIN. ◆ members and loans in the database; a book on loan can't be removed.
+57. Transactions, and lost updates (check and change in one statement). ◆ lending is all-or-nothing, and the last copy goes once; `inTransaction()`.
+58. Migrations: changing the schema safely; `ALTER TABLE`, indexes, `EXPLAIN QUERY PLAN`. ◆ `migrations/`, `Migrations` with hashes, the loan indexes.
+59. MariaDB with Docker, the same PDO code, and database users with least privilege. ◆ none: *Shelf* stays on SQLite, and the chapter says why. *(compose service `db`)*
+60. Testing code that uses a database: a new database per test, rollback on a server, contract tests. ◆ contract tests for the repositories; the PDO classes tested on SQLite in memory.
 
 ## Part 9: Users and security (6)
 61. Passwords: `password_hash` and `password_verify`, and never storing plain text. ◆ member accounts.

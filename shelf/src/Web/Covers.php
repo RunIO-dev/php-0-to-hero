@@ -74,6 +74,15 @@ final readonly class Covers
         return null;
     }
 
+    /** Deletes the cover of $title, if there is one (chapter 55: the book was removed). */
+    public function remove(string $title): void
+    {
+        $cover = $this->find($title);
+        if ($cover !== null && !unlink($cover['path'])) {
+            throw new RuntimeException("Cannot delete the cover of $title");
+        }
+    }
+
     /** The file name without extension: a hash of the title, so any title gives a safe name. */
     private function base(string $title): string
     {

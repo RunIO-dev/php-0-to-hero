@@ -1,0 +1,16 @@
+-- Exercise 58, advanced: rules for a table that holds data.
+--
+-- The books table (see ../library.php) was made without rules. Give it these, and keep every
+-- row with its id, so the loans still point to the right books:
+--   title  TEXT NOT NULL UNIQUE COLLATE NOCASE
+--   copies INTEGER NOT NULL CHECK (copies >= 0)
+--   and make the table STRICT.
+--
+-- SQLite's ALTER TABLE can't add a rule to a column. The way is to rebuild the table:
+--   1. CREATE TABLE new_books (...) with the rules;
+--   2. INSERT INTO new_books (...) SELECT ... FROM books;
+--   3. DROP TABLE books;
+--   4. ALTER TABLE new_books RENAME TO books.
+-- The test runs your file in one transaction, as Shelf's migrations run.
+--
+-- Check your work: composer exercise 58 advanced

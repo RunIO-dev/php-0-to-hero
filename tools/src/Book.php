@@ -35,7 +35,7 @@ final class Book
             $out = substr($file, 0, -4) . '.out';
             if (str_ends_with($path, '.php') && is_file($out)) {
                 $command = Examples::command($file);
-                $typed = $command['custom'] ? '$ ' . $command['line'] . "\n" : '';
+                $typed = $command['custom'] && Examples::session($file) === null ? '$ ' . $command['line'] . "\n" : '';
                 $block .= sprintf("\n%s:\n\n```txt\n%s%s\n```\n", self::word('output', $lang), $typed, rtrim((string) file_get_contents($out)));
             }
             if (str_ends_with($path, '.http') && is_file(substr($file, 0, -5) . '.out')) {

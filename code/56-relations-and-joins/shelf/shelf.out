@@ -1,0 +1,13 @@
+$ php shelf.php import
+Imported 4 books and 4 members
+$ php shelf.php loans Amira
+Amira has no books on loan
+$ php shelf.php loans Nobody
+There is no member named "Nobody"
+$ php shelf.php remove Kindred
+Removed: Kindred
+$ php shelf.php
+- Kitchen (Banana Yoshimoto, 1988): available
+- Parable of the Sower (Octavia E. Butler, 1993): available
+- Things Fall Apart (Chinua Achebe, 1958): available
+3 books

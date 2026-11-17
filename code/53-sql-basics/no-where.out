@@ -1,0 +1,13 @@
+> UPDATE books SET copies = copies - 1
+6 row(s) changed
+
+> SELECT title, copies FROM books
+title                | copies
+---------------------+-------
+Things Fall Apart    | 1
+Kindred              | -1
+Kitchen              | 0
+Parable of the Sower | 0
+Sula                 | 2
+Beloved              | 0
+

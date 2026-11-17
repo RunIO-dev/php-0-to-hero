@@ -65,6 +65,15 @@ final class Book
         $this->copies--;
     }
 
+    /** The library now has $copies copies of this book (chapter 55): more were bought, or some were lost. */
+    public function changeCopies(int $copies): void
+    {
+        if ($copies < 0) {
+            throw new InvalidArgumentException("\"$this->title\" can't have $copies copies");
+        }
+        $this->copies = $copies;
+    }
+
     public function line(): string
     {
         $status = $this->isAvailable() ? 'available' : 'all copies on loan';

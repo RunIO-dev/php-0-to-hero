@@ -1,0 +1,20 @@
+> INSERT INTO books (title, author, year, copies) VALUES ('Kindred', 'Octavia E. Butler', 1979, 1)
+1 row(s) changed
+
+> INSERT INTO books (title, author, year) VALUES ('KINDRED', 'Octavia E. Butler', 1979)
+Error: UNIQUE constraint failed: books.title
+
+> INSERT INTO books (title, author, year, copies) VALUES ('Sula', 'Toni Morrison', 1973, -1)
+Error: CHECK constraint failed: copies >= 0
+
+> INSERT INTO books (title, author, year) VALUES ('Sula', 'Toni Morrison', 'last year')
+Error: cannot store TEXT value in INTEGER column books.year
+
+> INSERT INTO books (title, year) VALUES ('Sula', 1973)
+Error: NOT NULL constraint failed: books.author
+
+> SELECT * FROM books
+id | title   | author            | year | copies | isbn
+---+---------+-------------------+------+--------+-----
+1  | Kindred | Octavia E. Butler | 1979 | 1      | NULL
+

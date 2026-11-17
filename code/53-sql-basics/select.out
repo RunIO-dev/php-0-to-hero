@@ -1,0 +1,32 @@
+> SELECT title, year FROM books
+title                | year
+---------------------+-----
+Things Fall Apart    | 1958
+Kindred              | 1979
+Kitchen              | 1988
+Parable of the Sower | 1993
+Sula                 | 1973
+Beloved              | 1987
+
+> SELECT title, year FROM books ORDER BY year DESC
+title                | year
+---------------------+-----
+Parable of the Sower | 1993
+Kitchen              | 1988
+Beloved              | 1987
+Kindred              | 1979
+Sula                 | 1973
+Things Fall Apart    | 1958
+
+> SELECT title, author FROM books ORDER BY title LIMIT 3
+title   | author
+--------+------------------
+Beloved | Toni Morrison
+Kindred | Octavia E. Butler
+Kitchen | Banana Yoshimoto
+
+> SELECT * FROM books WHERE id = 2
+id | title   | author            | year | copies | isbn
+---+---------+-------------------+------+--------+--------------
+2  | Kindred | Octavia E. Butler | 1979 | 0      | 9780807083697
+

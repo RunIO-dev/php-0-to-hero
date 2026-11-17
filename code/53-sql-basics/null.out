@@ -1,0 +1,11 @@
+> SELECT title FROM books WHERE isbn = NULL
+(no rows)
+
+> SELECT title FROM books WHERE isbn IS NULL
+title
+--------------------
+Kitchen
+Parable of the Sower
+Sula
+Beloved
+

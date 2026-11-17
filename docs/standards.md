@@ -6,7 +6,8 @@ These standards apply to the book, the code and the exercises. Where a rule can 
 
 ```
 README.md  LICENSE (CC BY 4.0 for text)  LICENSE-CODE (MIT)  ATTRIBUTION.md  CONTRIBUTING.md
-Dockerfile, compose.yaml  php:8.6 and php:8.5 images (8.6-rc-cli until the 8.6 release), plus web and db from Part 7
+Dockerfile, compose.yaml  php:8.6 and php:8.5 images (8.6-rc-cli until the 8.6 release), plus web (Part 7) and db, MariaDB (chapter 59)
+docker/db/users.sh      the database users for chapter 59
 composer.json           "php": ">=8.5"; dev: phpunit 13, phpstan 2, php-cs-fixer 3
 tools/check.php         setup check: PHP version, extensions, Composer; prints the exact fix
 tools/verify            the one script CI and we run: every check in §6
@@ -87,6 +88,8 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
 - **Examples that show an error on purpose** (for "Common mistakes") go in files named `*.error.php`. They run like any example, and their `.out` holds the real error message. PHPStan and the style check skip them, and the text marks them (⚠). An exercise starter with a mistake on purpose uses the same name.
 - **`.out` files** are written with `composer run-script out code/NN-slug/*.php`, which records exactly what the check expects. Read each one before you commit it.
 - **Arguments and input:** an example that needs them has a `.run` file next to it with the command as a learner types it: `php greet.php Amira "Things Fall Apart" < names.txt`. Only `php <file>`, arguments, and `< file` from the same folder are allowed; no shell runs it. The book shows the command above the output.
+- **Sessions** (chapter 54 on): a `.run` file with several lines, each `php <file> [arguments]`, is a session. Its commands change files (a database), so they run in order in a copy of the folder (of *Shelf* as it was after the snapshot's chapter), and the `.out` holds each command with `$ ` before it, followed by what it printed.
+- **Databases:** examples use SQLite in memory (`sqlite::memory:`) or in a temporary file they delete, never a file in the repo. Examples and exercises for MariaDB (chapter 59 on) connect to the `db` service with `host=db`, and need it running: `docker compose up -d --wait db`. Without it, the checks name each such file and skip it (`tools/src/Database.php`); CI starts it before `verify`.
 - **Files of functions** that other examples load with `require_once __DIR__ . '/name.php'` need no `.out`: they are checked through the files that load them.
 - **Tests as examples** (chapter 41 on): a `code/**/*Test.php` file runs with PHPUnit from the course folder (`vendor/bin/phpunit --testdox <file>`), and its `.out` holds what PHPUnit prints, without the version, runtime, time and memory lines. The file it tests is loaded with `require_once __DIR__ . '/name.php'`, so it needs no `.out`.
 - **PHPStan output as examples** (chapter 40): an example `x.php` may have an `x.phpstan` file. Its first line is the command (`$ vendor/bin/phpstan analyse --level 8 code/40-static-analysis/x.php`), the rest is what PHPStan prints. `tools/verify` runs the command and compares, and the book shows it below the output; `php tools/out` writes it again. Such an example has problems on purpose, so the normal PHPStan runs leave it out (`tools/src/Analysis.php`).
@@ -100,7 +103,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - cookies are kept between the requests of one file; long cookie values and dates are shown as `…`, and a binary answer as its size.
   A page that only an `.http` file requests (in its folder, or one folder up) is checked through the requests, not run on its own. Exercise tests send requests with `responses_of($dir, $http)` (`tools/bootstrap.php`).
 - **Removed files:** a *Shelf* file that a chapter deletes gets an empty `X.removed` in that chapter's snapshot; from then on, `Shelf::state` leaves it out, and the check refuses it in `shelf/`.
-- **Course files in the text:** `compose.yaml` and `Dockerfile` at the top of the repo may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
+- **Course files in the text:** `compose.yaml`, `Dockerfile` and `docker/db/users.sh` may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
 
 ## 5. Exercises
 

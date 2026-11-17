@@ -1,0 +1,11 @@
+> INSERT INTO books (title, author, year) VALUES ('Midnight's Children', 'Salman Rushdie', 1981)
+Error: near "s": syntax error
+
+> INSERT INTO books (title, author, year) VALUES ('Midnight''s Children', 'Salman Rushdie', 1981)
+1 row(s) changed
+
+> SELECT title FROM books WHERE author = 'Salman Rushdie'
+title
+-------------------
+Midnight's Children
+

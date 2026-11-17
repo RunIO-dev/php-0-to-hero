@@ -1,0 +1,24 @@
+> SELECT members.name, loans.due FROM members LEFT JOIN loans ON loans.member_id = members.id ORDER BY members.name
+name  | due
+------+-----------
+Amira | 2026-03-16
+Amira | 2026-03-20
+Ana   | NULL
+Jonas | 2026-03-30
+Kenji | 2026-03-12
+
+> SELECT members.name, COUNT(loans.id) AS loans
+    FROM members LEFT JOIN loans ON loans.member_id = members.id
+    GROUP BY members.id ORDER BY loans DESC, members.name
+name  | loans
+------+------
+Amira | 2
+Jonas | 1
+Kenji | 1
+Ana   | 0
+
+> SELECT books.title FROM books LEFT JOIN loans ON loans.book_id = books.id WHERE loans.id IS NULL
+title
+-------
+Kitchen
+

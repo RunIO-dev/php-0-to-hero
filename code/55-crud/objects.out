@@ -1,0 +1,9 @@
+object(Book)#3 (3) {
+  ["title"]=>
+  string(4) "Sula"
+  ["year"]=>
+  int(1973)
+  ["copies"]=>
+  int(3)
+}
+NULL

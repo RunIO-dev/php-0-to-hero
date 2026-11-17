@@ -1,0 +1,14 @@
+array(4) {
+  ["title"]=>
+  string(7) "Kindred"
+  ["author"]=>
+  string(17) "Octavia E. Butler"
+  ["year"]=>
+  int(1979)
+  ["copies"]=>
+  int(0)
+}
+Added book 5
+Lent: Kitchen
+Not lent: Kitchen
+Not lent: Dune

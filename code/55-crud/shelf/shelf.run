@@ -1,0 +1,5 @@
+php shelf.php import
+php shelf.php add Americanah "Chimamanda Ngozi Adichie" 2013
+php shelf.php remove "things fall apart"
+php shelf.php
+php shelf.php remove Dune

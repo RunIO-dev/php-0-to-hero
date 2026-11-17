@@ -1,0 +1,6 @@
+
+Fatal error: Uncaught PDOException: There is already an active transaction in nested.error.php:16
+Stack trace:
+#0 nested.error.php(16): PDO->beginTransaction()
+#1 {main}
+  thrown in nested.error.php on line 16

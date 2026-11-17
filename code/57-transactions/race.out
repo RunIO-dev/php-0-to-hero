@@ -1,0 +1,8 @@
+Read, then write:
+  lent to Amira
+  lent to Jonas
+  copies Kindred: 0, Sula: 2; loans: 2
+Check and take in one statement:
+  lent to Amira
+  no copy left for Jonas
+  copies Kindred: 0, Sula: 2; loans: 1

@@ -1,0 +1,4 @@
+php shelf.php migrations
+php shelf.php import
+php shelf.php loans Amira
+php shelf.php

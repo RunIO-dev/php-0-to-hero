@@ -1,0 +1,8 @@
+...                                                                 3 / 3 (100%)
+
+Notes
+ ✔ A note is kept for its member
+ ✔ Notes come back oldest first
+ ✔ The database refuses an empty note
+
+OK (3 tests, 4 assertions)

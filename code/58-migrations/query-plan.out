@@ -1,0 +1,13 @@
+> EXPLAIN QUERY PLAN SELECT due FROM loans WHERE member_id = 1
+id | parent | notused | detail
+---+--------+---------+-----------
+2  | 0      | 0       | SCAN loans
+
+> CREATE INDEX loans_by_member ON loans (member_id)
+Done
+
+> EXPLAIN QUERY PLAN SELECT due FROM loans WHERE member_id = 1
+id | parent | notused | detail
+---+--------+---------+-------------------------------------------------------
+3  | 0      | 0       | SEARCH loans USING INDEX loans_by_member (member_id=?)
+

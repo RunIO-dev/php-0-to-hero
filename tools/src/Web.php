@@ -121,7 +121,7 @@ final class Web
     {
         $site = self::parse($http);
         $copy = sys_get_temp_dir() . '/web-' . bin2hex(random_bytes(4));
-        self::copy($dir, $copy);
+        Run::copy($dir, $copy);
         [$server, $port] = self::serve($copy, $site['docroot'], $site['router'], $site['env']);
         try {
             $cookies = [];
@@ -197,21 +197,6 @@ final class Web
         }
 
         return ['status' => (int) (explode(' ', $response['status'])[1] ?? 0), 'headers' => $headers, 'body' => $response['body']];
-    }
-
-    /** Copies a folder, without following links out of it. */
-    private static function copy(string $from, string $to): void
-    {
-        mkdir($to, 0o777, true);
-        $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($from, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
-        foreach ($items as $item) {
-            $target = $to . substr((string) $item, strlen($from));
-            if ($item instanceof \SplFileInfo && $item->isDir() && !$item->isLink()) {
-                mkdir($target, 0o777, true);
-            } elseif ($item instanceof \SplFileInfo && $item->isFile() && !$item->isLink()) {
-                copy((string) $item, $target);
-            }
-        }
     }
 
     /**

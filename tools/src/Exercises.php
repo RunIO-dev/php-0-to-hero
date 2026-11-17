@@ -27,6 +27,10 @@ final class Exercises
                 $problems[] = "$name: no solution in " . substr($solution, strlen($root) + 1);
                 continue;
             }
+            if ((Database::isNeeded($dir) || Database::isNeeded(dirname($dir))) && !Database::isUp()) {
+                $problems[] = "$name: " . Database::START;
+                continue;
+            }
             $starter = self::test($root, $dir, false);
             if ($starter['code'] === 0) {
                 $problems[] = "$name: the tests pass on the starter, so the exercise asks for nothing";

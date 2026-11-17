@@ -1,0 +1,19 @@
+> INSERT INTO books (title, author, year) VALUES ('Americanah', 'Chimamanda Ngozi Adichie', 2013)
+1 row(s) changed
+
+> UPDATE books SET copies = copies - 1 WHERE title = 'Sula'
+1 row(s) changed
+
+> DELETE FROM books WHERE title = 'Beloved'
+1 row(s) changed
+
+> SELECT id, title, copies FROM books ORDER BY title
+id | title                | copies
+---+----------------------+-------
+7  | Americanah           | 1
+2  | Kindred              | 0
+3  | Kitchen              | 1
+4  | Parable of the Sower | 1
+5  | Sula                 | 2
+1  | Things Fall Apart    | 2
+

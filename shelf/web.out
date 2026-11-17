@@ -18,33 +18,7 @@
     </header>
     <main>
     <h1>Books</h1>
-    <ul class="books">
-        <li class="book">
-            <span class="cover" aria-hidden="true">K</span>
-            <h2>Kindred</h2>
-            <p>Octavia E. Butler, 1979</p>
-            <p class="status on-loan">All copies on loan</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">K</span>
-            <h2>Kitchen</h2>
-            <p>Banana Yoshimoto, 1988</p>
-            <p class="status">Available</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">P</span>
-            <h2>Parable of the Sower</h2>
-            <p>Octavia E. Butler, 1993</p>
-            <p class="status">Available</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">T</span>
-            <h2>Things Fall Apart</h2>
-            <p>Chinua Achebe, 1958</p>
-            <p class="status">Available</p>
-        </li>
-    </ul>
-    <p class="count">4 books</p>
+    <p class="empty">No books yet. <a href="/add">Add the first one.</a></p>
     </main>
 </body>
 </html>
@@ -83,6 +57,15 @@
     </main>
 </body>
 </html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&author=Octavia+E.+Butler&year=1979&isbn=9780807083697&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /
+< Content-type: text/html; charset=UTF-8
 
 > POST /add
 > Content-Type: application/x-www-form-urlencoded
@@ -341,36 +324,18 @@
     <ul class="books">
         <li class="book">
             <span class="cover" aria-hidden="true">K</span>
-            <h2>Kindred</h2>
+            <h2><a href="/book?title=Kindred">Kindred</a></h2>
             <p>Octavia E. Butler, 1979</p>
-            <p class="status on-loan">All copies on loan</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">K</span>
-            <h2>Kitchen</h2>
-            <p>Banana Yoshimoto, 1988</p>
-            <p class="status">Available</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">P</span>
-            <h2>Parable of the Sower</h2>
-            <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
             <img class="cover" src="/cover?title=Sula" alt="">
-            <h2>Sula</h2>
+            <h2><a href="/book?title=Sula">Sula</a></h2>
             <p>Toni Morrison, 1973</p>
             <p class="status">Available</p>
         </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">T</span>
-            <h2>Things Fall Apart</h2>
-            <p>Chinua Achebe, 1958</p>
-            <p class="status">Available</p>
-        </li>
     </ul>
-    <p class="count">5 books</p>
+    <p class="count">2 books</p>
     </main>
 </body>
 </html>
@@ -398,36 +363,18 @@
     <ul class="books">
         <li class="book">
             <span class="cover" aria-hidden="true">K</span>
-            <h2>Kindred</h2>
+            <h2><a href="/book?title=Kindred">Kindred</a></h2>
             <p>Octavia E. Butler, 1979</p>
-            <p class="status on-loan">All copies on loan</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">K</span>
-            <h2>Kitchen</h2>
-            <p>Banana Yoshimoto, 1988</p>
-            <p class="status">Available</p>
-        </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">P</span>
-            <h2>Parable of the Sower</h2>
-            <p>Octavia E. Butler, 1993</p>
             <p class="status">Available</p>
         </li>
         <li class="book">
             <img class="cover" src="/cover?title=Sula" alt="">
-            <h2>Sula</h2>
+            <h2><a href="/book?title=Sula">Sula</a></h2>
             <p>Toni Morrison, 1973</p>
             <p class="status">Available</p>
         </li>
-        <li class="book">
-            <span class="cover" aria-hidden="true">T</span>
-            <h2>Things Fall Apart</h2>
-            <p>Chinua Achebe, 1958</p>
-            <p class="status">Available</p>
-        </li>
     </ul>
-    <p class="count">5 books</p>
+    <p class="count">2 books</p>
     </main>
 </body>
 </html>
@@ -464,6 +411,269 @@
     </main>
 </body>
 </html>
+
+> GET /book?title=kindred
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Kindred</h1>
+    <div class="card details">
+        <span class="cover" aria-hidden="true">K</span>
+        <div>
+            <p>Octavia E. Butler, 1979</p>
+            <p>ISBN 9780807083697</p>
+        </div>
+    </div>
+    <form class="card" method="post" action="/copies">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <label>Copies in the library <input name="copies" value="1" required inputmode="numeric"></label>
+        <p class="actions"><button>Save</button></p>
+    </form>
+    <form class="card" method="post" action="/remove">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <p>Removing a book takes it off the shelf for good, with its cover.</p>
+        <p class="actions"><button class="danger">Remove this book</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /copies
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&copies=-1&_token={{token}}
+
+< HTTP/1.1 422 Unknown Status Code
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Kindred</h1>
+    <p class="error" role="alert">Copies must be a whole number from 0 to 999.</p>
+    <div class="card details">
+        <span class="cover" aria-hidden="true">K</span>
+        <div>
+            <p>Octavia E. Butler, 1979</p>
+            <p>ISBN 9780807083697</p>
+        </div>
+    </div>
+    <form class="card" method="post" action="/copies">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <label>Copies in the library <input name="copies" value="-1" required inputmode="numeric"></label>
+        <p class="actions"><button>Save</button></p>
+    </form>
+    <form class="card" method="post" action="/remove">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <p>Removing a book takes it off the shelf for good, with its cover.</p>
+        <p class="actions"><button class="danger">Remove this book</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /copies
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&copies=3&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /book?title=Kindred
+< Content-type: text/html; charset=UTF-8
+
+> GET /book?title=Kindred
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Kindred</h1>
+    <p class="flash" role="status">Saved: the library has 3 copies.</p>
+    <div class="card details">
+        <span class="cover" aria-hidden="true">K</span>
+        <div>
+            <p>Octavia E. Butler, 1979</p>
+            <p>ISBN 9780807083697</p>
+        </div>
+    </div>
+    <form class="card" method="post" action="/copies">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <label>Copies in the library <input name="copies" value="3" required inputmode="numeric"></label>
+        <p class="actions"><button>Save</button></p>
+    </form>
+    <form class="card" method="post" action="/remove">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Kindred">
+        <p>Removing a book takes it off the shelf for good, with its cover.</p>
+        <p class="actions"><button class="danger">Remove this book</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> GET /book?title=Sula
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sula · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Sula</h1>
+    <div class="card details">
+        <img class="cover" src="/cover?title=Sula" alt="">
+        <div>
+            <p>Toni Morrison, 1973</p>
+        </div>
+    </div>
+    <form class="card" method="post" action="/copies">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Sula">
+        <label>Copies in the library <input name="copies" value="1" required inputmode="numeric"></label>
+        <p class="actions"><button>Save</button></p>
+    </form>
+    <form class="card" method="post" action="/remove">
+        <input type="hidden" name="_token" value="{{token}}">
+        <input type="hidden" name="title" value="Sula">
+        <p>Removing a book takes it off the shelf for good, with its cover.</p>
+        <p class="actions"><button class="danger">Remove this book</button></p>
+    </form>
+    </main>
+</body>
+</html>
+
+> POST /remove
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /
+< Content-type: text/html; charset=UTF-8
+
+> GET /
+
+< HTTP/1.1 200 OK
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Books</h1>
+    <p class="flash" role="status">Removed &quot;Sula&quot;.</p>
+    <ul class="books">
+        <li class="book">
+            <span class="cover" aria-hidden="true">K</span>
+            <h2><a href="/book?title=Kindred">Kindred</a></h2>
+            <p>Octavia E. Butler, 1979</p>
+            <p class="status">Available</p>
+        </li>
+    </ul>
+    <p class="count">1 book</p>
+    </main>
+</body>
+</html>
+
+> GET /cover?title=Sula
+
+< HTTP/1.1 404 Not Found
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not found · Shelf</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="site">
+        <a class="brand" href="/">Shelf</a>
+        <nav><a href="/">Books</a> <a class="button" href="/add">Add a book</a></nav>
+    </header>
+    <main>
+    <h1>Not found</h1>
+    <p>There is nothing at this address. <a href="/">Back to the books</a></p>
+    </main>
+</body>
+</html>
+
+> GET /remove?title=Kindred
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: POST
+< Content-type: text/html; charset=UTF-8
 
 > GET /add.php
 

@@ -12,9 +12,13 @@ Run every check. They are the same checks CI runs:
 
 ```
 docker compose run --rm php composer install
+docker compose up -d --wait db
 docker compose run --rm php composer verify
 docker compose run --rm php85 composer verify
 ```
+
+`docker compose up -d --wait db` starts MariaDB, which the examples of chapter 59 on need.
+Stop it afterwards with `docker compose stop db`.
 
 The rules the checks enforce, and the ones they can't, are in
 [docs/standards.md](docs/standards.md). In short:

@@ -7,6 +7,7 @@ namespace Tests;
 use PHPUnit\Framework\TestCase;
 use Tools\Analysis;
 use Tools\Chapters;
+use Tools\Database;
 use Tools\Examples;
 use Tools\Exercises;
 use Tools\Glossary;
@@ -107,6 +108,45 @@ final class ChecksTest extends TestCase
 
         self::assertSame("add|Things Fall Apart|:Amira\n", Examples::output($this->root, $this->root . '/code/24-input/greet.php'));
         self::assertSame("php greet.php add \"Things Fall Apart\" '' < names.txt", Examples::command($this->root . '/code/24-input/greet.php')['line']);
+    }
+
+    public function testASessionRunsItsCommandsInOrderInACopy(): void
+    {
+        $counter = "<?php\n\$n = (int) @file_get_contents('count.txt') + (int) (\$argv[1] ?? 0);\n"
+            . "file_put_contents('count.txt', (string) \$n);\necho \"count \$n\\n\";\n";
+        $this->put('code/54-pdo/count.php', $counter);
+        $this->put('code/54-pdo/count.run', "php count.php 2\nphp count.php 3\n");
+        $file = $this->root . '/code/54-pdo/count.php';
+
+        $first = Examples::output($this->root, $file);
+        $again = Examples::output($this->root, $file); // a new copy each time: the count starts at 0 again
+
+        self::assertSame("$ php count.php 2\ncount 2\n$ php count.php 3\ncount 5\n", $first);
+        self::assertSame($first, $again);
+        self::assertFileDoesNotExist($this->root . '/code/54-pdo/count.txt');
+        self::assertSame(['php count.php 2', 'php count.php 3'], Examples::session($file));
+    }
+
+    public function testASessionRunsOnlyItsOwnFile(): void
+    {
+        $this->put('code/54-pdo/count.php', "<?php\n");
+        $this->put('code/54-pdo/count.run', "php count.php\nphp other.php\n");
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('each line must be: php count.php');
+
+        Examples::output($this->root, $this->root . '/code/54-pdo/count.php');
+    }
+
+    public function testAFileNeedsTheDatabaseWhenItOrAFileItLoadsSaysHostDb(): void
+    {
+        $this->put('code/59-mariadb/db.php', "<?php\nconst DSN = 'mysql:host=db;dbname=shelf';\n");
+        $this->put('code/59-mariadb/books.php', "<?php\nrequire_once __DIR__ . '/db.php';\n");
+        $this->put('code/59-mariadb/local.php', "<?php\nconst DSN = 'mysql:host=localhost';\n");
+
+        self::assertTrue(Database::isNeeded($this->root . '/code/59-mariadb/books.php'));
+        self::assertFalse(Database::isNeeded($this->root . '/code/59-mariadb/local.php'));
+        self::assertTrue(Database::isNeeded($this->root . '/code/59-mariadb'));
     }
 
     public function testRunFileMustRunThisFileWithInputFromTheSameFolder(): void

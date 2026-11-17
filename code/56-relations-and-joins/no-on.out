@@ -1,0 +1,10 @@
+> SELECT COUNT(*) FROM loans JOIN books
+COUNT(*)
+--------
+16
+
+> SELECT COUNT(*) FROM loans JOIN books ON books.id = loans.book_id
+COUNT(*)
+--------
+4
+

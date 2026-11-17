@@ -8,7 +8,7 @@ namespace Tools;
 final class Chapters
 {
     /** Files of the course itself that a chapter may include, besides code/ and shelf/. */
-    public const array COURSE_FILES = ['compose.yaml', 'Dockerfile'];
+    public const array COURSE_FILES = ['compose.yaml', 'Dockerfile', 'docker/db/users.sh'];
 
     /** The template headings per language edition. A new edition adds its list here. */
     public const HEADINGS = [

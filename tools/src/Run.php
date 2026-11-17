@@ -79,6 +79,21 @@ final class Run
         return $found;
     }
 
+    /** Copies a folder, without following links out of it. */
+    public static function copy(string $from, string $to): void
+    {
+        mkdir($to, 0o777, true);
+        $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($from, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
+        foreach ($items as $item) {
+            $target = $to . substr((string) $item, strlen($from));
+            if ($item instanceof \SplFileInfo && $item->isDir() && !$item->isLink()) {
+                mkdir($target, 0o777, true);
+            } elseif ($item instanceof \SplFileInfo && $item->isFile() && !$item->isLink()) {
+                copy((string) $item, $target);
+            }
+        }
+    }
+
     /** Deletes $dir and everything in it, without following symbolic links. */
     public static function remove(string $dir): void
     {

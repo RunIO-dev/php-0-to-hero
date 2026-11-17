@@ -24,8 +24,8 @@ final class TemplatesTest extends TestCase
         $html = $this->templates->page('Tom & Jerry', 'list', [null, [], new Book('Tom & Jerry', 'Someone', 1940)]);
 
         self::assertStringContainsString('<title>Tom &amp; Jerry</title>', $html);
-        self::assertStringContainsString('<h2>Tom &amp; Jerry</h2>', $html);
-        self::assertStringContainsString('1 books', $html);
+        self::assertStringContainsString('<h2><a href="/book?title=Tom+%26+Jerry">Tom &amp; Jerry</a></h2>', $html);
+        self::assertStringContainsString('<p class="count">1 book</p>', $html);
     }
 
     public function testAnEmptyShelfSaysWhatToDo(): void
@@ -34,6 +34,22 @@ final class TemplatesTest extends TestCase
 
         self::assertStringContainsString('No books yet. <a href="/add">Add the first one.</a>', $html);
         self::assertStringNotContainsString('<ul', $html);
+    }
+
+    public function testABookPageEscapesWhatItShows(): void
+    {
+        $html = $this->templates->render('book', [
+            'book' => new Book('Tom & Jerry', 'Someone', 1940),
+            'hasCover' => false,
+            'flash' => null,
+            'copies' => '"><script>',
+            'error' => 'Copies must be a whole number from 0 to 999.',
+            'token' => 'the-token',
+        ]);
+
+        self::assertStringContainsString('<h1>Tom &amp; Jerry</h1>', $html);
+        self::assertStringContainsString('<input name="copies" value="&quot;&gt;&lt;script&gt;"', $html);
+        self::assertSame(2, substr_count($html, '<input type="hidden" name="title" value="Tom &amp; Jerry">'));
     }
 
     public function testAWrongNameInTheDataStops(): void

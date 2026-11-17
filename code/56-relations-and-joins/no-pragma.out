@@ -1,0 +1,11 @@
+> DELETE FROM books WHERE title = 'Kindred'
+1 row(s) changed
+
+> SELECT loans.id, books.title, loans.due FROM loans LEFT JOIN books ON books.id = loans.book_id
+id | title             | due
+---+-------------------+-----------
+1  | NULL              | 2026-03-16
+2  | Things Fall Apart | 2026-03-20
+3  | NULL              | 2026-03-12
+4  | Sula              | 2026-03-30
+

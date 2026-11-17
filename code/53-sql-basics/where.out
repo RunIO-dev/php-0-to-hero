@@ -1,0 +1,24 @@
+> SELECT title FROM books WHERE author = 'Octavia E. Butler'
+title
+--------------------
+Kindred
+Parable of the Sower
+
+> SELECT title, year, copies FROM books WHERE year >= 1980 AND copies > 0
+title                | year | copies
+---------------------+------+-------
+Kitchen              | 1988 | 1
+Parable of the Sower | 1993 | 1
+Beloved              | 1987 | 1
+
+> SELECT title FROM books WHERE title LIKE '%the%'
+title
+--------------------
+Parable of the Sower
+
+> SELECT title FROM books WHERE isbn IS NOT NULL
+title
+-----------------
+Things Fall Apart
+Kindred
+

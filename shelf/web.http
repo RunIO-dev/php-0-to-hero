@@ -1,4 +1,5 @@
 # Shelf's web pages, served as by: docker compose up web
+# The database is new, so the shelf is empty (chapter 54).
 # docroot public
 GET /
 
@@ -6,6 +7,12 @@ GET /
 # The form's hidden field holds the token; the requests below send it back as {{token}}.
 # capture token /name="_token" value="([^"]+)"/
 GET /add
+
+###
+POST /add
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&author=Octavia+E.+Butler&year=1979&isbn=9780807083697&_token={{token}}
 
 ###
 # Nothing filled in: Library::add refuses, and the form comes back.
@@ -104,6 +111,46 @@ GET /cover?title=Sula
 
 ###
 GET /cover?title=Kindred
+
+###
+# Kindred's own page (chapter 55), found in any case.
+GET /book?title=kindred
+
+###
+# A wrong number of copies: the page comes back with the mistake.
+POST /copies
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&copies=-1&_token={{token}}
+
+###
+POST /copies
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&copies=3&_token={{token}}
+
+###
+GET /book?title=Kindred
+
+###
+GET /book?title=Sula
+
+###
+# Removing Sula removes its cover too.
+POST /remove
+Content-Type: application/x-www-form-urlencoded
+
+title=Sula&_token={{token}}
+
+###
+GET /
+
+###
+GET /cover?title=Sula
+
+###
+# Removing needs a POST: a link can't remove a book.
+GET /remove?title=Kindred
 
 ###
 # Addresses that don't exist, and a method the page doesn't take.
