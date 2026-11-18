@@ -120,7 +120,7 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 79. CI with every check (tests, PHPStan, style), and a simple deployment. ◆ *Shelf* online: a test stage, GitHub Actions, images per commit on ghcr.io, `deploy.sh` behind a restricted SSH key, a smoke test. Found: the test bootstrap ended with status 0.
 
 ## Part 13: What next (1)
-80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance).
+80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance); a short look at Fibers. ◆ No new code: where each next topic would fit *Shelf*, and its README with every command.
 
 ---
 

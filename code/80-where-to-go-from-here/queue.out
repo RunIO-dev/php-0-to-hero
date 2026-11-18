@@ -1,0 +1,4 @@
+page: answered, 2 reminders queued
+worker: reminded Amira of Kindred
+worker: Jonas failed (the mail server does not answer), queued again
+worker: reminded Jonas of Beloved

@@ -149,7 +149,7 @@ The images get names from the registry and the commit, `shelf/compose.prod.yaml`
 Set up a server once:
 
 1. Install Docker and its Compose plugin; make a user `deploy` in the `docker` group.
-2. In `/home/deploy/shelf/`, put `compose.prod.yaml`, `deploy.sh`, and a `.env` with `SHELF_IMAGE=ghcr.io/owner/shelf`, `SHELF_HOST` and `SHELF_APP_SECRET` (`chmod 600 .env`). If the images aren't public, `docker login ghcr.io` once, with a token that may only read packages.
+2. In `/home/deploy/shelf/`, put `compose.prod.yaml`, `deploy.sh` (executable: `chmod +x deploy.sh`), and a `.env` with `SHELF_IMAGE=ghcr.io/owner/shelf`, `SHELF_HOST` and `SHELF_APP_SECRET` (`chmod 600 .env`). If the images aren't public, `docker login ghcr.io` once, with a token that may only read packages.
 3. Make a key pair for CI: `ssh-keygen -t ed25519 -f shelf-ci`. Its public half goes into `~/.ssh/authorized_keys` of `deploy`, with `command="/home/deploy/shelf/deploy.sh",restrict` before it; its private half into the secret `DEPLOY_SSH_KEY`.
 4. Point the domain to the server, and open ports 80 and 443.
 

@@ -12,6 +12,8 @@ use Tools\Examples;
 use Tools\Web;
 use Tools\Exercises;
 use Tools\Glossary;
+use Tools\Run;
+use Tools\Scripts;
 use Tools\Shelf;
 
 /** Each test builds a tiny repo in a temp folder and runs one check on it. */
@@ -215,6 +217,27 @@ final class ChecksTest extends TestCase
         self::assertCount(2, $problems);
         self::assertStringContainsString("want: Hello\n    got:  Hi", $problems[0]);
         self::assertSame('code/05-first/other.php: no .out file next to it', $problems[1]);
+    }
+
+    private function git(string ...$args): void
+    {
+        Run::capture(['git', '-c', 'safe.directory=*', ...array_values($args)], $this->root);
+    }
+
+    public function testAScriptMustBeExecutableInGit(): void
+    {
+        $this->put('shelf/docker/entrypoint.sh', "#!/bin/sh\nexec \"$@\"\n");
+        $this->put('shelf/README.md', "# Shelf\n");
+        $this->git('init', '-q');
+        $this->git('add', '.');
+
+        self::assertSame(
+            ['shelf/docker/entrypoint.sh: starts with #! but is not executable in git; run: git update-index --chmod=+x shelf/docker/entrypoint.sh'],
+            Scripts::check($this->root),
+        );
+
+        $this->git('update-index', '--chmod=+x', 'shelf/docker/entrypoint.sh');
+        self::assertSame([], Scripts::check($this->root));
     }
 
     public function testAToolsSettingsFileIsNoExample(): void

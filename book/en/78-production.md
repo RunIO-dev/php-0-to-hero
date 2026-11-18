@@ -124,6 +124,8 @@ Before PHP-FPM starts, the database gets its migrations, `shelf/docker/entrypoin
 
 <!-- include: code/78-production/shelf/docker/entrypoint.sh -->
 
+Docker runs this file as a program, so it must be executable, in Git too: on a disk or a system that doesn't keep the mode, `git update-index --chmod=+x docker/entrypoint.sh` sets it. The course's CI found that it wasn't: the container refused to start with "permission denied".
+
 ### HTTPS
 
 `shelf/docker/Caddyfile`:

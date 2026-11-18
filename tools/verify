@@ -18,6 +18,7 @@ use Tools\Links;
 use Tools\Patterns;
 use Tools\Projects;
 use Tools\Run;
+use Tools\Scripts;
 use Tools\Shelf;
 
 require __DIR__ . '/bootstrap.php';
@@ -78,6 +79,7 @@ $checks = [
         return $problems;
     },
     'chapters follow the template' => static fn(): array => Chapters::check($root),
+    'scripts are executable in git' => static fn(): array => Scripts::check($root),
     'Shelf matches its newest chapter snapshot' => static fn(): array => Shelf::check($root),
     'project tests (Shelf from chapter 41)' => static fn(): array => Projects::test($root),
     'Arabic edition uses the agreed terms' => static fn(): array => Glossary::check($root),

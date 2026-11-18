@@ -20,11 +20,25 @@ Then serve it, and open http://localhost:8000:
 docker compose up web
 ```
 
-Run its tests (chapter 77; they use their own database, in `var/`):
+Run its checks, as CI does (chapter 79): the tests (chapter 77; they use their
+own database, in `var/`), PHPStan and the code style:
 
 ```
-vendor/bin/phpunit -c shelf
+composer --working-dir=shelf check
 ```
+
+Try the production containers on your computer (chapter 78), then open
+https://localhost; the browser warns once about Caddy's certificate for
+`localhost`:
+
+```
+cd shelf
+SHELF_APP_SECRET=$(openssl rand -hex 32) docker compose -f compose.prod.yaml up -d --build
+docker compose -f compose.prod.yaml exec app php bin/console shelf:import
+```
+
+Deploying to a server, and CI, are in chapter 79 (`.github/workflows/ci.yml`,
+`deploy/deploy.sh`).
 
 `php shelf/bin/console list shelf` shows its commands. Its settings are in
 `.env` (chapter 65); put changes for your computer into `.env.local`, which

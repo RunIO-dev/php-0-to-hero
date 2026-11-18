@@ -109,6 +109,7 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - Web transcripts: Symfony's CSRF tokens change on every page, so the `value` of a `_token` field shows as `…`; the test server's address in whole URLs (redirects) shows as `http://localhost:8000`. A `# capture` reads the token again after each login and logout, which change it.
   - *Shelf*'s tests run with `APP_ENV=test` (`.env.test`), against their own SQLite database in `var/`, migrated once by `tests/bootstrap.php`; each test runs in a transaction that is rolled back.
 - **Removed files:** a *Shelf* file that a chapter deletes gets an empty `X.removed` in that chapter's snapshot; from then on, `Shelf::state` leaves it out, and the check refuses it in `shelf/`.
+- **Scripts:** a file that starts with `#!` is stored as executable in Git (mode `100755`), or it fails in a fresh checkout. `tools/verify` checks it (`tools/src/Scripts.php`); fix one with `git update-index --chmod=+x <file>`.
 - **Course files in the text:** `compose.yaml`, `Dockerfile` and `docker/db/users.sh` may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
 
 ## 5. Exercises

@@ -1,0 +1,10 @@
+{
+    "name": "learner/what-next",
+    "description": "Chapter 80's examples: reading the manual, events, a queue, counting queries, and a fiber.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/event-dispatcher": "7.4.*"
+    }
+}
