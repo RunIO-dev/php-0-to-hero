@@ -1,0 +1,9 @@
+Borrowed most:
+  Kindred: 3
+  Sula: 1
+Borrowed more than once:
+  Kindred: 3
+Every book, COUNT(*) and COUNT(l.id):
+  Beloved: COUNT(*) 1, COUNT(l.id) 0
+  Kindred: COUNT(*) 3, COUNT(l.id) 3
+  Sula: COUNT(*) 1, COUNT(l.id) 1

@@ -28,6 +28,8 @@ namespace Tools;
  *                                       as a learner would: "php <file> [arguments] [< file]"; the .out
  *                                       starts with each command and what it printed
  *   # capture token /name="_token" value="([^"]+)"/   remember group 1 of the response (headers and body)
+ *   # today 2026-11-18 10:00            Symfony's clock stops at this moment, for the server and every
+ *                                       # run, so the dates in the .out are the same on every day
  * In a multipart/form-data body, a line "< cover.png" sends the bytes of that file (an upload).
  * {{token}} in a later request is replaced by the remembered value, and the value is shown
  * as {{token}} in the output, so a random token gives the same .out every time. Cookies are
@@ -47,13 +49,14 @@ final class Web
     }
 
     /**
-     * @return array{docroot: string, router: ?string, env: array<string, string>, runs: list<string>, requests: list<array{method: non-empty-string, path: string, headers: list<string>, body: string, captures: array<string, string>}>}
+     * @return array{docroot: string, router: ?string, env: array<string, string>, today: ?string, runs: list<string>, requests: list<array{method: non-empty-string, path: string, headers: list<string>, body: string, captures: array<string, string>}>}
      */
     public static function parse(string $text): array
     {
         $docroot = '.';
         $router = null;
         $env = [];
+        $today = null;
         $runs = [];
         $requests = [];
         foreach (preg_split('/^###.*$/m', $text) ?: [] as $block) {
@@ -70,6 +73,8 @@ final class Web
                         $router = $m[1];
                     } elseif (preg_match('/^# env ([A-Z][A-Z0-9_]*)=(.*)$/', $line, $m) === 1) {
                         $env[$m[1]] = $m[2];
+                    } elseif (preg_match('/^# today (\d{4}-\d\d-\d\d \d\d:\d\d)$/', $line, $m) === 1) {
+                        $today = $m[1];
                     } elseif (preg_match('/^# run (php .+)$/', $line, $m) === 1) {
                         $runs[] = $m[1];
                     } elseif (preg_match('/^# capture (\w+) (.+)$/', $line, $m) === 1) {
@@ -102,7 +107,7 @@ final class Web
             }
         }
 
-        return ['docroot' => $docroot, 'router' => $router, 'env' => $env, 'runs' => $runs, 'requests' => $requests];
+        return ['docroot' => $docroot, 'router' => $router, 'env' => $env, 'today' => $today, 'runs' => $runs, 'requests' => $requests];
     }
 
     /** The command a learner types to serve the example, from its folder. */
@@ -132,11 +137,12 @@ final class Web
         // What a developer's tools made (caches, databases, compiled assets) stays out: the copy starts as a
         // fresh checkout does, whatever was run in the folder before (chapter 80).
         Run::copy($dir, $copy, ['var', 'public/assets']);
+        $php = self::stopClock($copy, $site['today']);
         $ran = '';
         foreach ($site['runs'] as $line) {
-            $ran .= self::run($line, $copy, $site['env']);
+            $ran .= self::run($line, $copy, $site['env'], $php);
         }
-        [$server, $port] = self::serve($copy, $site['docroot'], $site['router'], $site['env']);
+        [$server, $port] = self::serve($copy, $site['docroot'], $site['router'], $site['env'], $php);
         try {
             $cookies = [];
             $values = [];
@@ -178,6 +184,9 @@ final class Web
             proc_terminate($server);
             proc_close($server);
             Run::remove($copy);
+            if (is_file("$copy-today.php")) {
+                unlink("$copy-today.php");
+            }
         }
     }
 
@@ -223,8 +232,9 @@ final class Web
      * A command that fails stops the check: the requests after it would test the wrong thing.
      *
      * @param array<string, string> $env
+     * @param list<string> $php options for PHP, from stopClock()
      */
-    private static function run(string $line, string $dir, array $env): string
+    private static function run(string $line, string $dir, array $env, array $php): string
     {
         $words = Examples::words($line);
         $stdin = null;
@@ -237,12 +247,44 @@ final class Web
             || ($stdin !== null && (preg_match('~/[\w.-]+$~', $stdin) !== 1 || !is_file($stdin)))) {
             throw new \RuntimeException("# run: only php <file of the folder> [arguments] [< file of the folder]: $line");
         }
-        $run = Run::capture([PHP_BINARY, ...array_slice($words, 1)], $dir, $env, stdin: $stdin);
+        $run = Run::capture([PHP_BINARY, ...$php, ...array_slice($words, 1)], $dir, $env, stdin: $stdin);
         if ($run['code'] !== 0) {
             throw new \RuntimeException("# run $line failed:\n" . $run['out'] . $run['err']);
         }
 
         return "$ $line\n" . $run['out'] . $run['err'];
+    }
+
+    /**
+     * "# today": a file PHP runs before each script (auto_prepend_file) sets Symfony's global clock to
+     * a MockClock at that moment; Symfony's clock service asks the global clock. The site's code stays
+     * as it is. No moment, or no Symfony in the site: no options, and the real time.
+     *
+     * @return list<string> options for PHP
+     */
+    private static function stopClock(string $copy, ?string $today): array
+    {
+        if ($today === null || !is_file("$copy/vendor/symfony/clock/MockClock.php")) {
+            return [];
+        }
+        // Not Composer's autoload.php: Symfony's runtime would see it loaded already, and not run the page.
+        // A loader for the clock's own classes only; Composer's loads the rest, later.
+        $vendor = var_export("$copy/vendor", true);
+        $moment = var_export($today, true);
+        file_put_contents("$copy-today.php", <<<PHP
+            <?php
+            spl_autoload_register(static function (string \$class): void {
+                foreach (['Symfony\\\\Component\\\\Clock\\\\' => 'symfony/clock/', 'Psr\\\\Clock\\\\' => 'psr/clock/src/'] as \$prefix => \$dir) {
+                    if (str_starts_with(\$class, \$prefix)) {
+                        require $vendor . '/' . \$dir . str_replace('\\\\', '/', substr(\$class, strlen(\$prefix))) . '.php';
+                    }
+                }
+            });
+            Symfony\\Component\\Clock\\Clock::set(new Symfony\\Component\\Clock\\MockClock($moment));
+
+            PHP);
+
+        return ['-d', "auto_prepend_file=$copy-today.php"];
     }
 
     /**
@@ -303,10 +345,11 @@ final class Web
 
     /**
      * @param array<string, string> $env
+     * @param list<string> $php options for PHP, from stopClock()
      *
      * @return array{resource, int} the server process and its port
      */
-    private static function serve(string $dir, string $docroot, ?string $router, array $env): array
+    private static function serve(string $dir, string $docroot, ?string $router, array $env, array $php): array
     {
         $socket = stream_socket_server('tcp://127.0.0.1:0');
         if ($socket === false) {
@@ -314,7 +357,7 @@ final class Web
         }
         $port = (int) substr((string) strrchr((string) stream_socket_get_name($socket, false), ':'), 1);
         fclose($socket);
-        $command = [PHP_BINARY, '-d', 'error_reporting=-1', '-d', 'display_errors=1', '-S', "127.0.0.1:$port", '-t', $docroot];
+        $command = [PHP_BINARY, ...$php, '-d', 'error_reporting=-1', '-d', 'display_errors=1', '-S', "127.0.0.1:$port", '-t', $docroot];
         if ($router !== null) {
             $command[] = $router;
         }

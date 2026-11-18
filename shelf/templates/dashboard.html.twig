@@ -1,0 +1,126 @@
+{# The librarian's dashboard (chapter 86). First what needs doing today: the loans that are overdue,
+   the copies set aside. Then how the library is used, from Statistics: the numbers today, the books
+   borrowed most, the loans of each month, how many came back on time, the books nobody borrowed.
+   The months are a table with a <meter> in each row: a chart that a screen reader reads as a table,
+   and no JavaScript or inline style, which the CSP refuses. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Dashboard</h1>
+            <p class="lead">{{ today|date('l, j F Y', false) }}: what needs doing, and how the library is used.</p>
+        </div>
+        <a class="button" href="{{ path('history') }}">Loan history</a>
+    </div>
+    <ul class="stats" aria-label="Today">
+        <li><strong>{{ overview.titles }}</strong> titles</li>
+        <li><strong>{{ overview.onShelf }}</strong> copies on the shelf</li>
+        <li><strong>{{ overview.onLoan }}</strong> on loan</li>
+        <li{% if overview.overdue > 0 %} class="warn"{% endif %}><strong>{{ overview.overdue }}</strong> overdue</li>
+        <li><strong>{{ overview.waiting }}</strong> reservations waiting</li>
+        <li><strong>{{ overview.setAside }}</strong> set aside</li>
+        <li><strong>{{ overview.members }}</strong> members</li>
+    </ul>
+
+    <h2 class="section-head" id="overdue">Overdue <span class="count">{{ overdue|length }}</span></h2>
+{% if overdue is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'Every loan is on time.'} only %}{% endembed %}
+{% else %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Was due</th><th scope="col">Late</th><th scope="col">Last reminder</th></tr>
+            </thead>
+            <tbody>
+{% for loan in overdue %}
+                <tr>
+                    <td><a href="{{ path('history', {title: loan.book.title}) }}">{{ loan.book.title }}</a></td>
+                    <td><a href="{{ path('history', {member: loan.member.name}) }}">{{ loan.member.name }}</a></td>
+                    <td>{{ loan.due|date('D j M Y', false) }}</td>
+                    <td>{% include 'components/_badge.html.twig' with {text: loan.due|due, level: 'danger'} only %}</td>
+                    <td>{{ loan.remindedOn ? loan.remindedOn|date('D j M', false) : 'none yet' }}</td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+
+    <h2 class="section-head">Set aside <span class="count">{{ ready|length }}</span></h2>
+{% if ready is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'No copy waits to be collected.'} only %}{% endembed %}
+{% else %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">For</th><th scope="col">Until</th></tr>
+            </thead>
+            <tbody>
+{% for hold in ready %}
+                <tr>
+                    <td>{{ hold.book.title }}</td>
+                    <td>{{ hold.member.name }}</td>
+                    <td>{{ hold.readyUntil|date('D j M Y', false) }}</td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p class="aside">Lend them from the <a href="{{ path('desk') }}#ready">desk</a>.</p>
+{% endif %}
+
+    <div class="report">
+        <section class="panel" aria-labelledby="popular-head">
+            <h2 id="popular-head">Borrowed most, last 90 days</h2>
+{% if popular is empty %}
+            <p class="aside">Nothing was lent in the last 90 days.</p>
+{% else %}
+            <ol class="tally">
+{% for tally in popular %}
+                <li><a href="{{ path('history', {title: tally.label}) }}">{{ tally.label }}</a> <span class="count">{{ tally.count }}×</span></li>
+{% endfor %}
+            </ol>
+{% endif %}
+        </section>
+        <section class="panel" aria-labelledby="returns-head">
+            <h2 id="returns-head">Back on time, last 12 months</h2>
+{% if returns.onTimePercent is null %}
+            <p class="aside">No book came back in the last 12 months.</p>
+{% else %}
+            <p class="big-number">{{ returns.onTimePercent }}%</p>
+            <p class="aside">{{ returns.returned }} {{ returns.returned == 1 ? 'loan' : 'loans' }} came back, {{ returns.late }} of them late.</p>
+{% endif %}
+        </section>
+        <section class="panel" aria-labelledby="months-head">
+            <h2 id="months-head">Loans per month</h2>
+            <table class="bars">
+                <thead>
+                    <tr><th scope="col">Month</th><th scope="col">Loans</th></tr>
+                </thead>
+                <tbody>
+{% for month in months %}
+                    <tr>
+                        <th scope="row">{{ month.label }}</th>
+                        <td><meter min="0" max="{{ busiest }}" value="{{ month.count }}"></meter> {{ month.count }}</td>
+                    </tr>
+{% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section class="panel" aria-labelledby="unborrowed-head">
+            <h2 id="unborrowed-head">Not borrowed for a year</h2>
+{% if unborrowed is empty %}
+            <p class="aside">Every book was borrowed in the last year.</p>
+{% else %}
+            <ul class="tally">
+{% for title in unborrowed %}
+                <li><a href="{{ path('book', {title: title}) }}">{{ title }}</a></li>
+{% endfor %}
+            </ul>
+{% endif %}
+        </section>
+    </div>
+{% endblock %}

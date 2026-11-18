@@ -42,7 +42,7 @@ final class DoctrineLoanRepositoryTest extends LoanRepositoryContract
         [, $loans] = $this->repositories($sula);
 
         try {
-            $loans->add(new Loan($sula, new Member('Nobody', Role::Reader), new DateTimeImmutable('2026-03-16')));
+            $loans->add(new Loan($sula, new Member('Nobody', Role::Reader), new DateTimeImmutable('2026-03-16'), new DateTimeImmutable('2026-03-02')));
             self::fail('A loan for someone who is not a member must fail');
         } catch (ORMInvalidArgumentException $e) {
             self::assertStringContainsString('A new entity was found', $e->getMessage());
@@ -56,7 +56,7 @@ final class DoctrineLoanRepositoryTest extends LoanRepositoryContract
     {
         $sula = new Book('Sula', 'Toni Morrison', 1973, 2);
         [, $loans] = $this->repositories($sula);
-        $loans->add(new Loan($sula, $this->amira, new DateTimeImmutable('2026-03-16')));
+        $loans->add(new Loan($sula, $this->amira, new DateTimeImmutable('2026-03-16'), new DateTimeImmutable('2026-03-02')));
         $this->entities->clear();
 
         $loan = $loans->forMember('amira')[0] ?? null;

@@ -1,0 +1,51 @@
+{# The history of every loan (chapter 86), the newest first, a page at a time. A form that sends GET
+   narrows it to one book or one member, so a narrowed history is an address, as a search is. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Loan history · Shelf{% endblock %}
+
+{% block main %}
+    <p class="back"><a href="{{ path('dashboard') }}">← Dashboard</a></p>
+    <div class="page-head">
+        <div>
+            <h1>Loan history</h1>
+            <p class="lead">Every loan, back or not, the newest first.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="{{ path('history') }}">
+        <label class="grow">Book <input name="title" value="{{ by_title }}" autocomplete="off"></label>
+        <label class="grow">Member <input name="member" value="{{ by_member }}" autocomplete="off"></label>
+        <button>Show</button>
+    </form>
+    <p class="count" role="status">{{ total }} {{ total == 1 ? 'loan' : 'loans' }}{% if by_title %} of “{{ by_title }}”{% endif %}{% if by_member %} by {{ by_member }}{% endif %}</p>
+{% if loans is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'No loans to show.'} only %}{% endembed %}
+{% else %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Lent</th><th scope="col">Due back</th><th scope="col">Back</th></tr>
+            </thead>
+            <tbody>
+{% for loan in loans %}
+{% set late = loan.daysLate(today) %}
+                <tr>
+                    <td><a href="{{ path('history', {title: loan.title}) }}">{{ loan.title }}</a></td>
+                    <td><a href="{{ path('history', {member: loan.member}) }}">{{ loan.member }}</a></td>
+                    <td>{{ loan.lentOn|date('j M Y', false) }}</td>
+                    <td>{{ loan.due|date('j M Y', false) }}</td>
+                    <td>
+{%- if loan.returnedOn -%}
+                        {{ loan.returnedOn|date('j M Y', false) }}{% if late > 0 %} {% include 'components/_badge.html.twig' with {text: late ~ (late == 1 ? ' day' : ' days') ~ ' late', level: 'warn'} only %}{% endif %}
+{%- else -%}
+                        {% include 'components/_badge.html.twig' with {text: late > 0 ? 'out, ' ~ late ~ (late == 1 ? ' day' : ' days') ~ ' late' : 'out', level: late > 0 ? 'danger' : 'ok'} only %}
+{%- endif -%}
+                    </td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% include 'components/_pager.html.twig' with {route: 'history', numbers: numbers, page: page, pages: pages, search: search} only %}
+{% endif %}
+{% endblock %}

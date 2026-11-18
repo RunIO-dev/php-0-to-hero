@@ -5,6 +5,9 @@
 # docroot public
 # Chapter 82: no email leaves the check; the tests read what would have been sent.
 # env MAILER_DSN=null://null
+# One moment for the whole transcript (Symfony's clock stops there), so its dates are the same
+# on every day it runs.
+# today 2026-11-18 10:00
 # run php bin/console doctrine:migrations:migrate --no-interaction --quiet
 # run php bin/console shelf:import
 # run php bin/console shelf:password Amira < amira-password.txt

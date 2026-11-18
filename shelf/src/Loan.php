@@ -11,10 +11,12 @@ use InvalidArgumentException;
 /**
  * One book lent to one member, until a due date. Chapter 74: an entity. Its book and its member are
  * entities too: the table holds their IDs, and Doctrine brings the objects back. Chapter 83: a loan
- * can be extended, and comes back; returned loans stay, as the library's history.
+ * can be extended, and comes back; returned loans stay, as the library's history. Chapter 86: the
+ * day it was lent, which the dashboard counts by.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'loans')]
+#[ORM\Index(name: 'loans_lent_on', columns: ['lent_on'])] // chapter 86: the dashboard counts loans by this day
 final class Loan
 {
     #[ORM\Id]
@@ -32,6 +34,10 @@ final class Loan
         // Chapter 83: not readonly, so that a loan can be extended.
         #[ORM\Column(type: 'date_immutable')]
         public private(set) DateTimeImmutable $due,
+        // Chapter 86: the day it was lent, for the statistics and the history. Not readonly: Doctrine's
+        // refresh() sets every column again, with a new date object (chapter 77).
+        #[ORM\Column(type: 'date_immutable')]
+        public private(set) DateTimeImmutable $lentOn,
     ) {}
 
     /** How often a loan may be extended (chapter 83), each time by the member's loan period. */
@@ -132,7 +138,9 @@ final class Loan
     /** A loan that starts today. The member's role decides how many days it lasts. */
     public static function start(Book $book, Member $member, DateTimeImmutable $today): self
     {
-        return new self($book, $member, $today->modify('+' . $member->role->loanDays() . ' days'));
+        $day = new DateTimeImmutable($today->format('Y-m-d'));
+
+        return new self($book, $member, $day->modify('+' . $member->role->loanDays() . ' days'), $day);
     }
 
     public function line(): string

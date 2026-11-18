@@ -26,6 +26,8 @@ final class AccessibilityTest extends ShelfWebTestCase
         yield 'my account' => ['/account', 'Amira'];
         yield 'the lending desk' => ['/desk', 'Jonas'];
         yield 'the members' => ['/members', 'Jonas'];
+        yield 'the dashboard' => ['/dashboard', 'Jonas'];
+        yield 'the loan history' => ['/history?member=Amira', 'Jonas'];
         yield "a book's page" => ['/book?title=Kindred', null];
         yield 'a missing page' => ['/nothing-here', null];
         yield 'a request not understood' => ['/?sort=price', null];

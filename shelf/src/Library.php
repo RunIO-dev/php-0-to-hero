@@ -99,6 +99,12 @@ final readonly class Library
         return $this->loans->current();
     }
 
+    /** @return list<Loan> chapter 86: the loans past their due date, the longest overdue first */
+    public function overdueLoans(DateTimeImmutable $today): array
+    {
+        return array_values(array_filter($this->loans->current(), fn(Loan $loan): bool => $loan->isOverdue($today)));
+    }
+
     /** Chapter 83: a loan by its number, from a form. */
     public function loan(int $id): Loan
     {

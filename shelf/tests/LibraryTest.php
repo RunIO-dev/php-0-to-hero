@@ -411,4 +411,14 @@ final class LibraryTest extends TestCase
 
         self::assertSame(Reminder::Pickup, $due[0][1] ?? null);
     }
+
+    public function testOnlyTheLoansPastTheirDueDateAreOverdue(): void
+    {
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02')); // due 16 March
+        $this->library->lend('Things Fall Apart', 'Ben', new DateTimeImmutable('2026-03-10')); // due 24 March
+
+        self::assertSame([], $this->library->overdueLoans(new DateTimeImmutable('2026-03-16')), 'Due today is not overdue');
+        $overdue = $this->library->overdueLoans(new DateTimeImmutable('2026-03-17'));
+        self::assertSame(['Kindred'], array_map(fn(Loan $loan): string => $loan->book->title, $overdue));
+    }
 }

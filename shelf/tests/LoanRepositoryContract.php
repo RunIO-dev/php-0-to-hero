@@ -36,7 +36,9 @@ abstract class LoanRepositoryContract extends TestCase
 
     private function loan(Book $book, Member $member, string $due): Loan
     {
-        return new Loan($book, $member, new DateTimeImmutable($due));
+        $back = new DateTimeImmutable($due);
+
+        return new Loan($book, $member, $back, $back->modify('-14 days'));
     }
 
     public function testALoanTakesACopy(): void

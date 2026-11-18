@@ -41,6 +41,8 @@ $ php bin/console debug:router
   remove             POST       /remove                   
   reserve            POST       /reserve                  
   cover              GET        /cover                    
+  dashboard          GET        /dashboard                
+  history            GET        /history                  
   desk               GET        /desk                     
   desk_lend          POST       /desk/lend                
   desk_return        POST       /desk/return              
@@ -68,7 +70,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -217,7 +219,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -297,7 +299,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -448,7 +450,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -517,7 +519,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not understood · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -565,7 +567,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -614,7 +616,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -677,7 +679,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -763,7 +765,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -845,7 +847,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -927,7 +929,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Forgot your password · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -982,7 +984,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>This link has expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1052,7 +1054,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1133,7 +1135,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1216,7 +1218,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1369,7 +1371,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not allowed · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1420,7 +1422,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My loans · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1502,7 +1504,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1585,7 +1587,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1601,6 +1603,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1648,7 +1651,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1664,6 +1667,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1714,7 +1718,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1730,6 +1734,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1778,7 +1783,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1794,6 +1799,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1843,7 +1849,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1859,6 +1865,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1919,7 +1926,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1935,6 +1942,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add" aria-current="page">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2026,7 +2034,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2042,6 +2050,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2183,7 +2192,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2199,6 +2208,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2339,7 +2349,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2355,6 +2365,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk" aria-current="page">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="{{token}}">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2493,7 +2504,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2509,6 +2520,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk" aria-current="page">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2650,7 +2662,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2666,6 +2678,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2854,7 +2867,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2870,6 +2883,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk" aria-current="page">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3009,7 +3023,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Members · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3025,6 +3039,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members" aria-current="page">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3178,7 +3193,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3194,6 +3209,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3296,7 +3312,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3312,6 +3328,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3385,7 +3402,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My loans · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3401,6 +3418,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3475,7 +3493,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3491,6 +3509,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3984,7 +4003,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4000,6 +4019,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4075,7 +4095,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4091,6 +4111,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4189,7 +4210,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4205,6 +4226,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4279,7 +4301,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4295,6 +4317,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk" aria-current="page">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4417,7 +4440,7 @@ New books added: 53. Already on the shelf: 0.
 </body>
 </html>
 
-> GET /book?title=Sula
+> GET /dashboard
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
@@ -4430,9 +4453,9 @@ New books added: 53. Already on the shelf: 0.
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sula · Shelf</title>
+    <title>Dashboard · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4448,6 +4471,262 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard" aria-current="page">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Dashboard</h1>
+            <p class="lead">Wednesday, 18 November 2026: what needs doing, and how the library is used.</p>
+        </div>
+        <a class="button" href="/history">Loan history</a>
+    </div>
+    <ul class="stats" aria-label="Today">
+        <li><strong>58</strong> titles</li>
+        <li><strong>82</strong> copies on the shelf</li>
+        <li><strong>0</strong> on loan</li>
+        <li><strong>0</strong> overdue</li>
+        <li><strong>0</strong> reservations waiting</li>
+        <li><strong>1</strong> set aside</li>
+        <li><strong>5</strong> members</li>
+    </ul>
+
+    <h2 class="section-head" id="overdue">Overdue <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>Every loan is on time.</p>
+</div>
+
+    <h2 class="section-head">Set aside <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">For</th><th scope="col">Until</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Kindred</td>
+                    <td>Jonas</td>
+                    <td>Wed 25 Nov 2026</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <p class="aside">Lend them from the <a href="/desk#ready">desk</a>.</p>
+
+    <div class="report">
+        <section class="panel" aria-labelledby="popular-head">
+            <h2 id="popular-head">Borrowed most, last 90 days</h2>
+            <ol class="tally">
+                <li><a href="/history?title=Kitchen">Kitchen</a> <span class="count">1×</span></li>
+            </ol>
+        </section>
+        <section class="panel" aria-labelledby="returns-head">
+            <h2 id="returns-head">Back on time, last 12 months</h2>
+            <p class="big-number">100%</p>
+            <p class="aside">1 loan came back, 0 of them late.</p>
+        </section>
+        <section class="panel" aria-labelledby="months-head">
+            <h2 id="months-head">Loans per month</h2>
+            <table class="bars">
+                <thead>
+                    <tr><th scope="col">Month</th><th scope="col">Loans</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Dec 2025</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jan 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Feb 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Mar 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Apr 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">May 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jun 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jul 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Aug 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sep 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Oct 2026</th>
+                        <td><meter min="0" max="1" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nov 2026</th>
+                        <td><meter min="0" max="1" value="1"></meter> 1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="panel" aria-labelledby="unborrowed-head">
+            <h2 id="unborrowed-head">Not borrowed for a year</h2>
+            <ul class="tally">
+                <li><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></li>
+                <li><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></li>
+                <li><a href="/book?title=Americanah">Americanah</a></li>
+                <li><a href="/book?title=Animal%20Farm">Animal Farm</a></li>
+                <li><a href="/book?title=Anna%20Karenina">Anna Karenina</a></li>
+                <li><a href="/book?title=Beloved">Beloved</a></li>
+                <li><a href="/book?title=Brave%20New%20World">Brave New World</a></li>
+                <li><a href="/book?title=Buddenbrooks">Buddenbrooks</a></li>
+                <li><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></li>
+                <li><a href="/book?title=Don%20Quixote">Don Quixote</a></li>
+            </ul>
+        </section>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /history?title=kitchen
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loan history · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <a href="/dashboard" aria-current="page">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/dashboard">← Dashboard</a></p>
+    <div class="page-head">
+        <div>
+            <h1>Loan history</h1>
+            <p class="lead">Every loan, back or not, the newest first.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="/history">
+        <label class="grow">Book <input name="title" value="kitchen" autocomplete="off"></label>
+        <label class="grow">Member <input name="member" value="" autocomplete="off"></label>
+        <button>Show</button>
+    </form>
+    <p class="count" role="status">1 loan of “kitchen”</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Lent</th><th scope="col">Due back</th><th scope="col">Back</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/history?title=Kitchen">Kitchen</a></td>
+                    <td><a href="/history?member=Amira">Amira</a></td>
+                    <td>18 Nov 2026</td>
+                    <td>16 Dec 2026</td>
+                    <td>18 Nov 2026</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /book?title=Sula
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sula · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4542,7 +4821,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4558,6 +4837,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4699,7 +4979,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4715,6 +4995,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4762,7 +5043,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4778,6 +5059,7 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/add">Add a book</a>
                 <a href="/desk">Desk</a>
                 <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -4814,7 +5096,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>

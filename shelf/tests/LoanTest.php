@@ -97,7 +97,7 @@ final class LoanTest extends TestCase
     #[DataProvider('reminders')]
     public function testAReminderGoesBeforeTheDueDateAndThenWeekly(string $today, ?string $last, ?Reminder $due): void
     {
-        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'));
+        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'), new DateTimeImmutable('2026-03-02'));
         if ($last !== null) {
             $loan->remind(new DateTimeImmutable($last));
         }
@@ -107,7 +107,7 @@ final class LoanTest extends TestCase
 
     public function testAnExtendedLoanIsDueSoonAgain(): void
     {
-        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'));
+        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'), new DateTimeImmutable('2026-03-02'));
         $loan->remind(new DateTimeImmutable('2026-03-14'));
         $loan->renew(new DateTimeImmutable('2026-03-15'));
 
@@ -117,7 +117,7 @@ final class LoanTest extends TestCase
 
     public function testAReturnedBookNeedsNoReminder(): void
     {
-        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'));
+        $loan = new Loan(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-16'), new DateTimeImmutable('2026-03-02'));
         $loan->giveBack(new DateTimeImmutable('2026-03-12'));
 
         self::assertNull($loan->reminderDue(new DateTimeImmutable('2026-03-20')));

@@ -34,6 +34,7 @@
                 <a href="{{ path('add') }}"{% if here == 'add' %} aria-current="page"{% endif %}>Add a book</a>
                 <a href="{{ path('desk') }}"{% if here == 'desk' %} aria-current="page"{% endif %}>Desk</a>
                 <a href="{{ path('members') }}"{% if here == 'members' %} aria-current="page"{% endif %}>Members</a>
+                <a href="{{ path('dashboard') }}"{% if here in ['dashboard', 'history'] %} aria-current="page"{% endif %}>Dashboard</a>
 {% endif %}
                 <form class="account" method="post" action="{{ path('_logout_main') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
