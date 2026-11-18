@@ -126,6 +126,8 @@ The frame sets the page's language and direction, and links each page to itself 
 
 Dates are `|format_date('full', timezone: false)`: a due date is a day, not a moment, so no time zone moves it to the day before.
 
+Which digits Arabic gets depends on the server's ICU: an older one writes ١٢٣, a newer one 123, and a page could mix both, a count in one and a page number in the other. `Shelf\Web\WesternDigits` asks ICU for Arabic with Latin numbers, the locale `ar-u-nu-latn`, wherever it formats: in the translator's messages, and in PHP's default locale, which `|format_date` takes. The catalogs and the page's `lang` stay `ar`.
+
 ### Messages after a change
 
 A flash message is a `TranslatableMessage`, made by `t()`, and translated when it is shown, in `shelf/templates/_flash.html.twig`:
