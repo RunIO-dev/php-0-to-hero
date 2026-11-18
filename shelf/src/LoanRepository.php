@@ -35,4 +35,7 @@ interface LoanRepository
 
     /** Chapter 83: deletes the member's returned loans, when the member deletes their account. */
     public function forget(Member $member): void;
+
+    /** Chapter 83: deletes the book's returned loans, when the book is removed for good. */
+    public function forgetBook(Book $book): void;
 }

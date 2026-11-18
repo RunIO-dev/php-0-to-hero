@@ -82,10 +82,21 @@ final readonly class DoctrineLoanRepository implements LoanRepository
 
     public function forget(Member $member): void
     {
+        $this->removeReturned('member', $member);
+    }
+
+    public function forgetBook(Book $book): void
+    {
+        $this->removeReturned('book', $book);
+    }
+
+    /** $field is 'member' or 'book': the returned loans of that member or book go. */
+    private function removeReturned(string $field, Member|Book $of): void
+    {
         // remove(), not a DELETE query: loans already loaded would stay in Doctrine's memory otherwise.
         /** @var list<Loan> $returned */
-        $returned = $this->entities->createQuery('SELECT l FROM ' . Loan::class . ' l WHERE l.member = :member AND l.returnedOn IS NOT NULL')
-            ->setParameter('member', $member)
+        $returned = $this->entities->createQuery('SELECT l FROM ' . Loan::class . " l WHERE l.$field = :of AND l.returnedOn IS NOT NULL")
+            ->setParameter('of', $of)
             ->getResult();
         foreach ($returned as $loan) {
             $this->entities->remove($loan);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shelf\Tests;
 
 use DateTimeImmutable;
+use Shelf\Book;
 use Shelf\BookNotFound;
 use Shelf\Loan;
 use Shelf\Member;
@@ -65,5 +66,10 @@ final class InMemoryLoanRepository implements LoanRepository
     public function forget(Member $member): void
     {
         $this->loans = array_values(array_filter($this->loans, fn(Loan $loan): bool => $loan->member !== $member || !$loan->isReturned()));
+    }
+
+    public function forgetBook(Book $book): void
+    {
+        $this->loans = array_values(array_filter($this->loans, fn(Loan $loan): bool => !sameTitle($loan->book->title, $book->title) || !$loan->isReturned()));
     }
 }

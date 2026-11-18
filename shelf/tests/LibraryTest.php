@@ -154,6 +154,18 @@ final class LibraryTest extends TestCase
         $this->library->remove('Kindred');
     }
 
+    /** Chapter 83: a book that came back can go, and its history with it. */
+    public function testABookThatCameBackCanBeRemoved(): void
+    {
+        $loan = $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        $this->library->giveBack($loan->id(), new DateTimeImmutable('2026-03-05'));
+
+        $this->library->remove('Kindred');
+
+        self::assertSame([], $this->library->loansOf('Amira'));
+        self::assertSame(['Things Fall Apart'], array_column($this->library->books(), 'title'));
+    }
+
     /** Chapter 82: a member deletes their account. */
     public function testAMemberCanLeave(): void
     {

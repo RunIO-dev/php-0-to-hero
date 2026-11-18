@@ -200,13 +200,17 @@ final readonly class Library
         return $book;
     }
 
-    /** Takes a book off the shelf for good, and returns it. A book that is lent can't go: its loans need it. */
+    /**
+     * Takes a book off the shelf for good, and returns it. A book that is lent can't go: its loans need it.
+     * Chapter 83: its returned loans, its history, go with it, as a member's go with their account.
+     */
     public function remove(string $title): Book
     {
         $book = $this->find($title);
         if ($this->loans->isOnLoan($book->title)) {
             throw new InvalidArgumentException("\"$book->title\" is on loan, so it can't be removed.");
         }
+        $this->loans->forgetBook($book);
         $this->books->remove($book->title);
 
         return $book;

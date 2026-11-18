@@ -158,4 +158,20 @@ abstract class LoanRepositoryContract extends TestCase
         self::assertNull($loans->find($id));
         self::assertNotNull($loans->find($out->id()), 'A loan that is out is never forgotten');
     }
+
+    /** A book that was lent and came back can be removed: its history goes first (chapter 83). */
+    public function testARemovedBooksHistoryGoesWithIt(): void
+    {
+        $sula = new Book('Sula', 'Toni Morrison', 1973, 2);
+        [$books, $loans] = $this->repositories($sula);
+        $loans->add($back = $this->loan($sula, $this->amira, '2026-03-16'));
+        $loans->giveBack($back, new DateTimeImmutable('2026-03-10'));
+        $id = $back->id();
+
+        $loans->forgetBook($sula);
+        $books->remove('Sula');
+
+        self::assertNull($loans->find($id));
+        self::assertNull($books->find('Sula'));
+    }
 }

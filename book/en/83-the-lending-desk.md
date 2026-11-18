@@ -21,7 +21,7 @@ Until now, a book was lent with `bin/console shelf:lend`, and never came back: n
 
 **Rules live in the model.** A loan may be extended twice, each time by its member's loan period, and never once it is overdue. A reader may have five books at once, staff ten. A blocked member can't borrow. All of this is in `Loan`, `Role` and `Library`, and the pages only call them. The same rules then hold for the desk, for "My loans", for the console and for the API.
 
-**History, not deletion.** A returned book could simply delete its loan. But then nobody could say later which books are popular, who brings books back late, or what happened to a copy. So a loan that comes back gets the day in `returned_on`, and stays. "Out" now means "without `returned_on`". Chapter 86's dashboard reads that history. The one time history is deleted is when a member deletes their account (chapter 82): their past loans go with them.
+**History, not deletion.** A returned book could simply delete its loan. But then nobody could say later which books are popular, who brings books back late, or what happened to a copy. So a loan that comes back gets the day in `returned_on`, and stays. "Out" now means "without `returned_on`". Chapter 86's dashboard reads that history. History is deleted only when what it is about goes: a member who deletes their account (chapter 82) takes their past loans with them, and a book removed for good takes its own.
 
 **Counting in the database.** Two members bring back Kindred at the same moment, at two desks. Each request reads "0 copies", adds one, and writes "1". The second write undoes the first, and a copy is lost from the count: a **lost update**. `UPDATE books SET copies = copies + 1` has the database do the counting, one statement after the other, as lending has done since chapter 57 with `copies - 1 ... AND copies > 0`.
 
@@ -97,7 +97,7 @@ A member can be blocked, and change role, `shelf/src/Member.php`:
 
 <!-- include: code/83-the-lending-desk/shelf/src/Member.php -->
 
-The repository finds a loan, lists the ones that are out, takes one back, and forgets a member's history, `shelf/src/LoanRepository.php`:
+The repository finds a loan, lists the ones that are out, takes one back, and forgets the history of a member or a book, `shelf/src/LoanRepository.php`:
 
 <!-- include: code/83-the-lending-desk/shelf/src/LoanRepository.php -->
 
@@ -106,7 +106,7 @@ The repository finds a loan, lists the ones that are out, takes one back, and fo
 <!-- include: code/83-the-lending-desk/shelf/src/Doctrine/DoctrineLoanRepository.php -->
 
 - `giveBack()` adds the copy in SQL, inside the transaction, like `add()` takes it.
-- `forget()` uses `remove()` for each loan. A `DELETE` query would leave the loans Doctrine has already loaded in its memory.
+- `forget()` and `forgetBook()` use `remove()` for each loan. A `DELETE` query would leave the loans Doctrine has already loaded in its memory.
 
 The migration adds the columns in place, as in chapter 82, `shelf/migrations/Version20261118120000.php`:
 
