@@ -1,7 +1,6 @@
-Hello {{ name }},
+{{ 'Hello {name},'|trans({name: name}) }}
 
-"{{ title }}" is due back on {{ day }}. You can extend it on your loans page, unless someone has
-reserved it:
+{{ '“{title}” is due back on {day}. You can extend it on your loans page, unless someone has reserved it.'|trans({title: title, day: day|format_date('full', timezone: false)}) }}
 
 {{ link }}
 

@@ -34,6 +34,11 @@ final class AccessibilityTest extends ShelfWebTestCase
         yield 'my loans' => ['/loans', 'Jonas'];
         yield "a book's page, for staff" => ['/book?title=Kindred', 'Amira'];
         yield 'add a book' => ['/add', 'Amira'];
+        yield 'the books, in German' => ['/de/', null];
+        yield 'the dashboard, in German' => ['/de/dashboard', 'Jonas'];
+        yield 'the books, in Arabic' => ['/ar/', null];
+        yield 'the lending desk, in Arabic' => ['/ar/desk', 'Jonas'];
+        yield 'a missing page, in Arabic' => ['/ar/nothing-here', null];
     }
 
     #[DataProvider('pages')]
@@ -44,11 +49,13 @@ final class AccessibilityTest extends ShelfWebTestCase
         }
         $page = $this->client->request('GET', $path);
 
-        self::assertSame('en', $page->filter('html')->attr('lang'), 'The language, for the screen reader');
+        $language = preg_match('{^/(de|ar)/}', $path, $match) === 1 ? $match[1] : 'en';
+        self::assertSame($language, $page->filter('html')->attr('lang'), 'The language, for the screen reader');
+        self::assertSame($language === 'ar' ? 'rtl' : 'ltr', $page->filter('html')->attr('dir'), 'Arabic is read from the right');
         self::assertCount(1, $page->filter('h1'), 'One main heading');
         self::assertSame('#main', $page->filter('a.skip')->attr('href'), 'A skip link first');
         self::assertCount(1, $page->filter('main#main'), 'The skip link has a target');
-        self::assertCount(1, $page->filter('nav[aria-label]'), 'The menu is a named landmark');
+        self::assertCount($page->filter('nav')->count(), $page->filter('nav[aria-label]'), 'Every menu is a named landmark: the pages, and the languages');
 
         foreach ($page->filter('img') as $image) {
             self::assertInstanceOf(DOMElement::class, $image);

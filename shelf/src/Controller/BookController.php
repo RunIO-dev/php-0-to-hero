@@ -15,9 +15,10 @@ use Shelf\Form\BookType;
 use Shelf\Hold;
 use Shelf\Library;
 use Shelf\Member;
+use Shelf\Security\BookVoter;
 use Shelf\Web\Covers;
 use Shelf\Web\Pager;
-use Shelf\Security\BookVoter;
+use Shelf\Web\Said;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -28,6 +29,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * The pages about books (chapter 73), from App's routes: the list, one book with its forms, adding
@@ -92,7 +97,7 @@ final class BookController extends AbstractController
 
     #[Route('/add', name: 'add', methods: ['GET', 'POST'])]
     #[IsGranted(BookVoter::CHANGE)]
-    public function add(Request $request): Response
+    public function add(Request $request, TranslatorInterface $translator): Response
     {
         $book = new BookData();
         $form = $this->createForm(BookType::class, $book, ['action' => $this->generateUrl('add')])->handleRequest($request);
@@ -105,11 +110,11 @@ final class BookController extends AbstractController
                 if ($book->cover !== null) {
                     $this->covers->save($added->title, $book->cover);
                 }
-                $this->addFlash('notice', "Added \"$added->title\".");
+                $this->addFlash('notice', t('Added "{title}".', ['title' => $added->title]));
 
                 return $this->redirectToRoute('books', status: Response::HTTP_SEE_OTHER);
             } catch (InvalidArgumentException $e) {
-                $form->addError(new FormError($e->getMessage()));
+                $form->addError(new FormError($e instanceof TranslatableInterface ? $e->trans($translator) : $e->getMessage()));
             }
         }
 
@@ -128,10 +133,12 @@ final class BookController extends AbstractController
         } catch (BookNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $this->bookPage($title, $copies, $e->getMessage());
+            return $this->bookPage($title, $copies, Said::of($e));
         }
-        $this->addFlash('notice', "Saved: the library has $book->copies " . ($book->copies === 1 ? 'copy' : 'copies') . ' on the shelf'
-            . ($served === [] ? '.' : ', and ' . count($served) . ' set aside for ' . implode(', ', array_map(fn(Hold $hold): string => $hold->member->name, $served)) . '.'));
+        $this->addFlash('notice', t(
+            'Saved: the library has {copies, plural, one {# copy} other {# copies}} on the shelf{served, plural, =0 {.} other {, and # set aside for {names}.}}',
+            ['copies' => $book->copies, 'served' => count($served), 'names' => implode(', ', array_map(fn(Hold $hold): string => $hold->member->name, $served))],
+        ));
 
         return $this->redirectToRoute('book', ['title' => $book->title], Response::HTTP_SEE_OTHER);
     }
@@ -146,10 +153,10 @@ final class BookController extends AbstractController
         } catch (BookNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $this->bookPage($title, error: $e->getMessage());
+            return $this->bookPage($title, error: Said::of($e));
         }
         $this->covers->remove($book->title);
-        $this->addFlash('notice', "Removed \"$book->title\".");
+        $this->addFlash('notice', t('Removed "{title}".', ['title' => $book->title]));
 
         return $this->redirectToRoute('books', status: Response::HTTP_SEE_OTHER);
     }
@@ -165,9 +172,9 @@ final class BookController extends AbstractController
         } catch (BookNotFound) {
             throw new NotFoundHttpException();
         } catch (InvalidArgumentException $e) {
-            return $this->bookPage($title, error: $e->getMessage());
+            return $this->bookPage($title, error: Said::of($e));
         }
-        $this->addFlash('notice', "You reserved \"{$hold->book->title}\". The next copy that comes back is kept for you.");
+        $this->addFlash('notice', t('You reserved "{title}". The next copy that comes back is kept for you.', ['title' => $hold->book->title]));
 
         return $this->redirectToRoute('book', ['title' => $hold->book->title], Response::HTTP_SEE_OTHER);
     }
@@ -181,7 +188,7 @@ final class BookController extends AbstractController
     }
 
     /** One book's page. $error is set when a form comes back with a mistake, and $copies when it was the copies form. */
-    private function bookPage(string $title, ?string $copies = null, ?string $error = null): Response
+    private function bookPage(string $title, ?string $copies = null, TranslatableInterface|string|null $error = null): Response
     {
         try {
             $book = $this->library->find($title);

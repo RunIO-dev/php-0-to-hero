@@ -1,0 +1,9 @@
+# Shelf's languages (chapter 87). The texts are English in the code and the templates; their German and
+# Arabic are in translations/messages+intl-icu.{de,ar}.yaml, in ICU's MessageFormat (plurals, dates).
+# A text with no translation shows in English, never as an empty space.
+framework:
+    default_locale: en
+    enabled_locales: [en, de, ar]
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks: [en]

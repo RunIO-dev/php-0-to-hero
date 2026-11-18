@@ -85,7 +85,7 @@ final class HoldsTest extends ShelfWebTestCase
         $this->client->submit($crawler->filter('#ready + .table-wrap')->selectButton('Lend')->form());
         $this->client->followRedirect();
 
-        self::assertSelectorTextSame('.flash', 'Lent: Kindred to Amira, due back on Monday, 16 March 2026.');
+        self::assertSelectorTextSame('.flash', 'Lent: Kindred to Amira, due back on Monday, March 16, 2026.');
         self::assertSelectorNotExists('#ready');
         self::assertSame([], $this->library->holdsOf($this->amira()), 'Collected');
     }
@@ -103,7 +103,7 @@ final class HoldsTest extends ShelfWebTestCase
         $this->client->request('POST', '/renew', ['loan' => $loan->id(), 'from' => 'desk', '_token' => $token]);
 
         self::assertResponseStatusCodeSame(422);
-        self::assertSelectorTextSame('.error', '"Kindred" is reserved by another member, so it can\'t be extended: please bring it back by Monday, 30 March 2026.');
+        self::assertSelectorTextSame('.error', '"Kindred" is reserved by another member, so it can\'t be extended: please bring it back by Monday, March 30, 2026.');
     }
 
     public function testAReaderCancelsTheirOwnReservationOnly(): void

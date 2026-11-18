@@ -36,6 +36,13 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => true])]
     public private(set) bool $confirmed = true;
 
+    /** The languages Shelf speaks (chapter 87), as config/packages/translation.yaml enables them. */
+    public const array LANGUAGES = ['en', 'de', 'ar'];
+
+    /** Chapter 87: the language Shelf writes to the member in: the one they signed up or last logged in with. */
+    #[ORM\Column(length: 2, options: ['default' => 'en'])]
+    public private(set) string $language = 'en';
+
     /** Chapter 83: a blocked member can log in and see their loans, but can't borrow. */
     #[ORM\Column(options: ['default' => false])]
     public private(set) bool $blocked = false;
@@ -53,6 +60,14 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
     public function id(): int
     {
         return $this->id ?? throw new \LogicException("$this->name isn't stored yet");
+    }
+
+    /** Chapter 87: Shelf writes to the member in this language from now on; one it doesn't speak is ignored. */
+    public function speaks(string $language): void
+    {
+        if (in_array($language, self::LANGUAGES, true)) {
+            $this->language = $language;
+        }
     }
 
     /** A reader who signed up themselves (chapter 82), not confirmed yet. */

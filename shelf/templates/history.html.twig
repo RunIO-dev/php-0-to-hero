@@ -2,29 +2,29 @@
    narrows it to one book or one member, so a narrowed history is an address, as a search is. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Loan history · Shelf{% endblock %}
+{% block title %}{{ 'Loan history'|trans }} · Shelf{% endblock %}
 
 {% block main %}
-    <p class="back"><a href="{{ path('dashboard') }}">← Dashboard</a></p>
+    <p class="back"><a href="{{ path('dashboard') }}">{{ '← Dashboard'|trans }}</a></p>
     <div class="page-head">
         <div>
-            <h1>Loan history</h1>
-            <p class="lead">Every loan, back or not, the newest first.</p>
+            <h1>{{ 'Loan history'|trans }}</h1>
+            <p class="lead">{{ 'Every loan, back or not, the newest first.'|trans }}</p>
         </div>
     </div>
     <form class="search" method="get" action="{{ path('history') }}">
-        <label class="grow">Book <input name="title" value="{{ by_title }}" autocomplete="off"></label>
-        <label class="grow">Member <input name="member" value="{{ by_member }}" autocomplete="off"></label>
-        <button>Show</button>
+        <label class="grow">{{ 'Book'|trans }} <input name="title" value="{{ by_title }}" autocomplete="off"></label>
+        <label class="grow">{{ 'Member'|trans }} <input name="member" value="{{ by_member }}" autocomplete="off"></label>
+        <button>{{ 'Show'|trans }}</button>
     </form>
-    <p class="count" role="status">{{ total }} {{ total == 1 ? 'loan' : 'loans' }}{% if by_title %} of “{{ by_title }}”{% endif %}{% if by_member %} by {{ by_member }}{% endif %}</p>
+    <p class="count" role="status">{{ '{count, plural, one {# loan} other {# loans}}'|trans({count: total}) }}{% if by_title %} {{ 'of “{title}”'|trans({title: by_title}) }}{% endif %}{% if by_member %} {{ 'by {member}'|trans({member: by_member}) }}{% endif %}</p>
 {% if loans is empty %}
 {% embed 'components/_empty.html.twig' with {text: 'No loans to show.'} only %}{% endembed %}
 {% else %}
     <div class="table-wrap">
         <table>
             <thead>
-                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Lent</th><th scope="col">Due back</th><th scope="col">Back</th></tr>
+                <tr><th scope="col">{{ 'Book'|trans }}</th><th scope="col">{{ 'Member'|trans }}</th><th scope="col">{{ 'Lent'|trans }}</th><th scope="col">{{ 'Due back'|trans }}</th><th scope="col">{{ 'Back'|trans }}</th></tr>
             </thead>
             <tbody>
 {% for loan in loans %}
@@ -32,13 +32,13 @@
                 <tr>
                     <td><a href="{{ path('history', {title: loan.title}) }}">{{ loan.title }}</a></td>
                     <td><a href="{{ path('history', {member: loan.member}) }}">{{ loan.member }}</a></td>
-                    <td>{{ loan.lentOn|date('j M Y', false) }}</td>
-                    <td>{{ loan.due|date('j M Y', false) }}</td>
+                    <td>{{ loan.lentOn|format_date('medium', timezone: false) }}</td>
+                    <td>{{ loan.due|format_date('medium', timezone: false) }}</td>
                     <td>
 {%- if loan.returnedOn -%}
-                        {{ loan.returnedOn|date('j M Y', false) }}{% if late > 0 %} {% include 'components/_badge.html.twig' with {text: late ~ (late == 1 ? ' day' : ' days') ~ ' late', level: 'warn'} only %}{% endif %}
+                        {{ loan.returnedOn|format_date('medium', timezone: false) }}{% if late > 0 %} {% include 'components/_badge.html.twig' with {text: '{days, plural, one {# day late} other {# days late}}'|trans({days: late}), level: 'warn'} only %}{% endif %}
 {%- else -%}
-                        {% include 'components/_badge.html.twig' with {text: late > 0 ? 'out, ' ~ late ~ (late == 1 ? ' day' : ' days') ~ ' late' : 'out', level: late > 0 ? 'danger' : 'ok'} only %}
+                        {% include 'components/_badge.html.twig' with {text: late > 0 ? '{days, plural, one {out, # day late} other {out, # days late}}'|trans({days: late}) : 'out'|trans, level: late > 0 ? 'danger' : 'ok'} only %}
 {%- endif -%}
                     </td>
                 </tr>

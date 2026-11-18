@@ -55,14 +55,14 @@ final readonly class DoctrineBookRepository implements BookRepository
     public function update(Book $book): void
     {
         if (!$this->entities->contains($book)) {
-            throw new BookNotFound("There is no book titled \"$book->title\"");
+            throw new BookNotFound('There is no book titled "{title}"', ['title' => $book->title]);
         }
         $this->entities->flush(); // Doctrine finds what changed, and writes only that
     }
 
     public function remove(string $title): void
     {
-        $this->entities->remove($this->find($title) ?? throw new BookNotFound("There is no book titled \"$title\""));
+        $this->entities->remove($this->find($title) ?? throw new BookNotFound('There is no book titled "{title}"', ['title' => $title]));
         $this->entities->flush();
     }
 

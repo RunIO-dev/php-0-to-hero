@@ -1,0 +1,7 @@
+{% extends 'email/base.html.twig' %}
+
+{% block body %}
+<p>{{ 'Hello {name},'|trans({name: name}) }}</p>
+<p>{{ 'The copy of “{title}” that you reserved is waiting for you at the desk, until {day}. After that, it goes to the next in line.'|trans({title: title, day: day|format_date('full', timezone: false)}) }}</p>
+<p><a class="button" href="{{ link }}">{{ 'My reservations'|trans }}</a></p>
+{% endblock %}

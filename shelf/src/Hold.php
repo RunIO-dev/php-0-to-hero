@@ -66,7 +66,7 @@ final class Hold
     public function ready(DateTimeImmutable $today): void
     {
         if ($this->status !== HoldStatus::Waiting) {
-            throw new InvalidArgumentException("The reservation of \"{$this->book->title}\" isn't waiting.");
+            throw new Refused('The reservation of "{title}" isn\'t waiting.', ['title' => $this->book->title]);
         }
         $this->status = HoldStatus::Ready;
         $this->readyUntil = self::pickupBy($today);
@@ -94,7 +94,7 @@ final class Hold
     public function expire(DateTimeImmutable $today): void
     {
         if (!$this->hasExpired($today)) {
-            throw new InvalidArgumentException("The reservation of \"{$this->book->title}\" hasn't expired.");
+            throw new Refused('The reservation of "{title}" hasn\'t expired.', ['title' => $this->book->title]);
         }
         $this->status = HoldStatus::Expired;
     }
@@ -120,7 +120,7 @@ final class Hold
     private function close(HoldStatus $as): void
     {
         if (!$this->status->isOpen()) {
-            throw new InvalidArgumentException("The reservation of \"{$this->book->title}\" is over already.");
+            throw new Refused('The reservation of "{title}" is over already.', ['title' => $this->book->title]);
         }
         $this->status = $as;
     }

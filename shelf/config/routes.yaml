@@ -1,3 +1,16 @@
 # Shelf's routes (chapter 72): the #[Route] attributes of the controllers in src/Controller/.
-controllers:
-    resource: routing.controllers
+# Chapter 87: every page in three languages, one address each: /desk in English, /de/desk in German,
+# /ar/desk in Arabic. The prefix sets the request's locale; path() keeps it in every link.
+pages:
+    resource: ../src/Controller/
+    type: attribute
+    exclude: ../src/Controller/ApiController.php
+    prefix:
+        en: ''
+        de: /de
+        ar: /ar
+
+# The API is for programs: one address, and English, whatever the browser prefers.
+api:
+    resource: ../src/Controller/ApiController.php
+    type: attribute

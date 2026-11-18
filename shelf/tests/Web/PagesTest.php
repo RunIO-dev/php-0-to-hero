@@ -187,7 +187,7 @@ final class PagesTest extends ShelfWebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextSame('tbody tr td:first-child', 'Kindred');
-        self::assertSelectorTextSame('tbody tr td:nth-child(2)', 'Tuesday, 1 December 2026');
+        self::assertSelectorTextSame('tbody tr td:nth-child(2)', 'Tuesday, December 1, 2026');
     }
 
     /** Chapter 80: the badge says how the due date reads today, in words and colour. */

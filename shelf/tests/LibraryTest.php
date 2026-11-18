@@ -324,7 +324,7 @@ final class LibraryTest extends TestCase
     {
         $this->benWaitsForKindred();
 
-        $this->expectExceptionMessage('"Kindred" is reserved by another member, so it can\'t be extended: please bring it back by Monday, 16 March 2026.');
+        $this->expectExceptionMessage('"Kindred" is reserved by another member, so it can\'t be extended: please bring it back by Monday, March 16, 2026.');
 
         $this->library->renew(1, new DateTimeImmutable('2026-03-10'));
     }

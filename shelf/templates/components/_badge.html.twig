@@ -1,4 +1,5 @@
 {# A status in words and colour (chapter 80): level is ok, warn or danger. Colour alone says nothing to
    a screen reader, or to someone who can't tell the colours apart, so the words are always there.
-   Use: {% include 'components/_badge.html.twig' with {text: 'Available', level: 'ok'} only %} #}
-<span class="badge {{ level }}">{{ text }}</span>
+   Use: {% include 'components/_badge.html.twig' with {text: 'Available', level: 'ok'} only %}
+   Chapter 87: text is English, translated here; a text with values comes translated already. #}
+<span class="badge {{ level }}">{{ text|trans }}</span>

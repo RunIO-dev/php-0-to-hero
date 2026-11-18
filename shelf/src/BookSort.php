@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Shelf;
 
+use Symfony\Component\Translation\TranslatableMessage;
+
 /**
  * The orders a list of books can have (chapter 81). The value is what the address says, ?sort=newest;
  * the label is what the form shows. One enum for both the database and the in-memory list, so the
@@ -16,13 +18,14 @@ enum BookSort: string
     case Newest = 'newest';
     case Oldest = 'oldest';
 
-    public function label(): string
+    /** Chapter 87: a message, which the page translates. */
+    public function label(): TranslatableMessage
     {
         return match ($this) {
-            self::Title => 'Title, A to Z',
-            self::Author => 'Author, A to Z',
-            self::Newest => 'Newest first',
-            self::Oldest => 'Oldest first',
+            self::Title => new TranslatableMessage('Title, A to Z'),
+            self::Author => new TranslatableMessage('Author, A to Z'),
+            self::Newest => new TranslatableMessage('Newest first'),
+            self::Oldest => new TranslatableMessage('Oldest first'),
         };
     }
 

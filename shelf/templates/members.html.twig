@@ -2,30 +2,30 @@
    may borrow. Block or unblock, and make a reader staff or the other way round; never oneself. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Members · Shelf{% endblock %}
+{% block title %}{{ 'Members'|trans }} · Shelf{% endblock %}
 
 {% block main %}
     <div class="page-head">
         <div>
-            <h1>Members</h1>
-            <p class="lead">Who may borrow, and who runs the desk.</p>
+            <h1>{{ 'Members'|trans }}</h1>
+            <p class="lead">{{ 'Who may borrow, and who runs the desk.'|trans }}</p>
         </div>
     </div>
 {% include '_flash.html.twig' %}
 {% if error %}
-    <p class="error" role="alert">{{ error }}</p>
+    <p class="error" role="alert">{{ error|trans }}</p>
 {% endif %}
     <div class="table-wrap">
         <table>
             <thead>
-                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+                <tr><th scope="col">{{ 'Name'|trans }}</th><th scope="col">{{ 'Email'|trans }}</th><th scope="col">{{ 'Role'|trans }}</th><th scope="col">{{ 'On loan'|trans }}</th><th scope="col">{{ 'Status'|trans }}</th><th scope="col"><span class="visually-hidden">{{ 'Actions'|trans }}</span></th></tr>
             </thead>
             <tbody>
 {% for person in members %}
                 <tr>
                     <td>{{ person.name }}</td>
                     <td>{{ person.email ?? '—' }}</td>
-                    <td>{{ person.role.value|capitalize }}</td>
+                    <td>{{ person.role.label|trans }}</td>
                     <td>{{ counts[person.name] }}</td>
                     <td>
 {% if person.blocked %}
@@ -42,16 +42,16 @@
                             <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
                             <input type="hidden" name="member" value="{{ person.name }}">
                             <input type="hidden" name="blocked" value="{{ person.blocked ? '0' : '1' }}">
-                            <button class="quiet">{{ person.blocked ? 'Unblock' : 'Block' }} <span class="visually-hidden">{{ person.name }}</span></button>
+                            <button class="quiet">{{ person.blocked ? 'Unblock'|trans : 'Block'|trans }} <span class="visually-hidden">{{ person.name }}</span></button>
                         </form>
                         <form method="post" action="{{ path('members_role') }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
                             <input type="hidden" name="member" value="{{ person.name }}">
                             <input type="hidden" name="role" value="{{ person.role.value == 'staff' ? 'reader' : 'staff' }}">
-                            <button class="quiet">{{ person.role.value == 'staff' ? 'Make reader' : 'Make staff' }} <span class="visually-hidden">{{ person.name }}</span></button>
+                            <button class="quiet">{{ person.role.value == 'staff' ? 'Make reader'|trans : 'Make staff'|trans }} <span class="visually-hidden">{{ person.name }}</span></button>
                         </form>
 {% else %}
-                        <small>You</small>
+                        <small>{{ 'You'|trans }}</small>
 {% endif %}
                     </div></td>
                 </tr>

@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\LogoutException;
+use Symfony\Component\Translation\LocaleSwitcher;
 use Throwable;
 use Twig\Environment;
 
@@ -27,6 +28,7 @@ use Twig\Environment;
  *   Allow header;
  * - for an error nothing caught: on a developer's computer (debug), Symfony's page with every detail;
  *   on a server, a short page with a reference that finds the details in the log (chapter 66).
+ * Chapter 87: in the language of the address, also when no route matched it.
  * After the security's listener (priority 1), which sends a visitor who isn't logged in to the login,
  * and before Symfony's error page (priority -128): an answer set here is the one sent.
  */
@@ -36,6 +38,7 @@ final readonly class ErrorPages implements EventSubscriberInterface
         private Environment $twig,
         private LoggerInterface $logger,
         private Security $security,
+        private LocaleSwitcher $locales,
         #[Autowire('%kernel.debug%')]
         private bool $debug,
     ) {}
@@ -48,6 +51,11 @@ final readonly class ErrorPages implements EventSubscriberInterface
     public function answer(ExceptionEvent $event): void
     {
         $e = $event->getThrowable();
+        // Chapter 87: an address that matched no route has no language yet; /de/nothing is German.
+        if (preg_match('~^/(de|ar)(/|$)~', $event->getRequest()->getPathInfo(), $m) === 1) {
+            $event->getRequest()->setLocale($m[1]);
+            $this->locales->setLocale($m[1]);
+        }
         if (str_starts_with($event->getRequest()->getPathInfo(), '/api/')) {
             $event->setResponse($this->problem($e, $event->getRequest()->getPathInfo()));
         } elseif ($e->getPrevious() instanceof LogoutException) {

@@ -3,10 +3,10 @@
    Chapter 86: route, the list's page, when it isn't the books. #}
 {% set route = route|default('books') %}
 {% if pages > 1 %}
-<nav class="pager" aria-label="Pages">
+<nav class="pager" aria-label="{{ 'Pages'|trans }}">
     <ul>
 {% if page > 1 %}
-        <li><a href="{{ path(route, search|merge({page: page - 1})) }}" rel="prev">Previous</a></li>
+        <li><a href="{{ path(route, search|merge({page: page - 1})) }}" rel="prev">{{ 'Previous'|trans }}</a></li>
 {% endif %}
 {% for number in numbers %}
 {% if number is null %}
@@ -18,7 +18,7 @@
 {% endif %}
 {% endfor %}
 {% if page < pages %}
-        <li><a href="{{ path(route, search|merge({page: page + 1})) }}" rel="next">Next</a></li>
+        <li><a href="{{ path(route, search|merge({page: page + 1})) }}" rel="next">{{ 'Next'|trans }}</a></li>
 {% endif %}
     </ul>
 </nav>

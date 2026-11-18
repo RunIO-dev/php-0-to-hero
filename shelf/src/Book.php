@@ -85,7 +85,7 @@ final class Book
     public function lend(): void
     {
         if (!$this->isAvailable()) {
-            throw new NoCopyLeft("All copies of \"$this->title\" are on loan");
+            throw new NoCopyLeft('All copies of "{title}" are on loan', ['title' => $this->title]);
         }
         $this->copies--;
     }

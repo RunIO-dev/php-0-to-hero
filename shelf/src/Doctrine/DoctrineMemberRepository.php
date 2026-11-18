@@ -40,7 +40,7 @@ final readonly class DoctrineMemberRepository implements MemberRepository
             ->setParameters(['hash' => $hash, 'name' => trim($name)])
             ->execute();
         if ($changed === 0) {
-            throw new MemberNotFound('There is no member named "' . trim($name) . '"');
+            throw new MemberNotFound('There is no member named "{name}"', ['name' => trim($name)]);
         }
         // Chapter 82: UPDATE goes straight to the table; a Member already loaded still holds the old hash.
         $member = $this->find($name);

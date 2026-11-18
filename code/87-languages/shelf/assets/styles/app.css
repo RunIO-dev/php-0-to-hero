@@ -1,0 +1,954 @@
+/*
+ * Shelf's stylesheet (chapter 80). Copy it as it is: the course teaches PHP, not CSS.
+ * Plain CSS, no framework, and no JavaScript anywhere: the CSP allows none.
+ * - Colours, sizes and shadows are variables (design tokens); dark mode only changes them.
+ * - Logical properties (margin-inline, padding-block, inset-inline-start) instead of left and right,
+ *   so the Arabic edition (chapter 87) turns the whole layout around with dir="rtl" alone.
+ * - Every component has a class of its own: .book-card, .badge, .button, .panel, .table-wrap, .empty.
+ * - Phones first: one column; wider screens get more columns.
+ */
+
+:root {
+    --bg: #f7f4ee;
+    --surface: #ffffff;
+    --surface-2: #f1ede4;
+    --ink: #1d232e;
+    --muted: #5a6170;
+    --line: #e3ddd1;
+    --accent: #1d6b58;
+    --accent-strong: #154f41;
+    --accent-ink: #ffffff;
+    --accent-soft: #e2f0eb;
+    --danger: #a32121;
+    --danger-soft: #fbe9e9;
+    --warn: #7c5100;
+    --warn-soft: #fbf0d9;
+    --ok: #1d6b3a;
+    --ok-soft: #e3f3e8;
+    --tone-0: #2f5d8a;
+    --tone-1: #8a3f2f;
+    --tone-2: #2f7a5d;
+    --tone-3: #6a4a8a;
+    --tone-4: #8a6a2f;
+    --tone-5: #2f6f7a;
+    --radius: 14px;
+    --radius-small: 8px;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.05), 0 8px 24px rgb(31 36 48 / 0.07);
+    --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.06), 0 14px 32px rgb(31 36 48 / 0.12);
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Arabic", sans-serif;
+    --font-display: ui-serif, Georgia, "Times New Roman", "Noto Naskh Arabic", serif;
+    --width: 72rem;
+    color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #12151b;
+        --surface: #1b2029;
+        --surface-2: #232934;
+        --ink: #e8eaee;
+        --muted: #a2a9b6;
+        --line: #2d3441;
+        --accent: #62c7a8;
+        --accent-strong: #8fdcc3;
+        --accent-ink: #0d1c18;
+        --accent-soft: #1c332d;
+        --danger: #ff8f8f;
+        --danger-soft: #3a1e21;
+        --warn: #f2c46e;
+        --warn-soft: #382d18;
+        --ok: #7fd59b;
+        --ok-soft: #1d3324;
+        --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+        --shadow-lift: 0 4px 18px rgb(0 0 0 / 0.5);
+    }
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-block-size: 100vh;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 1rem/1.6 var(--font);
+}
+
+a {
+    color: var(--accent);
+    text-underline-offset: 0.18em;
+}
+
+a:hover {
+    color: var(--accent-strong);
+}
+
+:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+h1,
+h2,
+h3 {
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+h1 {
+    margin-block: 0 0.4rem;
+    font: 600 clamp(1.7rem, 4vw, 2.4rem) / 1.15 var(--font-display);
+}
+
+img {
+    max-inline-size: 100%;
+}
+
+/* The link that keyboard and screen-reader users meet first: straight to the content. */
+.skip {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: -4rem;
+    z-index: 10;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-small);
+    background: var(--accent);
+    color: var(--accent-ink);
+}
+
+.skip:focus {
+    inset-block-start: 1rem;
+}
+
+/* Text for screen readers only. */
+.visually-hidden {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* ---- The frame: header, main, footer ---- */
+
+.site {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 5;
+    border-block-end: 1px solid var(--line);
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    backdrop-filter: blur(8px);
+}
+
+.site-inner,
+main,
+.footer-inner {
+    inline-size: 100%;
+    max-inline-size: var(--width);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+}
+
+.site-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    align-items: center;
+    padding-block: 0.75rem;
+}
+
+.brand {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--ink);
+    font: 700 1.35rem/1 var(--font-display);
+    text-decoration: none;
+}
+
+.brand svg {
+    inline-size: 1.7rem;
+    block-size: 1.7rem;
+    color: var(--accent);
+}
+
+/* The menu: a row that wraps under the name on narrow screens; no JavaScript, no hidden menu. */
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+    margin-inline-start: auto;
+}
+
+.nav a,
+.nav .link {
+    display: block;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-small);
+    color: var(--ink);
+    font: inherit;
+    text-decoration: none;
+}
+
+.nav a:hover,
+.nav .link:hover {
+    background: var(--surface-2);
+}
+
+.nav a[aria-current="page"] {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-weight: 600;
+}
+
+.nav .account {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+    margin: 0;
+    padding-inline-start: 0.5rem;
+    border-inline-start: 1px solid var(--line);
+    color: var(--muted);
+}
+
+.nav .who {
+    padding-inline: 0.5rem;
+}
+
+main {
+    flex: 1;
+    padding-block: 2rem 3rem;
+}
+
+.footer {
+    border-block-start: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    justify-content: space-between;
+    padding-block: 1.25rem;
+}
+
+.footer p {
+    margin: 0;
+}
+
+/* Chapter 87: the languages, each named in its own; the one of the page is not a link to follow. */
+.languages {
+    display: flex;
+    gap: 1rem;
+}
+
+.languages a {
+    color: inherit;
+}
+
+.languages a[aria-current] {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Arabic letters need more room between the lines. */
+html:lang(ar) body {
+    line-height: 1.8;
+}
+
+/* ---- The top of a page: its title, a line under it, and its actions ---- */
+
+.page-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: end;
+    justify-content: space-between;
+    margin-block-end: 1.5rem;
+}
+
+.page-head .lead {
+    margin: 0;
+    color: var(--muted);
+}
+
+.back {
+    margin-block: 0 0.75rem;
+    font-size: 0.95rem;
+}
+
+.back a {
+    text-decoration: none;
+}
+
+/* ---- Buttons ---- */
+
+button,
+.button {
+    display: inline-flex;
+    gap: 0.4rem;
+    align-items: center;
+    justify-content: center;
+    min-block-size: 2.6rem;
+    padding: 0.5rem 1.1rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font: 600 1rem/1.2 var(--font);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button:hover,
+.button:hover {
+    background: var(--accent-strong);
+    color: var(--accent-ink);
+}
+
+.button.quiet,
+button.quiet {
+    border-color: var(--line);
+    background: var(--surface);
+    color: var(--ink);
+}
+
+.button.quiet:hover,
+button.quiet:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+}
+
+button.danger {
+    background: var(--danger);
+    color: var(--surface); /* white on dark red; in dark mode, dark on light red */
+}
+
+button.danger:hover {
+    background: var(--danger);
+    color: var(--surface);
+    filter: brightness(0.9);
+}
+
+button.link {
+    min-block-size: 0;
+    padding: 0.45rem 0.75rem;
+    border: 0;
+    background: none;
+    color: var(--accent);
+    font-weight: 400;
+}
+
+button.link:hover {
+    background: var(--surface-2);
+    color: var(--accent-strong);
+}
+
+/* ---- Cards, panels and the book grid ---- */
+
+.card,
+.panel {
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.panel h2 {
+    margin-block: 0 0.75rem;
+    font-size: 1.1rem;
+}
+
+.panel + .panel {
+    margin-block-start: 1rem;
+}
+
+.books {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, 40vw), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.book-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.book-card:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+}
+
+.book-card h2 {
+    margin: 0.35rem 0 0;
+    font: 600 1.05rem/1.25 var(--font-display);
+}
+
+/* The whole card is the link's target, so it is easy to tap. */
+.book-card h2 a {
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.book-card h2 a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+}
+
+.book-card .by {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.book-card .badge {
+    align-self: start;
+    margin-block-start: auto;
+}
+
+/* ---- Covers: the uploaded picture, or a coloured placeholder with the title's first letter ---- */
+
+.cover {
+    display: grid;
+    place-items: center;
+    inline-size: 100%;
+    aspect-ratio: 2 / 3;
+    border-radius: var(--radius-small);
+    object-fit: cover;
+    background: var(--surface-2);
+    color: #ffffff;
+    font: 600 3rem/1 var(--font-display);
+    box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+
+.cover.tone-0 { background: linear-gradient(160deg, var(--tone-0), color-mix(in srgb, var(--tone-0) 60%, #000)); }
+.cover.tone-1 { background: linear-gradient(160deg, var(--tone-1), color-mix(in srgb, var(--tone-1) 60%, #000)); }
+.cover.tone-2 { background: linear-gradient(160deg, var(--tone-2), color-mix(in srgb, var(--tone-2) 60%, #000)); }
+.cover.tone-3 { background: linear-gradient(160deg, var(--tone-3), color-mix(in srgb, var(--tone-3) 60%, #000)); }
+.cover.tone-4 { background: linear-gradient(160deg, var(--tone-4), color-mix(in srgb, var(--tone-4) 60%, #000)); }
+.cover.tone-5 { background: linear-gradient(160deg, var(--tone-5), color-mix(in srgb, var(--tone-5) 60%, #000)); }
+
+/* ---- Badges: a status in words and colour, never colour alone ---- */
+
+.badge {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge::before {
+    content: "";
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    border-radius: 50%;
+    background: currentcolor;
+}
+
+.badge.ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+}
+
+.badge.warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+}
+
+.badge.danger {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+/* ---- A book's page ---- */
+
+.book-page {
+    display: grid;
+    gap: 2rem;
+}
+
+.book-page .cover {
+    max-inline-size: 16rem;
+    font-size: 5rem;
+    box-shadow: var(--shadow-lift);
+}
+
+.facts {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1.25rem;
+    margin: 0 0 1.25rem;
+}
+
+.facts dt {
+    color: var(--muted);
+}
+
+.facts dd {
+    margin: 0;
+}
+
+@media (min-width: 48rem) {
+    .book-page {
+        grid-template-columns: 16rem 1fr;
+        align-items: start;
+    }
+}
+
+/* ---- Tables ---- */
+
+.table-wrap {
+    position: relative; /* keeps .visually-hidden texts inside it, or they widen the page on a phone */
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+table {
+    inline-size: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 0.75rem 1rem;
+    border-block-end: 1px solid var(--line);
+    text-align: start;
+    vertical-align: middle;
+}
+
+th {
+    background: var(--surface-2);
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+tr:last-child td {
+    border-block-end: 0;
+}
+
+/* ---- Forms ---- */
+
+form.card {
+    display: grid;
+    gap: 1rem;
+    max-inline-size: 36rem;
+}
+
+form.narrow {
+    max-inline-size: 26rem;
+}
+
+label {
+    display: grid;
+    gap: 0.3rem;
+    font-weight: 600;
+}
+
+label small {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+input,
+select,
+textarea {
+    inline-size: 100%;
+    min-block-size: 2.6rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-small);
+    background: var(--surface);
+    color: var(--ink);
+    font: 400 1rem/1.4 var(--font);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent);
+}
+
+input[type="file"] {
+    padding: 0.4rem;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+}
+
+.inline-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.inline-form label {
+    flex: 1 1 8rem;
+}
+
+/* ---- Messages ---- */
+
+.flash,
+.error,
+.notice {
+    margin-block: 0 1.25rem;
+    padding: 0.75rem 1rem;
+    border-inline-start: 4px solid currentcolor;
+    border-radius: var(--radius-small);
+}
+
+.flash {
+    background: var(--ok-soft);
+    color: var(--ok);
+}
+
+.error {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+form .error {
+    margin: 0;
+}
+
+.notice {
+    background: var(--warn-soft);
+    color: var(--warn);
+}
+
+.empty {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    padding: 3rem 1.5rem;
+    border: 2px dashed var(--line);
+    border-radius: var(--radius);
+    color: var(--muted);
+    text-align: center;
+}
+
+.empty p {
+    margin: 0;
+}
+
+.empty .big {
+    font-size: 2.5rem;
+}
+
+.count {
+    margin-block-start: 1.5rem;
+    color: var(--muted);
+}
+
+/* ---- Searching and paging a list (chapter 81) ---- */
+
+.search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: end;
+    margin-block-end: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.search .grow {
+    flex: 1 1 16rem;
+}
+
+.search select {
+    inline-size: auto;
+}
+
+label.check {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-block-size: 2.6rem;
+    font-weight: 400;
+}
+
+label.check input {
+    inline-size: 1.15rem;
+    min-block-size: 1.15rem;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.count[role="status"] {
+    margin-block: 0 1rem;
+}
+
+.pager ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-block: 2rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pager a,
+.pager .gap {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 2.6rem;
+    min-block-size: 2.6rem;
+    padding-inline: 0.75rem;
+    border-radius: var(--radius-small);
+}
+
+.pager a {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+}
+
+.pager a:hover {
+    border-color: var(--accent);
+}
+
+.pager a[aria-current="page"] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+}
+
+.pager .gap {
+    color: var(--muted);
+}
+
+/* ---- Accounts (chapter 82) ---- */
+
+.panels {
+    display: grid;
+    gap: 1rem;
+    max-inline-size: 40rem;
+}
+
+.panels .panel + .panel {
+    margin-block-start: 0;
+}
+
+.panel form:not(.inline-form) {
+    display: grid;
+    gap: 1rem;
+}
+
+.panel.danger {
+    border-color: var(--danger);
+}
+
+.aside {
+    margin-block-start: 1.25rem;
+    color: var(--muted);
+}
+
+/* ---- The lending desk and the members (chapter 83) ---- */
+
+.section-head {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-block: 2rem 0.75rem;
+    font-size: 1.25rem;
+}
+
+.section-head .count {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: flex-end;
+}
+
+.row-actions form {
+    margin: 0;
+}
+
+.row-actions button {
+    min-block-size: 2.2rem;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.9rem;
+}
+
+/* ---- The dashboard (chapter 86) ---- */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.stats li {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.stats strong {
+    color: var(--ink);
+    font: 600 1.9rem/1.1 var(--font-display);
+}
+
+.stats .warn {
+    border-color: var(--warn);
+    background: var(--warn-soft);
+}
+
+.stats .warn strong {
+    color: var(--warn);
+}
+
+.report {
+    display: grid;
+    gap: 1rem;
+    margin-block-start: 2rem;
+}
+
+.report .panel + .panel {
+    margin-block-start: 0;
+}
+
+@media (min-width: 48rem) {
+    .report {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.tally {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.tally .count {
+    margin: 0;
+}
+
+.big-number {
+    margin: 0;
+    color: var(--accent);
+    font: 600 3rem/1 var(--font-display);
+}
+
+.bars th,
+.bars td {
+    padding: 0.3rem 0.5rem;
+    border: 0;
+    background: none;
+}
+
+.bars th[scope="row"] {
+    inline-size: 6rem;
+    color: var(--muted);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+.bars meter {
+    inline-size: calc(100% - 3rem);
+    block-size: 0.9rem;
+    vertical-align: middle;
+}
+
+.bars meter::-webkit-meter-bar {
+    border: 0;
+    border-radius: 999px;
+    background: var(--surface-2);
+}
+
+.bars meter::-webkit-meter-optimum-value {
+    border-radius: 999px;
+    background: var(--accent);
+}
+
+.bars meter::-moz-meter-bar {
+    border-radius: 999px;
+    background: var(--accent);
+}
+
+/* ---- The pages for errors ---- */
+
+.problem {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+    max-inline-size: 36rem;
+    padding-block: 2rem;
+}
+
+.problem .code {
+    color: var(--muted);
+    font: 600 4rem/1 var(--font-display);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+    }
+}

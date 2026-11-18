@@ -1,0 +1,82 @@
+{# The member's loans (chapter 76), as a table with each due date and how it reads today (chapter 80:
+   the filters due and due_level, from Shelf\Twig\ShelfExtension). Chapter 83: "Extend", while Loan's
+   rules allow it; error, when they didn't. Chapter 84: not while someone waits for the book (reserved,
+   their numbers), and the member's reservations, each with its place in the queue or its last day. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'My loans'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>{{ 'My loans'|trans }}</h1>
+            <p class="lead">{{ 'The books you have, when they are due back, and the ones you are waiting for.'|trans }}</p>
+        </div>
+    </div>
+{% include '_flash.html.twig' %}
+{% if error ?? false %}
+    <p class="error" role="alert">{{ error|trans }}</p>
+{% endif %}
+{% if loans is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'You have no books on loan.'} only %}
+{% block action %}<a class="button quiet" href="{{ path('books') }}">{{ 'Find a book'|trans }}</a>{% endblock %}
+{% endembed %}
+{% else %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">{{ 'Book'|trans }}</th><th scope="col">{{ 'Due back'|trans }}</th><th scope="col">{{ 'Status'|trans }}</th><th scope="col"><span class="visually-hidden">{{ 'Actions'|trans }}</span></th></tr>
+            </thead>
+            <tbody>
+{% for loan in loans %}
+                <tr>
+                    <td><a href="{{ path('book', {title: loan.book.title}) }}">{{ loan.book.title }}</a></td>
+                    <td>{{ loan.due|format_date('full', timezone: false) }}</td>
+                    <td>{% include 'components/_badge.html.twig' with {text: loan.due|due, level: loan.due|due_level} only %}</td>
+                    <td><div class="row-actions">
+{% if loan.due|due_level != 'danger' and loan.renewals < constant('Shelf\\Loan::MAX_RENEWALS') and loan.id not in (reserved ?? []) %}
+                        <form method="post" action="{{ path('renew') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                            <input type="hidden" name="loan" value="{{ loan.id }}">
+                            <button class="quiet">{{ 'Extend'|trans }} <span class="visually-hidden">{{ loan.book.title }}</span></button>
+                        </form>
+{% endif %}
+                    </div></td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% if holds ?? [] is not empty %}
+    <h2 class="section-head">{{ 'Reservations'|trans }} <span class="count">{{ holds|length }}</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">{{ 'Book'|trans }}</th><th scope="col">{{ 'Status'|trans }}</th><th scope="col"><span class="visually-hidden">{{ 'Actions'|trans }}</span></th></tr>
+            </thead>
+            <tbody>
+{% for entry in holds %}
+                <tr>
+                    <td><a href="{{ path('book', {title: entry.hold.book.title}) }}">{{ entry.hold.book.title }}</a></td>
+                    <td>
+{% if entry.position > 0 %}
+{% include 'components/_badge.html.twig' with {text: 'Number {position} in the queue'|trans({position: entry.position}), level: ''} only %}
+{% else %}
+{% include 'components/_badge.html.twig' with {text: 'Ready at the desk until {day}'|trans({day: entry.hold.readyUntil|format_date('medium', timezone: false)}), level: 'ok'} only %}
+{% endif %}
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="{{ path('cancel_hold') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                            <input type="hidden" name="hold" value="{{ entry.hold.id }}">
+                            <button class="quiet">{{ 'Cancel'|trans }} <span class="visually-hidden">{{ 'the reservation of {title}'|trans({title: entry.hold.book.title}) }}</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
+{% endblock %}

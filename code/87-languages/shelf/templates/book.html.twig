@@ -1,0 +1,80 @@
+{# A book's page (chapter 55), with its cover (chapter 52); the forms to change it only for the library's
+   staff (chapter 76). copies is the form's value; error, if set, says what was wrong with a form.
+   Chapter 80: the cover beside the facts, and the staff's forms in a panel of their own.
+   Chapter 84: hold, the member's reservation of this book and its place in the queue; "Reserve"
+   while every copy is out. Chapter 87: error is a text or a refusal, which |trans shows in the page's
+   language; dates by format_date, in the order and words of that language. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ book.title }} · Shelf{% endblock %}
+
+{% block main %}
+    <p class="back"><a href="{{ path('books') }}">{{ '← All books'|trans }}</a></p>
+{% include '_flash.html.twig' %}
+{% if error %}
+    <p class="error" role="alert">{{ error|trans }}</p>
+{% endif %}
+    <div class="book-page">
+{% include 'components/_cover.html.twig' with {book: book, hasCover: hasCover} only %}
+        <div>
+            <h1>{{ book.title }}</h1>
+            <dl class="facts">
+                <dt>{{ 'Author'|trans }}</dt>
+                <dd>{{ book.author }}</dd>
+                <dt>{{ 'Year'|trans }}</dt>
+                <dd>{{ book.year }}</dd>
+{% if book.isbn %}
+                <dt>ISBN</dt>
+                <dd>{{ book.isbn.digits }}</dd>
+{% endif %}
+                <dt>{{ 'On the shelf'|trans }}</dt>
+                <dd>
+{% if book.isAvailable %}
+{% include 'components/_badge.html.twig' with {text: '{count, plural, one {# copy} other {# copies}}'|trans({count: book.copies}), level: 'ok'} only %}
+{% else %}
+{% include 'components/_badge.html.twig' with {text: 'All copies on loan', level: 'warn'} only %}
+{% endif %}
+                </dd>
+            </dl>
+{% if hold %}
+            <section class="panel" aria-labelledby="hold-head">
+                <h2 id="hold-head">{{ 'Your reservation'|trans }}</h2>
+                <p>{% if hold.position > 0 %}{{ 'You are number {position} in the queue.'|trans({position: hold.position}) }}{% else %}{{ 'A copy is set aside for you at the desk until {day}.'|trans({day: hold.hold.readyUntil|format_date('full', timezone: false)}) }}{% endif %} <a href="{{ path('loans') }}">{{ 'All your reservations'|trans }}</a></p>
+            </section>
+{% elseif not book.isAvailable and is_granted('ROLE_READER') %}
+            <section class="panel" aria-labelledby="reserve-head">
+                <h2 id="reserve-head">{{ 'Reserve'|trans }}</h2>
+                <form method="post" action="{{ path('reserve') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <p>{{ 'Every copy is out. Reserve it, and the next copy that comes back is kept for you.'|trans }}</p>
+                    <p class="actions"><button>{{ 'Reserve'|trans }}</button></p>
+                </form>
+            </section>
+{% endif %}
+{% if is_granted('CHANGE_BOOKS') %}
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">{{ "For the library's staff"|trans }}</h2>
+                <form class="inline-form" method="post" action="{{ path('copies') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <label>{{ 'Copies on the shelf'|trans }} <input name="copies" value="{{ copies }}" required inputmode="numeric"></label>
+                    <button>{{ 'Save'|trans }}</button>
+                </form>
+{% if book.isAvailable %}
+                <p><a href="{{ path('desk', {title: book.title}) }}">{{ 'Lend this book at the desk'|trans }}</a></p>
+{% endif %}
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">{{ 'Remove this book'|trans }}</h2>
+                <form method="post" action="{{ path('remove') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <p>{{ 'This takes it off the shelf for good, with its cover.'|trans }}</p>
+                    <p class="actions"><button class="danger">{{ 'Remove this book'|trans }}</button></p>
+                </form>
+            </section>
+{% endif %}
+        </div>
+    </div>
+{% endblock %}

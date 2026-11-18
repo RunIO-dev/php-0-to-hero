@@ -18,7 +18,7 @@ final readonly class DoctrineTokenRepository implements TokenRepository
 
     public function add(string $hash, string $member, DateTimeImmutable $expires): void
     {
-        $owner = $this->members->find($member) ?? throw new MemberNotFound("There is no member named \"$member\"");
+        $owner = $this->members->find($member) ?? throw new MemberNotFound('There is no member named "{name}"', ['name' => $member]);
         $this->entities->persist(new ApiToken($hash, $owner, $expires));
         $this->entities->flush();
     }

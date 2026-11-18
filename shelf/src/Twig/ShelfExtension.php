@@ -6,6 +6,7 @@ namespace Shelf\Twig;
 
 use DateTimeImmutable;
 use Psr\Clock\ClockInterface;
+use Symfony\Component\Translation\TranslatableMessage;
 use Twig\Attribute\AsTwigFilter;
 
 /**
@@ -27,19 +28,19 @@ final readonly class ShelfExtension
         return crc32($title) % self::TONES;
     }
 
-    /** "due today", "due in 3 days", "2 days overdue": how a due date reads today. */
+    /**
+     * "due today", "due in 3 days", "2 days overdue": how a due date reads today. Chapter 87: a message
+     * to translate, not a text; |trans in the page says it in the page's language, with the plural
+     * forms of that language (Arabic has six).
+     */
     #[AsTwigFilter('due')]
-    public function due(DateTimeImmutable $due): string
+    public function due(DateTimeImmutable $due): TranslatableMessage
     {
         $days = $this->daysLeft($due);
 
-        return match (true) {
-            $days === 0 => 'due today',
-            $days === 1 => 'due tomorrow',
-            $days > 1 => "due in $days days",
-            $days === -1 => '1 day overdue',
-            default => -$days . ' days overdue',
-        };
+        return $days >= 0
+            ? new TranslatableMessage('{days, plural, =0 {due today} =1 {due tomorrow} other {due in # days}}', ['days' => $days])
+            : new TranslatableMessage('{days, plural, one {# day overdue} other {# days overdue}}', ['days' => -$days]);
     }
 
     /** The badge's colour for a due date: overdue is danger, the next two days a warning. */

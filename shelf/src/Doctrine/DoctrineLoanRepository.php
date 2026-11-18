@@ -34,7 +34,7 @@ final readonly class DoctrineLoanRepository implements LoanRepository
                     ->setParameter('book', $loan->book)
                     ->execute();
                 if ($taken === 0) {
-                    throw new NoCopyLeft("All copies of \"{$loan->book->title}\" are on loan");
+                    throw new NoCopyLeft('All copies of "{title}" are on loan', ['title' => $loan->book->title]);
                 }
             }
             $hold?->collect();

@@ -1,0 +1,12 @@
+{# A request the page can't read, with status 400 (chapter 81): ?sort=price or ?page=0 in the address. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Not understood'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <div class="problem">
+        <p class="code" aria-hidden="true">400</p>
+        <h1>{{ 'Not understood'|trans }}</h1>
+        <p>{{ "This address asks for something the page doesn't know."|trans }} <a href="{{ path('books') }}">{{ 'Back to the books'|trans }}</a></p>
+    </div>
+{% endblock %}

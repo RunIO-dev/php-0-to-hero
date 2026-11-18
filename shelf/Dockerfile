@@ -1,5 +1,6 @@
 # Shelf in production (chapter 78), in stages. Build and start it with compose.prod.yaml.
-#   base:    the official PHP-FPM image, with mbstring for text in any language
+#   base:    the official PHP-FPM image, with mbstring for text in any language, and intl for its
+#            plurals and dates (chapter 87)
 #   build:   the packages, without the tools for development, and Shelf's code
 #   test:    build, plus the tools, and every check (chapter 79: CI runs docker build --target test)
 #   release: build, without the tests
@@ -9,8 +10,8 @@ ARG PHP=8.6-rc-fpm
 
 FROM php:${PHP} AS base
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends libonig-dev \
-    && docker-php-ext-install mbstring \
+    && apt-get install -y --no-install-recommends libonig-dev libicu-dev \
+    && docker-php-ext-install mbstring intl \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS build

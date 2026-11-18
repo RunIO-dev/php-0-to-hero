@@ -1,23 +1,23 @@
 {# The page of a reset link (chapter 82): the new password, posted to the same signed address. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}A new password · Shelf{% endblock %}
+{% block title %}{{ 'A new password'|trans }} · Shelf{% endblock %}
 
 {% block main %}
     <div class="page-head">
         <div>
-            <h1>A new password</h1>
-            <p class="lead">For {{ person.name }}.</p>
+            <h1>{{ 'A new password'|trans }}</h1>
+            <p class="lead">{{ 'For {name}.'|trans({name: person.name}) }}</p>
         </div>
     </div>
 {% if error %}
-    <p class="error" role="alert">{{ error }}</p>
+    <p class="error" role="alert">{{ error|trans }}</p>
 {% endif %}
     <form class="card narrow" method="post" action="{{ app.request.requestUri }}">
         <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
         <input type="hidden" name="name" value="{{ person.name }}" autocomplete="username">
-        <label>New password <small>At least 15 characters</small>
+        <label>{{ 'New password'|trans }} <small>{{ 'At least 15 characters'|trans }}</small>
             <input type="password" name="password" required minlength="15" autocomplete="new-password"></label>
-        <p class="actions"><button>Save the password</button></p>
+        <p class="actions"><button>{{ 'Save the password'|trans }}</button></p>
     </form>
 {% endblock %}

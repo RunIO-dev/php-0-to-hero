@@ -12,8 +12,10 @@ use Shelf\HoldNotFound;
 use Shelf\Library;
 use Shelf\Member;
 use Shelf\MemberRepository;
+use Shelf\Refused;
 use Shelf\Web\AccountLinks;
 use Shelf\Web\AccountMail;
+use Shelf\Web\Said;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +26,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Translation\TranslatableMessage;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * The login page (chapter 62) and a member's loans (63). From chapter 76, Symfony's security does the
@@ -44,6 +49,13 @@ final class AccountController extends AbstractController
         private readonly RateLimiterFactoryInterface $accountMailLimiter,
     ) {}
 
+    /** Chapter 87: the address of logging out, in each language. The firewall answers it; this never runs. */
+    #[Route('/logout', name: 'logout', methods: ['POST'])]
+    public function logout(): never
+    {
+        throw new \LogicException('The firewall logs out before this runs');
+    }
+
     #[Route('/login', name: 'login', methods: ['GET', 'POST'])]
     public function logIn(AuthenticationUtils $authentication): Response
     {
@@ -51,8 +63,8 @@ final class AccountController extends AbstractController
         // Chapter 82: a right password for an account that waits for its email gets that message.
         $error = $authentication->getLastAuthenticationError();
         $message = match (true) {
-            $error instanceof CustomUserMessageAccountStatusException => $error->getMessageKey(),
-            $error !== null => 'Wrong name or password.',
+            $error instanceof CustomUserMessageAccountStatusException => t($error->getMessageKey()), // Shelf's own text: ConfirmedMembers
+            $error !== null => t('Wrong name or password.'),
             default => null,
         };
 
@@ -77,7 +89,7 @@ final class AccountController extends AbstractController
         } catch (HoldNotFound) {
             throw $this->createNotFoundException();
         }
-        $this->addFlash('notice', "Your reservation of \"{$hold->book->title}\" is cancelled.");
+        $this->addFlash('notice', t('Your reservation of "{title}" is cancelled.', ['title' => $hold->book->title]));
 
         return $this->redirectToRoute('loans', status: Response::HTTP_SEE_OTHER);
     }
@@ -96,7 +108,7 @@ final class AccountController extends AbstractController
         if ($request->isMethod('POST')) {
             $this->limit($request);
             try {
-                $member = $this->accounts->signUp($fields['name'], $fields['email'], $request->request->getString('password'));
+                $member = $this->accounts->signUp($fields['name'], $fields['email'], $request->request->getString('password'), $request->getLocale());
                 $this->mail->confirm($member, $fields['email']);
             } catch (EmailInUse) {
                 $owner = $this->members->findByEmail($fields['email']);
@@ -104,9 +116,9 @@ final class AccountController extends AbstractController
                     $this->mail->alreadyMember($owner);
                 }
             } catch (InvalidArgumentException $e) {
-                return $this->render('signup.html.twig', $fields + ['error' => $e->getMessage()], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
+                return $this->render('signup.html.twig', $fields + ['error' => Said::of($e)], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
             }
-            $this->addFlash('notice', "Almost done: Shelf has sent a link to {$fields['email']}. Open it within two days to confirm your address.");
+            $this->addFlash('notice', t('Almost done: Shelf has sent a link to {email}. Open it within two days to confirm your address.', ['email' => $fields['email']]));
 
             return $this->redirectToRoute('login', status: Response::HTTP_SEE_OTHER);
         }
@@ -133,7 +145,7 @@ final class AccountController extends AbstractController
             }
             $member->confirmEmail($email);
             $this->members->update($member);
-            $this->addFlash('notice', "Your address $email is confirmed.");
+            $this->addFlash('notice', t('Your address {email} is confirmed.', ['email' => $email]));
 
             return $this->redirectToRoute($this->getUser() !== null ? 'account' : 'login', status: Response::HTTP_SEE_OTHER);
         }
@@ -152,7 +164,7 @@ final class AccountController extends AbstractController
             if ($member !== null) {
                 $this->mail->reset($member);
             }
-            $this->addFlash('notice', "If an account has the address $email, Shelf has sent it a link. It works for an hour.");
+            $this->addFlash('notice', t('If an account has the address {email}, Shelf has sent it a link. It works for an hour.', ['email' => $email]));
 
             return $this->redirectToRoute('forgot', status: Response::HTTP_SEE_OTHER);
         }
@@ -172,12 +184,12 @@ final class AccountController extends AbstractController
             try {
                 $this->accounts->setPassword($member->name, $request->request->getString('password'));
             } catch (InvalidArgumentException $e) {
-                return $this->render('reset.html.twig', ['person' => $member, 'error' => $e->getMessage()], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
+                return $this->render('reset.html.twig', ['person' => $member, 'error' => Said::of($e)], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
             }
             // The link came to the member's inbox, so the address is theirs: confirmed too.
             $member->confirmEmail((string) $member->email);
             $this->members->update($member);
-            $this->addFlash('notice', 'Your new password is saved. Log in with it.');
+            $this->addFlash('notice', t('Your new password is saved. Log in with it.'));
 
             return $this->redirectToRoute('login', status: Response::HTTP_SEE_OTHER);
         }
@@ -205,7 +217,7 @@ final class AccountController extends AbstractController
         }
         $security->login($member, 'form_login', 'main');
 
-        return $this->accountDone('Your password is changed.');
+        return $this->accountDone(t('Your password is changed.'));
     }
 
     /** A new address is the member's only once its link is used; until then, the old one stays. */
@@ -217,14 +229,14 @@ final class AccountController extends AbstractController
         try {
             $this->accounts->checkCurrent($member->name, $request->request->getString('current'));
             if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-                throw new InvalidArgumentException('This is not an email address.');
+                throw new Refused('This is not an email address.');
             }
         } catch (InvalidArgumentException $e) {
             return $this->accountError('email', $e);
         }
         $this->mail->confirm($member, $email);
 
-        return $this->accountDone("Shelf has sent a link to $email. Your address changes when you open it.");
+        return $this->accountDone(t('Shelf has sent a link to {email}. Your address changes when you open it.', ['email' => $email]));
     }
 
     #[Route('/account/delete', name: 'account_delete', methods: ['POST'])]
@@ -237,17 +249,17 @@ final class AccountController extends AbstractController
             return $this->accountError('delete', $e);
         }
         $security->logout(validateCsrfToken: false); // the form's token was checked already, by CheckCsrf
-        $this->addFlash('notice', 'Your account is deleted. Goodbye, and thank you for reading with us.');
+        $this->addFlash('notice', t('Your account is deleted. Goodbye, and thank you for reading with us.'));
 
         return $this->redirectToRoute('books', status: Response::HTTP_SEE_OTHER);
     }
 
     private function accountError(string $form, InvalidArgumentException $e): Response
     {
-        return $this->render('account.html.twig', ['errors' => [$form => $e->getMessage()]], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
+        return $this->render('account.html.twig', ['errors' => [$form => Said::of($e)]], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 
-    private function accountDone(string $message): Response
+    private function accountDone(TranslatableMessage $message): Response
     {
         $this->addFlash('notice', $message);
 

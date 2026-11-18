@@ -30,7 +30,11 @@
         "symfony/mailer": "7.4.*",
         "symfony/messenger": "7.4.*",
         "symfony/doctrine-messenger": "7.4.*",
-        "symfony/scheduler": "7.4.*"
+        "symfony/scheduler": "7.4.*",
+        "symfony/translation": "7.4.*",
+        "twig/intl-extra": "^3.21",
+        "twig/extra-bundle": "^3.21",
+        "ext-intl": "*"
     },
     "autoload": {
         "psr-4": {

@@ -1,7 +1,6 @@
-Hello {{ name }},
+{{ 'Hello {name},'|trans({name: name}) }}
 
-the copy of "{{ title }}" that you reserved is waiting for you at the desk, until {{ day }}. After
-that, it goes to the next in line.
+{{ 'The copy of “{title}” that you reserved is waiting for you at the desk, until {day}. After that, it goes to the next in line.'|trans({title: title, day: day|format_date('full', timezone: false)}) }}
 
 {{ link }}
 

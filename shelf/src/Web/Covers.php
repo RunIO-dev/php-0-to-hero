@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shelf\Web;
 
+use Shelf\Refused;
 use finfo;
 use InvalidArgumentException;
 use RuntimeException;
@@ -30,16 +31,16 @@ final readonly class Covers
     public function check(UploadedFile $upload): void
     {
         if ($upload->getError() === UPLOAD_ERR_INI_SIZE || $upload->getError() === UPLOAD_ERR_FORM_SIZE) {
-            throw new InvalidArgumentException('The cover is larger than 2 MB.');
+            throw new Refused('The cover is larger than 2 MB.');
         }
         if (!$upload->isValid() || !is_file($upload->getPathname())) {
-            throw new InvalidArgumentException('The cover could not be uploaded. Please try again.');
+            throw new Refused('The cover could not be uploaded. Please try again.');
         }
         if (filesize($upload->getPathname()) > self::MAX_BYTES) {
-            throw new InvalidArgumentException('The cover is larger than 2 MB.');
+            throw new Refused('The cover is larger than 2 MB.');
         }
         if ($this->extension($upload->getPathname()) === null || getimagesize($upload->getPathname()) === false) {
-            throw new InvalidArgumentException('A cover must be a PNG or JPEG image.');
+            throw new Refused('A cover must be a PNG or JPEG image.');
         }
     }
 

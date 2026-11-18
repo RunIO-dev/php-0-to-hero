@@ -32,7 +32,7 @@ final class DeskTest extends ShelfWebTestCase
 
         $this->client->submitForm('Lend', ['title' => 'kindred', 'member' => 'amira']);
         $this->client->followRedirect();
-        self::assertSelectorTextSame('.flash', 'Lent: Kindred to Amira, due back on Monday, 16 March 2026.');
+        self::assertSelectorTextSame('.flash', 'Lent: Kindred to Amira, due back on Monday, March 16, 2026.');
         self::assertSelectorTextSame('tbody td:nth-child(2)', 'Amira');
         self::assertSame(1, self::service(BookRepository::class)->find('Kindred')?->copies);
 
@@ -73,7 +73,7 @@ final class DeskTest extends ShelfWebTestCase
         $this->client->submitForm('Extend');
         $this->client->followRedirect();
 
-        self::assertSelectorTextSame('.flash', '"Kindred" is now due back on Monday, 30 March 2026.');
+        self::assertSelectorTextSame('.flash', '"Kindred" is now due back on Monday, March 30, 2026.');
         self::assertSelectorTextContains('tbody td:nth-child(3)', 'extended 1×');
     }
 
@@ -87,7 +87,7 @@ final class DeskTest extends ShelfWebTestCase
 
         $this->client->submitForm('Extend');
         $this->client->followRedirect();
-        self::assertSelectorTextSame('.flash', '"Kindred" is now due back on Monday, 30 March 2026.');
+        self::assertSelectorTextSame('.flash', '"Kindred" is now due back on Monday, March 30, 2026.');
         self::assertSame(1, $library->loan($mine->id())->renewals);
 
         $token = $this->client->getCrawler()->filter('form input[name="_token"]')->attr('value');
@@ -135,7 +135,7 @@ final class DeskTest extends ShelfWebTestCase
         $this->client->submitForm('Make staff Amira');
         $this->client->followRedirect();
 
-        self::assertSelectorTextSame('.flash', 'Amira is staff now.');
+        self::assertSelectorTextSame('.flash', 'Amira is a member of staff now.');
         self::assertSame('staff', self::service(MemberRepository::class)->find('Amira')?->role->value);
     }
 

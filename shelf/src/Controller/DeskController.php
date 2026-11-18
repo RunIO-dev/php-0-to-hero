@@ -13,6 +13,7 @@ use Shelf\Member;
 use Shelf\MemberNotFound;
 use Shelf\Role;
 use Shelf\ShelfException;
+use Shelf\Web\Said;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,6 +21,9 @@ use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatableInterface;
+
+use function Symfony\Component\Translation\t;
 
 /**
  * The lending desk (chapter 83): what the staff did with bin/console until now, in the browser.
@@ -50,9 +54,9 @@ final class DeskController extends AbstractController
         try {
             $loan = $this->library->lend($title, $name, $this->clock->now());
         } catch (ShelfException|InvalidArgumentException $e) { // no such book or member, no copy left, a rule
-            return $this->deskPage($e->getMessage(), ['title' => $title, 'member' => $name]);
+            return $this->deskPage(Said::of($e), ['title' => $title, 'member' => $name]);
         }
-        $this->addFlash('notice', $loan->line() . '.');
+        $this->addFlash('notice', t('Lent: {title} to {member}, due back on {due, date, full}.', ['title' => $loan->book->title, 'member' => $loan->member->name, 'due' => $loan->due]));
 
         return $this->redirectToRoute('desk', status: Response::HTTP_SEE_OTHER);
     }
@@ -66,10 +70,11 @@ final class DeskController extends AbstractController
         } catch (LoanNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $this->deskPage($e->getMessage());
+            return $this->deskPage(Said::of($e));
         }
-        $this->addFlash('notice', "\"{$loan->book->title}\" is back from {$loan->member->name}."
-            . ($hold === null ? '' : " Please set it aside for {$hold->member->name}, who reserved it."));
+        $this->addFlash('notice', $hold === null
+            ? t('"{title}" is back from {member}.', ['title' => $loan->book->title, 'member' => $loan->member->name])
+            : t('"{title}" is back from {member}. Please set it aside for {next}, who reserved it.', ['title' => $loan->book->title, 'member' => $loan->member->name, 'next' => $hold->member->name]));
 
         return $this->redirectToRoute('desk', status: Response::HTTP_SEE_OTHER);
     }
@@ -92,15 +97,15 @@ final class DeskController extends AbstractController
         } catch (LoanNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $staff ? $this->deskPage($e->getMessage())
+            return $staff ? $this->deskPage(Said::of($e))
                 : $this->render('loans.html.twig', [
                     'loans' => $loans = $this->library->loansOf($member->name),
                     'reserved' => $this->library->reserved($loans),
                     'holds' => $this->library->holdsOf($member),
-                    'error' => $e->getMessage(),
+                    'error' => Said::of($e),
                 ], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
         }
-        $this->addFlash('notice', "\"{$loan->book->title}\" is now due back on {$loan->due->format('l, j F Y')}.");
+        $this->addFlash('notice', t('"{title}" is now due back on {due, date, full}.', ['title' => $loan->book->title, 'due' => $loan->due]));
 
         return $this->redirectToRoute($staff ? 'desk' : 'loans', status: Response::HTTP_SEE_OTHER);
     }
@@ -122,9 +127,11 @@ final class DeskController extends AbstractController
         } catch (MemberNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $this->membersPage($e->getMessage());
+            return $this->membersPage(Said::of($e));
         }
-        $this->addFlash('notice', $blocked ? "$member->name is blocked: they can't borrow until you unblock them." : "$member->name may borrow again.");
+        $this->addFlash('notice', $blocked
+            ? t('{name} is blocked: they can\'t borrow until you unblock them.', ['name' => $member->name])
+            : t('{name} may borrow again.', ['name' => $member->name]));
 
         return $this->redirectToRoute('members', status: Response::HTTP_SEE_OTHER);
     }
@@ -139,15 +146,15 @@ final class DeskController extends AbstractController
         } catch (MemberNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
-            return $this->membersPage($e->getMessage());
+            return $this->membersPage(Said::of($e));
         }
-        $this->addFlash('notice', "$member->name is {$role->value} now.");
+        $this->addFlash('notice', t('{name} is {role, select, staff {a member of staff} other {a reader}} now.', ['name' => $member->name, 'role' => $role->value]));
 
         return $this->redirectToRoute('members', status: Response::HTTP_SEE_OTHER);
     }
 
     /** @param array{title?: string, member?: string} $typed what the lend form had, after a mistake */
-    private function deskPage(?string $error = null, array $typed = []): Response
+    private function deskPage(TranslatableInterface|string|null $error = null, array $typed = []): Response
     {
         $loans = $this->library->currentLoans();
 
@@ -163,7 +170,7 @@ final class DeskController extends AbstractController
         ], new Response(status: $error === null ? Response::HTTP_OK : Response::HTTP_UNPROCESSABLE_ENTITY));
     }
 
-    private function membersPage(?string $error = null): Response
+    private function membersPage(TranslatableInterface|string|null $error = null): Response
     {
         $members = $this->library->members();
         $counts = [];

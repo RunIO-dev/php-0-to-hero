@@ -58,7 +58,7 @@ final class RemindersTest extends ShelfWebTestCase
         $email = self::getMailerMessage();
         self::assertInstanceOf(Email::class, $email);
         self::assertEmailAddressContains($email, 'To', 'amira@example.org');
-        self::assertEmailHeaderSame($email, 'Subject', '"Kindred" is due back on Monday, 16 March');
+        self::assertEmailHeaderSame($email, 'Subject', '“Kindred” is due back on Monday, March 16');
         self::assertEmailTextBodyContains($email, 'http://localhost:8000/loans');
     }
 
@@ -72,7 +72,7 @@ final class RemindersTest extends ShelfWebTestCase
         }
 
         self::assertEmailCount(2);
-        self::assertEmailHeaderSame(self::getMailerMessage(1) ?? self::fail('No second email'), 'Subject', '"Kindred" was due back on Monday, 16 March');
+        self::assertEmailHeaderSame(self::getMailerMessage(1) ?? self::fail('No second email'), 'Subject', '“Kindred” was due back on Monday, March 16');
     }
 
     public function testAnExpiredCopyGoesOnAndItsNextMemberHearsOfIt(): void
@@ -86,7 +86,7 @@ final class RemindersTest extends ShelfWebTestCase
         $this->bus->dispatch(new SendReminders());
 
         self::assertEmailCount(1);
-        self::assertEmailHeaderSame(self::getMailerMessage() ?? self::fail('No email'), 'Subject', '"Kindred" is waiting for you at the desk, until Wednesday, 11 March');
+        self::assertEmailHeaderSame(self::getMailerMessage() ?? self::fail('No email'), 'Subject', '“Kindred” is waiting for you at the desk, until Wednesday, March 11');
 
         self::mockTime('2026-03-12 03:00');
         $this->bus->dispatch(new ExpireHolds());

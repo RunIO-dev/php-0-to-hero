@@ -33,7 +33,7 @@ final readonly class AccountLinks
 
     public function confirm(Member $member, string $email): string
     {
-        $url = $this->urls->generate('confirm', ['member' => $member->id(), 'email' => Member::normalEmail($email)], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urls->generate('confirm', ['member' => $member->id(), 'email' => Member::normalEmail($email), '_locale' => $member->language], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return $this->signer->sign($url, new DateInterval(self::CONFIRM_FOR));
     }
@@ -41,7 +41,7 @@ final readonly class AccountLinks
     public function reset(Member $member): string
     {
         $check = self::fingerprint($this->members->passwordHash($member->name));
-        $url = $this->urls->generate('reset', ['member' => $member->id(), 'check' => $check], UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->urls->generate('reset', ['member' => $member->id(), 'check' => $check, '_locale' => $member->language], UrlGeneratorInterface::ABSOLUTE_URL); // chapter 87: in the member's language
 
         return $this->signer->sign($url, new DateInterval(self::RESET_FOR));
     }

@@ -83,13 +83,13 @@ final class Loan
     {
         $title = $this->book->title;
         if ($this->isReturned()) {
-            throw new InvalidArgumentException("\"$title\" is back already.");
+            throw new Refused('"{title}" is back already.', ['title' => $title]);
         }
         if ($this->isOverdue($today)) {
-            throw new InvalidArgumentException("\"$title\" is overdue: please bring it back to the library.");
+            throw new Refused('"{title}" is overdue: please bring it back to the library.', ['title' => $title]);
         }
         if ($this->renewals >= self::MAX_RENEWALS) {
-            throw new InvalidArgumentException("\"$title\" was extended " . self::MAX_RENEWALS . ' times already, which is the most.');
+            throw new Refused('"{title}" was extended {count} times already, which is the most.', ['title' => $title, 'count' => self::MAX_RENEWALS]);
         }
         $this->due = $this->due->modify('+' . $this->member->role->loanDays() . ' days');
         $this->renewals++;
@@ -130,7 +130,7 @@ final class Loan
     public function giveBack(DateTimeImmutable $today): void
     {
         if ($this->isReturned()) {
-            throw new InvalidArgumentException("\"{$this->book->title}\" is back already.");
+            throw new Refused('"{title}" is back already.', ['title' => $this->book->title]);
         }
         $this->returnedOn = new DateTimeImmutable($today->format('Y-m-d'));
     }

@@ -1,0 +1,7 @@
+{# The message shown once (chapter 50), after a change. Symfony keeps every message in the session
+   until a page shows it; Shelf shows the newest, as before. Chapter 87: a message is a text to
+   translate, or a TranslatableMessage with its values; |trans takes both. #}
+{% set messages = app.flashes('notice') %}
+{% if messages is not empty %}
+    <p class="flash" role="status">{{ (messages|last)|trans }}</p>
+{% endif %}

@@ -438,6 +438,26 @@ GET /dashboard
 GET /history?title=kitchen
 
 ###
+# Chapter 87: the same pages in German and in Arabic. The language is the start of the address;
+# English has none.
+GET /de/?q=butler
+
+###
+# Arabic is read from the right: the page says dir="rtl", and the layout turns around.
+GET /ar/book?title=Kindred
+
+###
+# A refusal is said in the language of the page.
+POST /ar/copies
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&copies=-1&_token={{token}}
+
+###
+# An address that doesn't exist, in German.
+GET /de/nothing
+
+###
 GET /book?title=Sula
 
 ###

@@ -1,0 +1,11 @@
+# Shelf's validation messages in German; Symfony's own come with the validator.
+"A book needs a title.": "Ein Buch braucht einen Titel."
+"A book needs a year.": "Ein Buch braucht ein Jahr."
+"A book needs an author.": "Ein Buch braucht einen Autor."
+"A cover must be a PNG or JPEG image.": "Ein Umschlag muss ein PNG- oder JPEG-Bild sein."
+"A name has at most {{ limit }} characters.": "Ein Name hat höchstens {{ limit }} Zeichen."
+"A title has at most {{ limit }} characters.": "Ein Titel hat höchstens {{ limit }} Zeichen."
+"The cover is larger than 2 MB.": "Der Umschlag ist größer als 2 MB."
+"The year is a number, such as 1979.": "Das Jahr ist eine Zahl, zum Beispiel 1979."
+"The year is from {{ min }} to {{ max }}.": "Das Jahr liegt zwischen {{ min }} und {{ max }}."
+"{{ value }} is not a valid ISBN-13.": "{{ value }} ist keine gültige ISBN-13."

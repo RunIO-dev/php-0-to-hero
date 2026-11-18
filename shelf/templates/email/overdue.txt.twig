@@ -1,7 +1,6 @@
-Hello {{ name }},
+{{ 'Hello {name},'|trans({name: name}) }}
 
-"{{ title }}" was due back on {{ day }}. Please bring it back to the library: someone may be waiting
-for it.
+{{ '“{title}” was due back on {day}. Please bring it back to the library: someone may be waiting for it.'|trans({title: title, day: day|format_date('full', timezone: false)}) }}
 
 {{ link }}
 

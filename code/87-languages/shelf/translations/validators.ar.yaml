@@ -1,0 +1,11 @@
+# Shelf's validation messages in Arabic; Symfony's own come with the validator.
+"A book needs a title.": "يحتاج الكتاب إلى عنوان."
+"A book needs a year.": "يحتاج الكتاب إلى سنة."
+"A book needs an author.": "يحتاج الكتاب إلى مؤلف."
+"A cover must be a PNG or JPEG image.": "يجب أن يكون الغلاف صورة PNG أو JPEG."
+"A name has at most {{ limit }} characters.": "لا يتجاوز الاسم {{ limit }} حرفًا."
+"A title has at most {{ limit }} characters.": "لا يتجاوز العنوان {{ limit }} حرفًا."
+"The cover is larger than 2 MB.": "الغلاف أكبر من 2 ميغابايت."
+"The year is a number, such as 1979.": "السنة رقم، مثل 1979."
+"The year is from {{ min }} to {{ max }}.": "السنة من {{ min }} إلى {{ max }}."
+"{{ value }} is not a valid ISBN-13.": "{{ value }} ليس رقم ISBN-13 صالحًا."

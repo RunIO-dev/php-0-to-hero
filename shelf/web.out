@@ -12,45 +12,101 @@ $ php bin/console shelf:books
 - Things Fall Apart (Chinua Achebe, 1958): available
 4 books
 $ php bin/console debug:router
- ------------------ ---------- -------------------------- 
-  Name               Method     Path                      
- ------------------ ---------- -------------------------- 
-  _preview_error     ANY        /_error/{code}.{_format}  
-  _logout_main       ANY        /logout                   
-  login              GET|POST   /login                    
-  loans              GET        /loans                    
-  cancel_hold        POST       /reservations/cancel      
-  signup             GET|POST   /signup                   
-  confirm            GET|POST   /confirm                  
-  forgot             GET|POST   /forgot                   
-  reset              GET|POST   /reset                    
-  account            GET        /account                  
-  account_password   POST       /account/password         
-  account_email      POST       /account/email            
-  account_delete     POST       /account/delete           
-  api_books          GET        /api/books                
-  api_book           GET        /api/book                 
-  api_add            POST       /api/books                
-  api_login          POST       /api/tokens               
-  api_logout         DELETE     /api/tokens               
-  api_loans          GET        /api/loans                
-  books              GET        /                         
-  book               GET        /book                     
-  add                GET|POST   /add                      
-  copies             POST       /copies                   
-  remove             POST       /remove                   
-  reserve            POST       /reserve                  
-  cover              GET        /cover                    
-  dashboard          GET        /dashboard                
-  history            GET        /history                  
-  desk               GET        /desk                     
-  desk_lend          POST       /desk/lend                
-  desk_return        POST       /desk/return              
-  renew              POST       /renew                    
-  members            GET        /members                  
-  members_block      POST       /members/block            
-  members_role       POST       /members/role             
- ------------------ ---------- -------------------------- 
+ --------------------- ---------- -------------------------- 
+  Name                  Method     Path                      
+ --------------------- ---------- -------------------------- 
+  _preview_error        ANY        /_error/{code}.{_format}  
+  logout.en             POST       /logout                   
+  logout.de             POST       /de/logout                
+  logout.ar             POST       /ar/logout                
+  login.en              GET|POST   /login                    
+  login.de              GET|POST   /de/login                 
+  login.ar              GET|POST   /ar/login                 
+  loans.en              GET        /loans                    
+  loans.de              GET        /de/loans                 
+  loans.ar              GET        /ar/loans                 
+  cancel_hold.en        POST       /reservations/cancel      
+  cancel_hold.de        POST       /de/reservations/cancel   
+  cancel_hold.ar        POST       /ar/reservations/cancel   
+  signup.en             GET|POST   /signup                   
+  signup.de             GET|POST   /de/signup                
+  signup.ar             GET|POST   /ar/signup                
+  confirm.en            GET|POST   /confirm                  
+  confirm.de            GET|POST   /de/confirm               
+  confirm.ar            GET|POST   /ar/confirm               
+  forgot.en             GET|POST   /forgot                   
+  forgot.de             GET|POST   /de/forgot                
+  forgot.ar             GET|POST   /ar/forgot                
+  reset.en              GET|POST   /reset                    
+  reset.de              GET|POST   /de/reset                 
+  reset.ar              GET|POST   /ar/reset                 
+  account.en            GET        /account                  
+  account.de            GET        /de/account               
+  account.ar            GET        /ar/account               
+  account_password.en   POST       /account/password         
+  account_password.de   POST       /de/account/password      
+  account_password.ar   POST       /ar/account/password      
+  account_email.en      POST       /account/email            
+  account_email.de      POST       /de/account/email         
+  account_email.ar      POST       /ar/account/email         
+  account_delete.en     POST       /account/delete           
+  account_delete.de     POST       /de/account/delete        
+  account_delete.ar     POST       /ar/account/delete        
+  books.en              GET        /                         
+  books.de              GET        /de/                      
+  books.ar              GET        /ar/                      
+  book.en               GET        /book                     
+  book.de               GET        /de/book                  
+  book.ar               GET        /ar/book                  
+  add.en                GET|POST   /add                      
+  add.de                GET|POST   /de/add                   
+  add.ar                GET|POST   /ar/add                   
+  copies.en             POST       /copies                   
+  copies.de             POST       /de/copies                
+  copies.ar             POST       /ar/copies                
+  remove.en             POST       /remove                   
+  remove.de             POST       /de/remove                
+  remove.ar             POST       /ar/remove                
+  reserve.en            POST       /reserve                  
+  reserve.de            POST       /de/reserve               
+  reserve.ar            POST       /ar/reserve               
+  cover.en              GET        /cover                    
+  cover.de              GET        /de/cover                 
+  cover.ar              GET        /ar/cover                 
+  dashboard.en          GET        /dashboard                
+  dashboard.de          GET        /de/dashboard             
+  dashboard.ar          GET        /ar/dashboard             
+  history.en            GET        /history                  
+  history.de            GET        /de/history               
+  history.ar            GET        /ar/history               
+  desk.en               GET        /desk                     
+  desk.de               GET        /de/desk                  
+  desk.ar               GET        /ar/desk                  
+  desk_lend.en          POST       /desk/lend                
+  desk_lend.de          POST       /de/desk/lend             
+  desk_lend.ar          POST       /ar/desk/lend             
+  desk_return.en        POST       /desk/return              
+  desk_return.de        POST       /de/desk/return           
+  desk_return.ar        POST       /ar/desk/return           
+  renew.en              POST       /renew                    
+  renew.de              POST       /de/renew                 
+  renew.ar              POST       /ar/renew                 
+  members.en            GET        /members                  
+  members.de            GET        /de/members               
+  members.ar            GET        /ar/members               
+  members_block.en      POST       /members/block            
+  members_block.de      POST       /de/members/block         
+  members_block.ar      POST       /ar/members/block         
+  members_role.en       POST       /members/role             
+  members_role.de       POST       /de/members/role          
+  members_role.ar       POST       /ar/members/role          
+  api_books             GET        /api/books                
+  api_book              GET        /api/book                 
+  api_add               POST       /api/books                
+  api_login             POST       /api/tokens               
+  api_logout            DELETE     /api/tokens               
+  api_loans             GET        /api/loans                
+ --------------------- ---------- -------------------------- 
 
 $ php bin/console shelf:catalogue catalogue.json
 New books added: 53. Already on the shelf: 0.
@@ -64,13 +120,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -198,6 +256,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -213,13 +276,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/?q=hesse&amp;sort=newest">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?q=hesse&amp;sort=newest">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -278,6 +343,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/?q=hesse&amp;sort=newest" lang="en" aria-current="true">English</a>
+                <a href="/de/?q=hesse&amp;sort=newest" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/?q=hesse&amp;sort=newest" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -293,13 +363,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/?available=1&amp;page=2">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?available=1&amp;page=2">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -429,6 +501,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/?available=1&amp;page=2" lang="en" aria-current="true">English</a>
+                <a href="/de/?available=1&amp;page=2" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/?available=1&amp;page=2" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -444,13 +521,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/?q=nothing%20like%20this">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?q=nothing%20like%20this">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -498,6 +577,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/?q=nothing%20like%20this" lang="en" aria-current="true">English</a>
+                <a href="/de/?q=nothing%20like%20this" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/?q=nothing%20like%20this" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -513,13 +597,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not understood · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/?sort=price">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?sort=price">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -540,12 +626,17 @@ New books added: 53. Already on the shelf: 0.
     <div class="problem">
         <p class="code" aria-hidden="true">400</p>
         <h1>Not understood</h1>
-        <p>This address asks for something the page doesn't know. <a href="/">Back to the books</a></p>
+        <p>This address asks for something the page doesn&#039;t know. <a href="/">Back to the books</a></p>
     </div>
     </main>
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/?sort=price" lang="en" aria-current="true">English</a>
+                <a href="/de/?sort=price" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/?sort=price" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -561,13 +652,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/?page=9">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?page=9">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -594,6 +687,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/?page=9" lang="en" aria-current="true">English</a>
+                <a href="/de/?page=9" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/?page=9" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -610,13 +708,15 @@ New books added: 53. Already on the shelf: 0.
 < Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/signup">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/signup">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -655,6 +755,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/signup" lang="en" aria-current="true">English</a>
+                <a href="/de/signup" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/signup" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -673,13 +778,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -719,6 +824,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -759,13 +869,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -801,6 +913,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -841,13 +958,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -883,6 +1002,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -923,13 +1047,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Forgot your password · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/forgot">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/forgot">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -963,6 +1089,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/forgot" lang="en" aria-current="true">English</a>
+                <a href="/de/forgot" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/forgot" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -978,13 +1109,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>This link has expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/reset?member=5&amp;check=0123456789abcdef&amp;_expiration=1795166256&amp;_hash=forged">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/reset?member=5&amp;check=0123456789abcdef&amp;_expiration=1795166256&amp;_hash=forged">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1011,6 +1144,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/reset?member=5&amp;check=0123456789abcdef&amp;_expiration=1795166256&amp;_hash=forged" lang="en" aria-current="true">English</a>
+                <a href="/de/reset?member=5&amp;check=0123456789abcdef&amp;_expiration=1795166256&amp;_hash=forged" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/reset?member=5&amp;check=0123456789abcdef&amp;_expiration=1795166256&amp;_hash=forged" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1048,13 +1186,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1089,6 +1229,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1129,13 +1274,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1171,6 +1318,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1212,13 +1364,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1350,6 +1504,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1365,13 +1524,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not allowed · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/add">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/add">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1395,12 +1556,17 @@ New books added: 53. Already on the shelf: 0.
     <div class="problem">
         <p class="code" aria-hidden="true">403</p>
         <h1>Not allowed</h1>
-        <p>Only the library's staff may change books. <a href="/">Back to the books</a></p>
+        <p>Only the library&#039;s staff may change books. <a href="/">Back to the books</a></p>
     </div>
     </main>
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/add" lang="en" aria-current="true">English</a>
+                <a href="/de/add" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/add" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1416,13 +1582,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My loans · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/loans">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/loans">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1457,6 +1625,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/loans" lang="en" aria-current="true">English</a>
+                <a href="/de/loans" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/loans" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1498,13 +1671,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1540,6 +1715,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1581,13 +1761,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/add">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/add">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1627,6 +1809,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/add" lang="en" aria-current="true">English</a>
+                <a href="/de/add" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/add" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1645,13 +1832,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1694,6 +1881,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1712,13 +1904,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1759,6 +1951,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1777,13 +1974,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1824,6 +2021,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1843,13 +2045,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1881,6 +2083,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -1920,13 +2127,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1967,6 +2174,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2028,13 +2240,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2171,6 +2385,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2186,13 +2405,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2328,6 +2549,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2343,13 +2569,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/desk">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/desk">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2458,6 +2686,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/desk" lang="en" aria-current="true">English</a>
+                <a href="/de/desk" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/desk" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2498,13 +2731,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/desk">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/desk">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2535,7 +2770,7 @@ New books added: 53. Already on the shelf: 0.
             <p class="lead">Lend books, take them back, and extend loans.</p>
         </div>
     </div>
-    <p class="flash" role="status">Lent: Kitchen to Amira, due back on Wednesday, 2 December 2026.</p>
+    <p class="flash" role="status">Lent: Kitchen to Amira, due back on Wednesday, December 2, 2026.</p>
     <section class="panel" aria-labelledby="lend-head">
         <h2 id="lend-head">Lend a book</h2>
         <form class="inline-form" method="post" action="/desk/lend">
@@ -2614,7 +2849,7 @@ New books added: 53. Already on the shelf: 0.
                 <tr>
                     <td><a href="/book?title=Kitchen">Kitchen</a></td>
                     <td>Amira</td>
-                    <td>Wed 2 Dec 2026</td>
+                    <td>Dec 2, 2026</td>
                     <td><span class="badge ok">due in 14 days</span>
 </td>
                     <td><div class="row-actions">
@@ -2638,6 +2873,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/desk" lang="en" aria-current="true">English</a>
+                <a href="/de/desk" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/desk" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2656,13 +2896,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2772,7 +3012,7 @@ New books added: 53. Already on the shelf: 0.
                 <tr>
                     <td><a href="/book?title=Kitchen">Kitchen</a></td>
                     <td>Amira</td>
-                    <td>Wed 2 Dec 2026</td>
+                    <td>Dec 2, 2026</td>
                     <td><span class="badge ok">due in 14 days</span>
 </td>
                     <td><div class="row-actions">
@@ -2796,6 +3036,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -2861,13 +3106,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/desk">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/desk">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2977,6 +3224,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/desk" lang="en" aria-current="true">English</a>
+                <a href="/de/desk" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/desk" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3017,13 +3269,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Members · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/members">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/members">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3172,6 +3426,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/members" lang="en" aria-current="true">English</a>
+                <a href="/de/members" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/members" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3187,13 +3446,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=Kindred">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/book?title=Kindred">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3243,7 +3504,7 @@ New books added: 53. Already on the shelf: 0.
                 </form>
             </section>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Kindred">
@@ -3266,6 +3527,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/book?title=Kindred" lang="en" aria-current="true">English</a>
+                <a href="/de/book?title=Kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=Kindred" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3306,13 +3572,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=Kindred">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/book?title=Kindred">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3358,7 +3626,7 @@ New books added: 53. Already on the shelf: 0.
                 <p>You are number 1 in the queue. <a href="/loans">All your reservations</a></p>
             </section>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Kindred">
@@ -3381,6 +3649,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/book?title=Kindred" lang="en" aria-current="true">English</a>
+                <a href="/de/book?title=Kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=Kindred" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3396,13 +3669,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My loans · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/loans">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/loans">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3464,6 +3739,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/loans" lang="en" aria-current="true">English</a>
+                <a href="/de/loans" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/loans" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3487,13 +3767,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/cover?title=Kindred">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/cover?title=Kindred">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3527,6 +3809,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/cover?title=Kindred" lang="en" aria-current="true">English</a>
+                <a href="/de/cover?title=Kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/cover?title=Kindred" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -3997,13 +4284,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=kindred">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/book?title=kindred">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4048,7 +4337,7 @@ New books added: 53. Already on the shelf: 0.
                 <p>You are number 1 in the queue. <a href="/loans">All your reservations</a></p>
             </section>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Kindred">
@@ -4071,6 +4360,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/book?title=kindred" lang="en" aria-current="true">English</a>
+                <a href="/de/book?title=kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=kindred" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4089,13 +4383,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4141,7 +4435,7 @@ New books added: 53. Already on the shelf: 0.
                 <p>You are number 1 in the queue. <a href="/loans">All your reservations</a></p>
             </section>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Kindred">
@@ -4164,6 +4458,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4204,13 +4503,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=Kindred">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/book?title=Kindred">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4253,10 +4554,10 @@ New books added: 53. Already on the shelf: 0.
             </dl>
             <section class="panel" aria-labelledby="hold-head">
                 <h2 id="hold-head">Your reservation</h2>
-                <p>A copy is set aside for you at the desk until Wednesday, 25 November. <a href="/loans">All your reservations</a></p>
+                <p>A copy is set aside for you at the desk until Wednesday, November 25, 2026. <a href="/loans">All your reservations</a></p>
             </section>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Kindred">
@@ -4280,6 +4581,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/book?title=Kindred" lang="en" aria-current="true">English</a>
+                <a href="/de/book?title=Kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=Kindred" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4295,13 +4601,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lending desk · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/desk">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/desk">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4412,7 +4720,7 @@ New books added: 53. Already on the shelf: 0.
                 <tr>
                     <td><a href="/book?title=Kindred">Kindred</a></td>
                     <td>Jonas</td>
-                    <td>Wed 25 Nov 2026</td>
+                    <td>Nov 25, 2026</td>
                     <td><div class="row-actions">
                         <form method="post" action="/desk/lend">
                             <input type="hidden" name="_token" value="…">
@@ -4434,6 +4742,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/desk" lang="en" aria-current="true">English</a>
+                <a href="/de/desk" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/desk" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4449,13 +4762,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Dashboard · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/dashboard">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/dashboard">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4483,7 +4798,7 @@ New books added: 53. Already on the shelf: 0.
     <div class="page-head">
         <div>
             <h1>Dashboard</h1>
-            <p class="lead">Wednesday, 18 November 2026: what needs doing, and how the library is used.</p>
+            <p class="lead">Wednesday, November 18, 2026: what needs doing, and how the library is used.</p>
         </div>
         <a class="button" href="/history">Loan history</a>
     </div>
@@ -4513,7 +4828,7 @@ New books added: 53. Already on the shelf: 0.
                 <tr>
                     <td>Kindred</td>
                     <td>Jonas</td>
-                    <td>Wed 25 Nov 2026</td>
+                    <td>Nov 25, 2026</td>
                 </tr>
             </tbody>
         </table>
@@ -4610,6 +4925,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/dashboard" lang="en" aria-current="true">English</a>
+                <a href="/de/dashboard" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/dashboard" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4625,13 +4945,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Loan history · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/history?title=kitchen">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/history?title=kitchen">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4678,9 +5000,9 @@ New books added: 53. Already on the shelf: 0.
                 <tr>
                     <td><a href="/history?title=Kitchen">Kitchen</a></td>
                     <td><a href="/history?member=Amira">Amira</a></td>
-                    <td>18 Nov 2026</td>
-                    <td>16 Dec 2026</td>
-                    <td>18 Nov 2026</td>
+                    <td>Nov 18, 2026</td>
+                    <td>Dec 16, 2026</td>
+                    <td>Nov 18, 2026</td>
                 </tr>
             </tbody>
         </table>
@@ -4689,7 +5011,356 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/history?title=kitchen" lang="en" aria-current="true">English</a>
+                <a href="/de/history?title=kitchen" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/history?title=kitchen" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /de/?q=butler
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, die Bibliothek: Bücher finden und sehen, was Sie ausgeliehen haben.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="en" href="http://localhost:8000/?q=butler">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/?q=butler">
+</head>
+<body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/de/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Hauptmenü">
+                <a href="/de/" aria-current="page">Bücher</a>
+                <a href="/de/loans">Meine Ausleihen</a>
+                <a href="/de/add">Buch hinzufügen</a>
+                <a href="/de/desk">Ausleihtheke</a>
+                <a href="/de/members">Mitglieder</a>
+                <a href="/de/dashboard">Übersicht</a>
+                <form class="account" method="post" action="/de/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/de/account">Jonas</a> <button class="link">Abmelden</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Bücher</h1>
+            <p class="lead">Alles im Regal, und was ausgeliehen ist.</p>
+        </div>
+        <a class="button" href="/de/add">Buch hinzufügen</a>
+    </div>
+    <form class="search" method="get" action="/de/" role="search">
+        <label class="grow">Suchen
+            <input type="search" name="q" value="butler" maxlength="100" placeholder="Titel, Autor oder ISBN">
+        </label>
+        <label>Sortieren nach
+            <select name="sort">
+                <option value="title" selected>Titel, A bis Z</option>
+                <option value="author">Autor, A bis Z</option>
+                <option value="newest">Neueste zuerst</option>
+                <option value="oldest">Älteste zuerst</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Nur im Regal</label>
+        <button type="submit">Suchen</button>
+    </form>
+    <p class="count" role="status">
+        2 Bücher für „butler“ · <a href="/de/">zurücksetzen</a>    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+    <h2><a href="/de/book?title=Kindred">Kindred</a></h2>
+    <p class="by">Octavia E. Butler · 1979</p>
+<span class="badge ok">Verfügbar</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">P</span>
+    <h2><a href="/de/book?title=Parable%20of%20the%20Sower">Parable of the Sower</a></h2>
+    <p class="by">Octavia E. Butler · 1993</p>
+<span class="badge ok">Verfügbar</span>
+</li>
+    </ul>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, die Bibliothek von <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Sprache">
+                <a href="/?q=butler" lang="en" hreflang="en">English</a>
+                <a href="/de/?q=butler" lang="de" aria-current="true">Deutsch</a>
+                <a href="/ar/?q=butler" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code unter der MIT-Lizenz.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /ar/book?title=Kindred
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <meta name="description" content="Shelf، المكتبة: ابحث عن كتاب، واطّلع على ما استعرته.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="en" href="http://localhost:8000/book?title=Kindred">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=Kindred">
+</head>
+<body>
+    <a class="skip" href="#main">انتقل إلى المحتوى</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/ar/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="القائمة الرئيسية">
+                <a href="/ar/">الكتب</a>
+                <a href="/ar/loans">إعاراتي</a>
+                <a href="/ar/add">إضافة كتاب</a>
+                <a href="/ar/desk">مكتب الإعارة</a>
+                <a href="/ar/members">الأعضاء</a>
+                <a href="/ar/dashboard">لوحة التحكم</a>
+                <form class="account" method="post" action="/ar/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/ar/account">Jonas</a> <button class="link">تسجيل الخروج</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/ar/">→ كل الكتب</a></p>
+    <div class="book-page">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+        <div>
+            <h1>Kindred</h1>
+            <dl class="facts">
+                <dt>المؤلف</dt>
+                <dd>Octavia E. Butler</dd>
+                <dt>السنة</dt>
+                <dd>1979</dd>
+                <dt>على الرف</dt>
+                <dd>
+<span class="badge ok">نسختان</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="hold-head">
+                <h2 id="hold-head">حجزك</h2>
+                <p>نسخة محفوظة لك في مكتب الإعارة حتى الأربعاء، 25 نوفمبر 2026. <a href="/ar/loans">كل حجوزاتك</a></p>
+            </section>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">لموظفي المكتبة</h2>
+                <form class="inline-form" method="post" action="/ar/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <label>النسخ على الرف <input name="copies" value="2" required inputmode="numeric"></label>
+                    <button>حفظ</button>
+                </form>
+                <p><a href="/ar/desk?title=Kindred">أعِر هذا الكتاب من مكتب الإعارة</a></p>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">إزالة هذا الكتاب</h2>
+                <form method="post" action="/ar/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <p>يُزال الكتاب من الرف نهائيًا، مع غلافه.</p>
+                    <p class="actions"><button class="danger">إزالة هذا الكتاب</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf، مكتبة <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="اللغة">
+                <a href="/book?title=Kindred" lang="en" hreflang="en">English</a>
+                <a href="/de/book?title=Kindred" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=Kindred" lang="ar" aria-current="true">العربية</a>
+            </nav>
+            <p>الشيفرة برخصة MIT.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /ar/copies
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&copies=-1&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <meta name="description" content="Shelf، المكتبة: ابحث عن كتاب، واطّلع على ما استعرته.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+</head>
+<body>
+    <a class="skip" href="#main">انتقل إلى المحتوى</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/ar/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="القائمة الرئيسية">
+                <a href="/ar/">الكتب</a>
+                <a href="/ar/loans">إعاراتي</a>
+                <a href="/ar/add">إضافة كتاب</a>
+                <a href="/ar/desk">مكتب الإعارة</a>
+                <a href="/ar/members">الأعضاء</a>
+                <a href="/ar/dashboard">لوحة التحكم</a>
+                <form class="account" method="post" action="/ar/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/ar/account">Jonas</a> <button class="link">تسجيل الخروج</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/ar/">→ كل الكتب</a></p>
+    <p class="error" role="alert">عدد النسخ عدد صحيح من 0 إلى 999.</p>
+    <div class="book-page">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+        <div>
+            <h1>Kindred</h1>
+            <dl class="facts">
+                <dt>المؤلف</dt>
+                <dd>Octavia E. Butler</dd>
+                <dt>السنة</dt>
+                <dd>1979</dd>
+                <dt>على الرف</dt>
+                <dd>
+<span class="badge ok">نسختان</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="hold-head">
+                <h2 id="hold-head">حجزك</h2>
+                <p>نسخة محفوظة لك في مكتب الإعارة حتى الأربعاء، 25 نوفمبر 2026. <a href="/ar/loans">كل حجوزاتك</a></p>
+            </section>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">لموظفي المكتبة</h2>
+                <form class="inline-form" method="post" action="/ar/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <label>النسخ على الرف <input name="copies" value="-1" required inputmode="numeric"></label>
+                    <button>حفظ</button>
+                </form>
+                <p><a href="/ar/desk?title=Kindred">أعِر هذا الكتاب من مكتب الإعارة</a></p>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">إزالة هذا الكتاب</h2>
+                <form method="post" action="/ar/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <p>يُزال الكتاب من الرف نهائيًا، مع غلافه.</p>
+                    <p class="actions"><button class="danger">إزالة هذا الكتاب</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf، مكتبة <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="اللغة">
+                <a href="/" lang="en" hreflang="en">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" aria-current="true">العربية</a>
+            </nav>
+            <p>الشيفرة برخصة MIT.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /de/nothing
+
+< HTTP/1.1 404 Not Found
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="de" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nicht gefunden · Shelf</title>
+    <meta name="description" content="Shelf, die Bibliothek: Bücher finden und sehen, was Sie ausgeliehen haben.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+</head>
+<body>
+    <a class="skip" href="#main">Zum Inhalt springen</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/de/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Hauptmenü">
+                <a href="/de/">Bücher</a>
+                <a href="/de/login">Anmelden</a>
+                <a href="/de/signup">Registrieren</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Nicht gefunden</h1>
+        <p>Unter dieser Adresse gibt es nichts. <a href="/de/">Zurück zu den Büchern</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, die Bibliothek von <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Sprache">
+                <a href="/" lang="en" hreflang="en">English</a>
+                <a href="/de/" lang="de" aria-current="true">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code unter der MIT-Lizenz.</p>
         </div>
     </footer>
 </body>
@@ -4704,13 +5375,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sula · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/book?title=Sula">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/book?title=Sula">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4751,7 +5424,7 @@ New books added: 53. Already on the shelf: 0.
                 </dd>
             </dl>
             <section class="panel" aria-labelledby="staff">
-                <h2 id="staff">For the library's staff</h2>
+                <h2 id="staff">For the library&#039;s staff</h2>
                 <form class="inline-form" method="post" action="/copies">
                     <input type="hidden" name="_token" value="…">
                     <input type="hidden" name="title" value="Sula">
@@ -4775,6 +5448,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/book?title=Sula" lang="en" aria-current="true">English</a>
+                <a href="/de/book?title=Sula" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/book?title=Sula" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4815,13 +5493,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -4958,6 +5638,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -4973,13 +5658,15 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/cover?title=Sula">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/cover?title=Sula">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -5013,6 +5700,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/cover?title=Sula" lang="en" aria-current="true">English</a>
+                <a href="/de/cover?title=Sula" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/cover?title=Sula" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>
@@ -5030,56 +5722,12 @@ New books added: 53. Already on the shelf: 0.
 
 > GET /logout
 
-< HTTP/1.1 403 Forbidden
+< HTTP/1.1 405 Method Not Allowed
+< Allow: POST
 < X-Content-Type-Options: nosniff
 < Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
 < Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
-
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Expired · Shelf</title>
-    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
-</head>
-<body>
-    <a class="skip" href="#main">Skip to the content</a>
-    <header class="site">
-        <div class="site-inner">
-            <a class="brand" href="/">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
-                Shelf
-            </a>
-            <nav class="nav" aria-label="Main">
-                <a href="/">Books</a>
-                <a href="/loans">My loans</a>
-                <a href="/add">Add a book</a>
-                <a href="/desk">Desk</a>
-                <a href="/members">Members</a>
-                <a href="/dashboard">Dashboard</a>
-                <form class="account" method="post" action="/logout">
-                    <input type="hidden" name="_token" value="…">
-                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
-                </form>
-            </nav>
-        </div>
-    </header>
-    <main id="main">
-    <h1>This form has expired</h1>
-    <p class="error" role="alert">Nothing was saved.</p>
-    <p>Please <a href="/add">open the form again</a> and send it once more.</p>
-    </main>
-    <footer class="footer">
-        <div class="footer-inner">
-            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
-            <p>Code under the MIT licence.</p>
-        </div>
-    </footer>
-</body>
-</html>
 
 > GET /add.php
 
@@ -5090,13 +5738,13 @@ New books added: 53. Already on the shelf: 0.
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-Kj4FWGi.css">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -5123,6 +5771,11 @@ New books added: 53. Already on the shelf: 0.
     <footer class="footer">
         <div class="footer-inner">
             <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
             <p>Code under the MIT licence.</p>
         </div>
     </footer>

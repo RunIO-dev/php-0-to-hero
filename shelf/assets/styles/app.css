@@ -248,6 +248,27 @@ main {
     margin: 0;
 }
 
+/* Chapter 87: the languages, each named in its own; the one of the page is not a link to follow. */
+.languages {
+    display: flex;
+    gap: 1rem;
+}
+
+.languages a {
+    color: inherit;
+}
+
+.languages a[aria-current] {
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Arabic letters need more room between the lines. */
+html:lang(ar) body {
+    line-height: 1.8;
+}
+
 /* ---- The top of a page: its title, a line under it, and its actions ---- */
 
 .page-head {
@@ -510,6 +531,7 @@ button.link:hover {
 /* ---- Tables ---- */
 
 .table-wrap {
+    position: relative; /* keeps .visually-hidden texts inside it, or they widen the page on a phone */
     overflow-x: auto;
     border: 1px solid var(--line);
     border-radius: var(--radius);

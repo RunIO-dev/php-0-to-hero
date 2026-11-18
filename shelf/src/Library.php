@@ -82,7 +82,7 @@ final readonly class Library
     {
         $count = count($this->loans->forMember($member->name));
         if ($count > 0) {
-            throw new InvalidArgumentException('Please return your ' . ($count === 1 ? 'book' : "$count books") . ' first: then you can delete your account.');
+            throw new Refused('Please return your {count, plural, one {book} other {# books}} first: then you can delete your account.', ['count' => $count]);
         }
         foreach ($this->holds->ofMember($member) as $hold) { // chapter 84: a copy set aside goes to the next in line
             $hold->cancel();
@@ -108,7 +108,7 @@ final readonly class Library
     /** Chapter 83: a loan by its number, from a form. */
     public function loan(int $id): Loan
     {
-        return $this->loans->find($id) ?? throw new LoanNotFound("There is no loan number $id");
+        return $this->loans->find($id) ?? throw new LoanNotFound('There is no loan number {id}', ['id' => (string) $id]);
     }
 
     /**
@@ -129,7 +129,7 @@ final readonly class Library
     {
         $loan = $this->loan($id);
         if (!$loan->isReturned() && $this->holds->isWaitedFor($loan->book)) {
-            throw new InvalidArgumentException("\"{$loan->book->title}\" is reserved by another member, so it can't be extended: please bring it back by {$loan->due->format('l, j F Y')}.");
+            throw new Refused('"{title}" is reserved by another member, so it can\'t be extended: please bring it back by {due, date, full}.', ['title' => $loan->book->title, 'due' => $loan->due]);
         }
         $loan->renew($today);
         $this->loans->update($loan);
@@ -159,16 +159,16 @@ final readonly class Library
     {
         $book = $this->find($title);
         if ($member->blocked) {
-            throw new InvalidArgumentException("$member->name is blocked, and can't reserve books.");
+            throw new Refused('{name} is blocked, and can\'t reserve books.', ['name' => $member->name]);
         }
         if ($book->isAvailable()) {
-            throw new InvalidArgumentException("\"$book->title\" is on the shelf: borrow it at the desk, no need to reserve it.");
+            throw new Refused('"{title}" is on the shelf: borrow it at the desk, no need to reserve it.', ['title' => $book->title]);
         }
         if (array_any($this->loans->forMember($member->name), fn(Loan $loan): bool => sameTitle($loan->book->title, $book->title))) {
-            throw new InvalidArgumentException("$member->name has \"$book->title\" already.");
+            throw new Refused('{name} has "{title}" already.', ['name' => $member->name, 'title' => $book->title]);
         }
         if ($this->holds->openFor($book, $member) !== null) {
-            throw new InvalidArgumentException("$member->name has reserved \"$book->title\" already.");
+            throw new Refused('{name} has reserved "{title}" already.', ['name' => $member->name, 'title' => $book->title]);
         }
         $hold = new Hold($book, $member, $today);
         $this->holds->add($hold);
@@ -206,7 +206,7 @@ final readonly class Library
     {
         $hold = $this->holds->find($id);
         if ($hold === null || mb_strtolower($hold->member->name) !== mb_strtolower($member->name) || !$hold->status->isOpen()) {
-            throw new HoldNotFound("You have no reservation number $id");
+            throw new HoldNotFound('You have no reservation number {id}', ['id' => (string) $id]);
         }
         $hold->cancel();
 
@@ -301,7 +301,7 @@ final readonly class Library
     {
         $member = $this->member($name);
         if ($member === $by || mb_strtolower($member->name) === mb_strtolower($by->name)) {
-            throw new InvalidArgumentException('You can\'t change your own account here: ask another member of staff.');
+            throw new Refused('You can\'t change your own account here: ask another member of staff.');
         }
 
         return $member;
@@ -310,7 +310,7 @@ final readonly class Library
     /** The book with this title, in any case. */
     public function find(string $title): Book
     {
-        return $this->books->find($title) ?? throw new BookNotFound("There is no book titled \"$title\"");
+        return $this->books->find($title) ?? throw new BookNotFound('There is no book titled "{title}"', ['title' => $title]);
     }
 
     public function lend(string $title, string $name, DateTimeImmutable $today): Loan
@@ -319,16 +319,16 @@ final readonly class Library
         $book = $this->find($title);
         // Chapter 83: a blocked member can't borrow, and nobody more than their role allows.
         if ($member->blocked) {
-            throw new InvalidArgumentException("$member->name is blocked, and can't borrow books.");
+            throw new Refused('{name} is blocked, and can\'t borrow books.', ['name' => $member->name]);
         }
         $has = count($this->loans->forMember($member->name));
         if ($has >= $member->role->maxLoans()) {
-            throw new InvalidArgumentException("$member->name has $has books already: that is the most a {$member->role->value} may have.");
+            throw new Refused('{name} has {count} books already: that is the most {role, select, staff {a member of staff} other {a reader}} may have.', ['name' => $member->name, 'count' => $has, 'role' => $member->role->value]);
         }
         // Chapter 84: a copy set aside for this member is theirs, though none is on the shelf.
         $hold = $this->holds->openFor($book, $member);
         if ($hold?->status !== HoldStatus::Ready && !$book->isAvailable()) {
-            throw new NoCopyLeft("All copies of \"$book->title\" are on loan");
+            throw new NoCopyLeft('All copies of "{title}" are on loan', ['title' => $book->title]);
         }
         $loan = Loan::start($book, $member, $today);
         $this->loans->add($loan, $hold); // stores the loan and takes the copy, together (chapter 57); collects the reservation
@@ -354,7 +354,7 @@ final readonly class Library
         $book = $this->find($title);
         $count = filter_var($copies, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => self::MOST_COPIES]]);
         if ($count === false) {
-            throw new InvalidArgumentException('Copies must be a whole number from 0 to ' . self::MOST_COPIES . '.');
+            throw new Refused('Copies must be a whole number from 0 to {most}.', ['most' => self::MOST_COPIES]);
         }
         $added = max(0, $count - $book->copies);
         $book->changeCopies($count - $added);
@@ -378,11 +378,11 @@ final readonly class Library
     {
         $book = $this->find($title);
         if ($this->loans->isOnLoan($book->title)) {
-            throw new InvalidArgumentException("\"$book->title\" is on loan, so it can't be removed.");
+            throw new Refused('"{title}" is on loan, so it can\'t be removed.', ['title' => $book->title]);
         }
         $setAside = array_any($this->holds->ready(), fn(Hold $hold): bool => sameTitle($hold->book->title, $book->title));
         if ($setAside || $this->holds->isWaitedFor($book)) { // chapter 84
-            throw new InvalidArgumentException("\"$book->title\" is reserved, so it can't be removed.");
+            throw new Refused('"{title}" is reserved, so it can\'t be removed.', ['title' => $book->title]);
         }
         $this->loans->forgetBook($book);
         $this->holds->forgetBook($book);
@@ -399,7 +399,7 @@ final readonly class Library
         foreach ($books as $book) {
             $sameIsbn = $new->isbn !== null && $book->isbn !== null && $book->isbn->equals($new->isbn);
             if ($sameIsbn || sameTitle($book->title, $new->title)) {
-                throw new BookExists("\"$book->title\" is already on the shelf");
+                throw new BookExists('"{title}" is already on the shelf', ['title' => $book->title]);
             }
         }
         $this->books->add($new);
@@ -415,7 +415,7 @@ final readonly class Library
         $range = ['min_range' => Book::FIRST_YEAR, 'max_range' => Book::LAST_YEAR];
         $year = filter_var($fields[2] ?? '', FILTER_VALIDATE_INT, ['options' => $range]);
         if ($title === '' || $author === '' || $year === false) {
-            throw new InvalidArgumentException('A book needs a title, an author and a year from ' . implode(' to ', $range) . '.');
+            throw new Refused('A book needs a title, an author and a year from {from} to {to}.', ['from' => (string) Book::FIRST_YEAR, 'to' => (string) Book::LAST_YEAR]);
         }
 
         return new Book($title, $author, $year, isbn: isset($fields[3]) ? new Isbn($fields[3]) : null);
@@ -429,6 +429,6 @@ final readonly class Library
 
     private function member(string $name): Member
     {
-        return $this->members->find($name) ?? throw new MemberNotFound("There is no member named \"$name\"");
+        return $this->members->find($name) ?? throw new MemberNotFound('There is no member named "{name}"', ['name' => $name]);
     }
 }

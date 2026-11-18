@@ -1,8 +1,9 @@
 {# What a page shows when it has nothing to list (chapter 80). A page fills its block "action" with what
    to do next: {% embed 'components/_empty.html.twig' with {text: 'No books yet.'} only %}
-   {% block action %}<a href="...">Add the first one</a>{% endblock %}{% endembed %} #}
+   {% block action %}<a href="...">Add the first one</a>{% endblock %}{% endembed %}
+   Chapter 87: text is English, translated here. #}
 <div class="empty">
     <p class="big" aria-hidden="true">📚</p>
-    <p>{{ text }}</p>
+    <p>{{ text|trans }}</p>
 {% block action %}{% endblock %}
 </div>

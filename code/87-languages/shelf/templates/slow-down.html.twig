@@ -1,0 +1,12 @@
+{# Too many requests from one address (chapter 82), with status 429 and a Retry-After header. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Slow down'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <div class="problem">
+        <p class="code" aria-hidden="true">429</p>
+        <h1>{{ 'Slow down'|trans }}</h1>
+        <p>{{ 'Shelf has sent several emails for this address in the last hour. Please try again later.'|trans }} <a href="{{ path('books') }}">{{ 'Back to the books'|trans }}</a></p>
+    </div>
+{% endblock %}

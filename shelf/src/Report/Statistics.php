@@ -60,7 +60,8 @@ final readonly class Statistics
     }
 
     /**
-     * @return list<Tally> the loans of each of the last $months months, the oldest first, "Nov 2026".
+     * @return list<Tally> the loans of each of the last $months months, the oldest first, "2026-11":
+     *   chapter 87, the page writes the month's name in its own language.
      *   A month without loans has no row to GROUP BY: it is filled in here, with 0.
      */
     public function perMonth(DateTimeImmutable $today, int $months = 12): array
@@ -75,7 +76,7 @@ final readonly class Statistics
 
         $tallies = [];
         for ($month = $first, $i = 0; $i < $months; $month = $month->modify('+1 month'), $i++) {
-            $tallies[] = new Tally($month->format('M Y'), (int) ($counts[$month->format('Y-m')] ?? 0));
+            $tallies[] = new Tally($month->format('Y-m'), (int) ($counts[$month->format('Y-m')] ?? 0));
         }
 
         return $tallies;

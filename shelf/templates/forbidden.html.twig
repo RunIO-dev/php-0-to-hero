@@ -1,12 +1,12 @@
 {# For a member who may not do what they asked (chapter 63), with status 403. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Not allowed · Shelf{% endblock %}
+{% block title %}{{ 'Not allowed'|trans }} · Shelf{% endblock %}
 
 {% block main %}
     <div class="problem">
         <p class="code" aria-hidden="true">403</p>
-        <h1>Not allowed</h1>
-        <p>Only the library's staff may change books. <a href="{{ path('books') }}">Back to the books</a></p>
+        <h1>{{ 'Not allowed'|trans }}</h1>
+        <p>{{ "Only the library's staff may change books."|trans }} <a href="{{ path('books') }}">{{ 'Back to the books'|trans }}</a></p>
     </div>
 {% endblock %}

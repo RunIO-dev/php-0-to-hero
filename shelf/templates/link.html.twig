@@ -1,12 +1,12 @@
 {# A link from an email that doesn't work (chapter 82), with status 410: changed, too old, or used. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}This link has expired · Shelf{% endblock %}
+{% block title %}{{ 'This link has expired'|trans }} · Shelf{% endblock %}
 
 {% block main %}
     <div class="problem">
         <p class="code" aria-hidden="true">410</p>
-        <h1>This link has expired</h1>
-        <p>It may be too old, already used, or not quite complete. <a href="{{ path('forgot') }}">Ask for a new password link</a>, or <a href="{{ path('login') }}">log in</a>.</p>
+        <h1>{{ 'This link has expired'|trans }}</h1>
+        <p>{{ 'It may be too old, already used, or not quite complete. <a href="{forgot}">Ask for a new password link</a>, or <a href="{login}">log in</a>.'|trans({forgot: path('forgot'), login: path('login')})|raw }}</p>
     </div>
 {% endblock %}

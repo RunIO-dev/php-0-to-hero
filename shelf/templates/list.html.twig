@@ -7,47 +7,47 @@
 {% block main %}
     <div class="page-head">
         <div>
-            <h1>Books</h1>
-            <p class="lead">Everything on the shelf, and what is on loan.</p>
+            <h1>{{ 'Books'|trans }}</h1>
+            <p class="lead">{{ 'Everything on the shelf, and what is on loan.'|trans }}</p>
         </div>
 {% if is_granted('CHANGE_BOOKS') %}
-        <a class="button" href="{{ path('add') }}">Add a book</a>
+        <a class="button" href="{{ path('add') }}">{{ 'Add a book'|trans }}</a>
 {% endif %}
     </div>
 {% include '_flash.html.twig' %}
     <form class="search" method="get" action="{{ path('books') }}" role="search">
-        <label class="grow">Search
-            <input type="search" name="q" value="{{ q }}" maxlength="100" placeholder="Title, author or ISBN">
+        <label class="grow">{{ 'Search'|trans }}
+            <input type="search" name="q" value="{{ q }}" maxlength="100" placeholder="{{ 'Title, author or ISBN'|trans }}">
         </label>
-        <label>Sort by
+        <label>{{ 'Sort by'|trans }}
             <select name="sort">
 {% for option in sorts %}
-                <option value="{{ option.value }}"{{ option == sort ? ' selected' }}>{{ option.label }}</option>
+                <option value="{{ option.value }}"{{ option == sort ? ' selected' }}>{{ option.label|trans }}</option>
 {% endfor %}
             </select>
         </label>
-        <label class="check"><input type="checkbox" name="available" value="1"{{ available ? ' checked' }}> Only on the shelf</label>
-        <button type="submit">Search</button>
+        <label class="check"><input type="checkbox" name="available" value="1"{{ available ? ' checked' }}> {{ 'Only on the shelf'|trans }}</label>
+        <button type="submit">{{ 'Search'|trans }}</button>
     </form>
 {% if books is empty and search is empty %}
 {% embed 'components/_empty.html.twig' with {text: 'No books yet.'} only %}
 {% block action %}
 {% if is_granted('CHANGE_BOOKS') %}
-    <a class="button" href="{{ path('add') }}">Add the first one</a>
+    <a class="button" href="{{ path('add') }}">{{ 'Add the first one'|trans }}</a>
 {% endif %}
 {% endblock %}
 {% endembed %}
 {% elseif books is empty %}
 {% embed 'components/_empty.html.twig' with {text: 'No book matches this search.'} only %}
 {% block action %}
-    <a class="button quiet" href="{{ path('books') }}">Clear the search</a>
+    <a class="button quiet" href="{{ path('books') }}">{{ 'Clear the search'|trans }}</a>
 {% endblock %}
 {% endembed %}
 {% else %}
     <p class="count" role="status">
-        {{ total }} {{ total == 1 ? 'book' : 'books' }}{% if q is not empty %} for “{{ q }}”{% endif %}{% if available %}, on the shelf{% endif %}
-{%- if pages > 1 %} · page {{ page }} of {{ pages }}{% endif %}
-{%- if search is not empty %} · <a href="{{ path('books') }}">clear</a>{% endif %}
+        {{ '{count, plural, one {# book} other {# books}}'|trans({count: total}) }}{% if q is not empty %} {{ 'for “{search}”'|trans({search: q}) }}{% endif %}{% if available %}{{ ', on the shelf'|trans }}{% endif %}
+{%- if pages > 1 %} · {{ 'page {page} of {pages}'|trans({page: page, pages: pages}) }}{% endif %}
+{%- if search is not empty %} · <a href="{{ path('books') }}">{{ 'clear'|trans }}</a>{% endif %}
     </p>
     <ul class="books">
 {% for book in books %}

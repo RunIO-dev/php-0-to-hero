@@ -9,8 +9,10 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shelf\Twig\ShelfExtension;
 use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Translation\Loader\YamlFileLoader;
+use Symfony\Component\Translation\Translator;
 
-/** Shelf's Twig filters (chapter 80), with a clock that stands still. */
+/** Shelf's Twig filters (chapter 80), with a clock that stands still. Chapter 87: in three languages. */
 final class ShelfExtensionTest extends TestCase
 {
     /** @return iterable<string, array{string, string, string}> today, then the label and level of a loan due on 1 December */
@@ -31,8 +33,40 @@ final class ShelfExtensionTest extends TestCase
         $extension = new ShelfExtension(new MockClock($today));
         $due = new DateTimeImmutable('2026-12-01');
 
-        self::assertSame($label, $extension->due($due));
+        self::assertSame($label, $extension->due($due)->trans(self::translator()));
         self::assertSame($level, $extension->dueLevel($due));
+    }
+
+    /** @return iterable<string, array{string, string, string}> the language, today, and the label then */
+    public static function languages(): iterable
+    {
+        yield 'German, tomorrow' => ['de', '2026-11-30 18:00', 'morgen fällig'];
+        yield 'German, in a week' => ['de', '2026-11-24 09:30', 'fällig in 7 Tagen'];
+        yield 'German, a day late' => ['de', '2026-12-02 08:00', '1 Tag überfällig'];
+        yield 'Arabic, two days late' => ['ar', '2026-12-03 08:00', 'متأخر يومين'];
+        yield 'Arabic, three days late' => ['ar', '2026-12-04 08:00', 'متأخر 3 أيام'];
+        yield 'Arabic, eleven days late' => ['ar', '2026-12-12 08:00', 'متأخر 11 يومًا'];
+    }
+
+    /** Chapter 87: the same message, in each language's words and plural forms. */
+    #[DataProvider('languages')]
+    public function testADueDateReadsInEachLanguage(string $locale, string $today, string $label): void
+    {
+        $extension = new ShelfExtension(new MockClock($today));
+
+        self::assertSame($label, $extension->due(new DateTimeImmutable('2026-12-01'))->trans(self::translator(), $locale));
+    }
+
+    /** Shelf's own translations, without the rest of Symfony. */
+    private static function translator(): Translator
+    {
+        $translator = new Translator('en');
+        $translator->addLoader('yaml', new YamlFileLoader());
+        foreach (['en', 'de', 'ar'] as $locale) {
+            $translator->addResource('yaml', dirname(__DIR__, 2) . "/translations/messages+intl-icu.$locale.yaml", $locale, 'messages+intl-icu');
+        }
+
+        return $translator;
     }
 
     public function testATitleAlwaysGetsTheSameTone(): void

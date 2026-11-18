@@ -1,7 +1,8 @@
 {# The frame of Shelf's emails (chapter 82). Mail programs ignore most of CSS, and load no stylesheet:
-   the few styles are in the message itself, and the text part says the same without any. #}
+   the few styles are in the message itself, and the text part says the same without any.
+   Chapter 87: in the member's language (the email's locale), right to left in Arabic. #}
 <!doctype html>
-<html lang="en">
+<html lang="{{ app.locale }}" dir="{{ app.locale == 'ar' ? 'rtl' : 'ltr' }}">
 <head>
 <meta charset="utf-8">
 <style>

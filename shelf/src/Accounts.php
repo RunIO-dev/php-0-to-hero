@@ -40,23 +40,24 @@ final readonly class Accounts
      * @throws InvalidArgumentException with a message for the form
      * @throws EmailInUse when the address already has an account, which the page must not reveal
      */
-    public function signUp(string $name, string $email, string $password): Member
+    public function signUp(string $name, string $email, string $password, string $language = 'en'): Member
     {
         $name = trim($name);
         if (preg_match(self::NAME, $name) !== 1) {
-            throw new InvalidArgumentException('A name has 2 to 40 letters, digits, spaces, dots, apostrophes or hyphens, and starts with a letter or digit.');
+            throw new Refused('A name has 2 to 40 letters, digits, spaces, dots, apostrophes or hyphens, and starts with a letter or digit.');
         }
         if (filter_var(trim($email), FILTER_VALIDATE_EMAIL) === false) {
-            throw new InvalidArgumentException('This is not an email address.');
+            throw new Refused('This is not an email address.');
         }
         self::checkPassword($password);
         if ($this->members->find($name) !== null) {
-            throw new InvalidArgumentException("The name $name is taken. Please choose another one.");
+            throw new Refused('The name {name} is taken. Please choose another one.', ['name' => $name]);
         }
         if ($this->members->findByEmail($email) !== null) {
             throw new EmailInUse('This address already has an account.');
         }
         $member = Member::signUp($name, $email);
+        $member->speaks($language); // chapter 87: the language of the page they signed up on
         $this->members->add($member);
         $this->setPassword($name, $password);
 
@@ -77,17 +78,17 @@ final readonly class Accounts
     public function checkCurrent(string $name, string $password): void
     {
         if ($this->authenticate($name, $password) === null) {
-            throw new InvalidArgumentException('The current password is wrong.');
+            throw new Refused('The current password is wrong.');
         }
     }
 
     private static function checkPassword(string $password): void
     {
         if (mb_strlen($password) < self::MIN_LENGTH) {
-            throw new InvalidArgumentException('A password needs at least ' . self::MIN_LENGTH . ' characters. A few words together are long and easy to remember.');
+            throw new Refused('A password needs at least {count} characters. A few words together are long and easy to remember.', ['count' => self::MIN_LENGTH]);
         }
         if (strlen($password) > self::MAX_BYTES) {
-            throw new InvalidArgumentException('A password can have at most ' . self::MAX_BYTES . ' bytes: 72 letters of English, fewer in other scripts.');
+            throw new Refused('A password can have at most {count} bytes: 72 letters of English, fewer in other scripts.', ['count' => self::MAX_BYTES]);
         }
     }
 

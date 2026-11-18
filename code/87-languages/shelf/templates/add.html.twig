@@ -1,0 +1,20 @@
+{# The form to add a book (chapter 75): Symfony's form draws each field, with its value and its
+   mistakes; form_end() adds the CSRF token, and what is left. #}
+{% extends 'base.html.twig' %}
+{% form_theme form 'form/shelf.html.twig' %}
+
+{% block title %}{{ 'Add a book'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <p class="back"><a href="{{ path('books') }}">{{ '← All books'|trans }}</a></p>
+    <h1>{{ 'Add a book'|trans }}</h1>{{ form_errors(form) }}
+    {{ form_start(form, {attr: {class: 'card'}}) }}
+        <label>{{ 'Title'|trans }} {{ form_widget(form.title) }}</label>{{ form_errors(form.title) }}
+        <label>{{ 'Author'|trans }} {{ form_widget(form.author) }}</label>{{ form_errors(form.author) }}
+        <label>{{ 'Year'|trans }} {{ form_widget(form.year) }}</label>{{ form_errors(form.year) }}
+        <label>ISBN <small>{{ 'optional'|trans }}</small> {{ form_widget(form.isbn) }}</label>{{ form_errors(form.isbn) }}
+        <label>{{ 'Cover'|trans }} <small>{{ 'PNG or JPEG, up to 2 MB, optional'|trans }}</small>
+            {{ form_widget(form.cover) }}</label>{{ form_errors(form.cover) }}
+        <p class="actions"><button>{{ 'Add the book'|trans }}</button> <a class="button quiet" href="{{ path('books') }}">{{ 'Cancel'|trans }}</a></p>
+    {{ form_end(form) }}
+{% endblock %}

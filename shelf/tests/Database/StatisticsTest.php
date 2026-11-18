@@ -83,7 +83,7 @@ final class StatisticsTest extends TestCase
     {
         $months = $this->statistics->perMonth($this->today, 4);
 
-        self::assertEquals([new Tally('Dec 2025', 0), new Tally('Jan 2026', 1), new Tally('Feb 2026', 1), new Tally('Mar 2026', 2)], $months);
+        self::assertEquals([new Tally('2025-12', 0), new Tally('2026-01', 1), new Tally('2026-02', 1), new Tally('2026-03', 2)], $months);
     }
 
     public function testReturnsCountTheLateOnes(): void
