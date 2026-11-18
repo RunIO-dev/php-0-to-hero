@@ -21,6 +21,15 @@ enum Role: string
         };
     }
 
+    /** How many books a member may have at once (chapter 83). */
+    public function maxLoans(): int
+    {
+        return match ($this) {
+            Role::Reader => 5,
+            Role::Staff => 10,
+        };
+    }
+
     /** Adding, changing and removing books: the library's staff only. */
     public function mayChangeBooks(): bool
     {

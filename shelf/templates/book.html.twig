@@ -42,6 +42,9 @@
                     <label>Copies on the shelf <input name="copies" value="{{ copies }}" required inputmode="numeric"></label>
                     <button>Save</button>
                 </form>
+{% if book.isAvailable %}
+                <p><a href="{{ path('desk', {title: book.title}) }}">Lend this book at the desk</a></p>
+{% endif %}
             </section>
             <section class="panel" aria-labelledby="remove">
                 <h2 id="remove">Remove this book</h2>

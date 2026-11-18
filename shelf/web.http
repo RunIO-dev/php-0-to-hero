@@ -235,6 +235,53 @@ GET /
 GET /
 
 ###
+# Chapter 83: the lending desk. Jonas lends Kitchen to Amira.
+# capture token /name="_token" value="([^"]+)"/
+GET /desk
+
+###
+POST /desk/lend
+Content-Type: application/x-www-form-urlencoded
+
+title=kitchen&member=amira&_token={{token}}
+
+###
+GET /desk
+
+###
+# A book with no copy on the shelf can't be lent.
+POST /desk/lend
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&member=Amira&_token={{token}}
+
+###
+# One more loan period, then the book comes back.
+POST /renew
+Content-Type: application/x-www-form-urlencoded
+
+loan=1&from=desk&_token={{token}}
+
+###
+POST /desk/return
+Content-Type: application/x-www-form-urlencoded
+
+loan=1&_token={{token}}
+
+###
+GET /desk
+
+###
+# The members: Jonas blocks Amira, who then can't borrow.
+POST /members/block
+Content-Type: application/x-www-form-urlencoded
+
+member=Amira&blocked=1&_token={{token}}
+
+###
+GET /members
+
+###
 GET /cover?title=Sula
 
 ###

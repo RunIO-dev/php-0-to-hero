@@ -36,12 +36,17 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(options: ['default' => true])]
     public private(set) bool $confirmed = true;
 
+    /** Chapter 83: a blocked member can log in and see their loans, but can't borrow. */
+    #[ORM\Column(options: ['default' => false])]
+    public private(set) bool $blocked = false;
+
     /** @param non-empty-string $name what a member logs in with, so never empty (chapter 76) */
     public function __construct(
         #[ORM\Column(unique: true, options: ['collation' => 'NOCASE'])]
         public readonly string $name,
+        // Chapter 83: not readonly; the staff can make a reader staff, or the other way round.
         #[ORM\Column(enumType: Role::class)]
-        public readonly Role $role,
+        public private(set) Role $role,
     ) {}
 
     /** The row's number (chapter 82: in the links of emails); the database gives it when the member is stored. */
@@ -68,6 +73,22 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->email = self::normalEmail($email);
         $this->confirmed = true;
+    }
+
+    /** Chapter 83: the staff block a member, who then can't borrow, and let them borrow again. */
+    public function block(): void
+    {
+        $this->blocked = true;
+    }
+
+    public function unblock(): void
+    {
+        $this->blocked = false;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        $this->role = $role;
     }
 
     /** The form that addresses are kept in: trimmed, in lower case, so one address is one account. */

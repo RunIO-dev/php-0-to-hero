@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Shelf\Doctrine;
+
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
+use Shelf\Book;
+use Shelf\Loan;
+use Shelf\Member;
+use Shelf\LoanRepository;
+use Shelf\NoCopyLeft;
+
+/**
+ * The loans, through Doctrine (chapter 74). A loan's book and member come back as objects with it:
+ * the JOINs that PdoLoanRepository wrote by hand, Doctrine writes from the mapping.
+ */
+final readonly class DoctrineLoanRepository implements LoanRepository
+{
+    public function __construct(private EntityManagerInterface $entities) {}
+
+    public function add(Loan $loan): void
+    {
+        $this->entities->wrapInTransaction(function () use ($loan): void {
+            // Only if a copy is left, checked and taken in one statement: another request can't come in between (chapter 57).
+            $taken = $this->entities->createQuery('UPDATE ' . Book::class . ' b SET b.copies = b.copies - 1 WHERE b.id = :book AND b.copies > 0')
+                ->setParameter('book', $loan->book)
+                ->execute();
+            if ($taken === 0) {
+                throw new NoCopyLeft("All copies of \"{$loan->book->title}\" are on loan");
+            }
+            $this->entities->persist($loan);
+        });
+        $this->entities->refresh($loan->book); // the UPDATE went past the object: read its copies again
+    }
+
+    public function forMember(string $name): array
+    {
+        /** @var list<Loan> */
+        return $this->entities->createQuery(
+            'SELECT l, b, m FROM ' . Loan::class . ' l JOIN l.book b JOIN l.member m WHERE m.name = :name AND l.returnedOn IS NULL ORDER BY l.due, b.title',
+        )->setParameter('name', trim($name))->getResult();
+    }
+
+    public function isOnLoan(string $title): bool
+    {
+        return $this->entities->createQuery('SELECT COUNT(l.id) FROM ' . Loan::class . ' l JOIN l.book b WHERE b.title = :title AND l.returnedOn IS NULL')
+            ->setParameter('title', trim($title))
+            ->getSingleScalarResult() > 0;
+    }
+
+    public function find(int $id): ?Loan
+    {
+        return $this->entities->find(Loan::class, $id);
+    }
+
+    public function current(): array
+    {
+        /** @var list<Loan> */
+        return $this->entities->createQuery(
+            'SELECT l, b, m FROM ' . Loan::class . ' l JOIN l.book b JOIN l.member m WHERE l.returnedOn IS NULL ORDER BY l.due, b.title, m.name',
+        )->getResult();
+    }
+
+    public function giveBack(Loan $loan, DateTimeImmutable $today): void
+    {
+        $this->entities->wrapInTransaction(function () use ($loan, $today): void {
+            $loan->giveBack($today);
+            // As add() takes a copy: in SQL, so two returns at once can't lose one.
+            $this->entities->createQuery('UPDATE ' . Book::class . ' b SET b.copies = b.copies + 1 WHERE b.id = :book')
+                ->setParameter('book', $loan->book)
+                ->execute();
+        });
+        $this->entities->refresh($loan->book);
+    }
+
+    public function update(Loan $loan): void
+    {
+        $this->entities->flush();
+    }
+
+    public function forget(Member $member): void
+    {
+        // remove(), not a DELETE query: loans already loaded would stay in Doctrine's memory otherwise.
+        /** @var list<Loan> $returned */
+        $returned = $this->entities->createQuery('SELECT l FROM ' . Loan::class . ' l WHERE l.member = :member AND l.returnedOn IS NOT NULL')
+            ->setParameter('member', $member)
+            ->getResult();
+        foreach ($returned as $loan) {
+            $this->entities->remove($loan);
+        }
+        $this->entities->flush();
+    }
+}

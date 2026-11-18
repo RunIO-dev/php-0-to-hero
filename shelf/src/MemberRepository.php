@@ -17,6 +17,9 @@ interface MemberRepository
     /** Stores a new password hash. Throws MemberNotFound if there is no member with that name. */
     public function changePasswordHash(string $name, string $hash): void;
 
+    /** @return list<Member> chapter 83: every member, by name */
+    public function all(): array;
+
     /** Chapter 82: the member with this email address, in any case, or null. */
     public function findByEmail(string $email): ?Member;
 

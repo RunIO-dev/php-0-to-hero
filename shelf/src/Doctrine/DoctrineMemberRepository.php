@@ -49,6 +49,12 @@ final readonly class DoctrineMemberRepository implements MemberRepository
         }
     }
 
+    public function all(): array
+    {
+        /** @var list<Member> */
+        return $this->entities->createQuery('SELECT m FROM ' . Member::class . ' m ORDER BY m.name')->getResult();
+    }
+
     public function findByEmail(string $email): ?Member
     {
         return $this->entities->getRepository(Member::class)->findOneBy(['email' => Member::normalEmail($email)]);

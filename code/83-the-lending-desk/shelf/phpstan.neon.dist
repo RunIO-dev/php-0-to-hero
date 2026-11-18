@@ -1,0 +1,23 @@
+# Static analysis for Shelf (chapter 40; its tests from chapter 41, its web pages from 46, templates from 49 to 72, shelf.php until 73), at the highest level. From the course folder:
+#   vendor/bin/phpstan analyse -c shelf/phpstan.neon.dist
+parameters:
+    level: 10
+    # Shelf's own packages (Symfony from chapter 72), which the course's autoloader doesn't know.
+    bootstrapFiles:
+        - vendor/autoload.php
+    paths:
+        - src
+        - tests
+        - public
+        - config
+    excludePaths:
+        - '*/config/reference.php' # made by Symfony in debug mode, for configuration written in PHP
+    ignoreErrors:
+        # Doctrine writes each entity's ID, and Member's password hash, itself (chapter 74).
+        -
+            identifiers: [property.onlyWritten, property.unusedType]
+            paths: [src/Book.php]
+        # Chapters 82 and 83: Member and Loan read their IDs (id()), so only "never assigned" is left.
+        -
+            identifier: property.unusedType
+            paths: [src/Member.php, src/Loan.php]

@@ -13,6 +13,7 @@ use Shelf\BookExists;
 use Shelf\BookNotFound;
 use Shelf\BookQuery;
 use Shelf\Library;
+use Shelf\LoanNotFound;
 use Shelf\Loan;
 use Shelf\Member;
 use Shelf\MemberNotFound;
@@ -169,6 +170,60 @@ final class LibraryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Please return your 2 books first: then you can delete your account.');
         $this->library->removeMember($this->library->findMember('Amira') ?? self::fail('No Amira'));
+    }
+
+    /** Chapter 83: a blocked member can't borrow. */
+    public function testABlockedMemberCantBorrow(): void
+    {
+        $staff = new Member('Jonas', Role::Staff);
+        $this->library->setBlocked('Amira', true, $staff);
+
+        try {
+            $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+            self::fail('Lent to a blocked member');
+        } catch (InvalidArgumentException $e) {
+            self::assertSame("Amira is blocked, and can't borrow books.", $e->getMessage());
+        }
+        $this->library->setBlocked('amira', false, $staff);
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        self::assertCount(1, $this->library->loansOf('Amira'));
+    }
+
+    public function testAReaderHasFiveBooksAtMost(): void
+    {
+        foreach (range(1, 6) as $n) {
+            $this->books->add(new Book("Story $n", 'Ana Writer', 2000 + $n));
+        }
+        foreach (range(1, 5) as $n) {
+            $this->library->lend("Story $n", 'Amira', new DateTimeImmutable('2026-03-02'));
+        }
+
+        $this->expectExceptionMessage('Amira has 5 books already: that is the most a reader may have.');
+        $this->library->lend('Story 6', 'Amira', new DateTimeImmutable('2026-03-02'));
+    }
+
+    public function testAReturnedBookCanBeLentAgain(): void
+    {
+        $loan = $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        $this->library->giveBack($loan->id(), new DateTimeImmutable('2026-03-05'));
+
+        self::assertSame([], $this->library->currentLoans());
+        self::assertSame(1, $this->library->find('Kindred')->copies);
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-05'));
+    }
+
+    public function testNobodyChangesTheirOwnRole(): void
+    {
+        $this->expectExceptionMessage("You can't change your own account here");
+
+        $this->library->changeRole('AMIRA', Role::Staff, $this->library->findMember('Amira') ?? self::fail('No Amira'));
+    }
+
+    public function testAnUnknownLoanIsNotFound(): void
+    {
+        $this->expectException(LoanNotFound::class);
+
+        $this->library->giveBack(42, new DateTimeImmutable('2026-03-05'));
     }
 
     public function testAPageKnowsHowManyPagesThereAre(): void

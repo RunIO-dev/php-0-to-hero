@@ -39,6 +39,13 @@ $ php bin/console debug:router
   copies             POST       /copies                   
   remove             POST       /remove                   
   cover              GET        /cover                    
+  desk               GET        /desk                     
+  desk_lend          POST       /desk/lend                
+  desk_return        POST       /desk/return              
+  renew              POST       /renew                    
+  members            GET        /members                  
+  members_block      POST       /members/block            
+  members_role       POST       /members/role             
  ------------------ ---------- -------------------------- 
 
 $ php bin/console shelf:catalogue catalogue.json
@@ -59,7 +66,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -208,7 +215,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -288,7 +295,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -439,7 +446,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -508,7 +515,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not understood · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -556,7 +563,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -605,7 +612,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -668,7 +675,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sign up · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -754,7 +761,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -836,7 +843,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -918,7 +925,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Forgot your password · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -973,7 +980,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>This link has expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1043,7 +1050,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1124,7 +1131,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1207,7 +1214,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1360,7 +1367,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not allowed · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1411,7 +1418,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My loans · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1493,7 +1500,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Log in · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1576,7 +1583,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1590,8 +1597,10 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
-                    <input type="hidden" name="_token" value="{{token}}">
+                    <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
                 </form>
             </nav>
@@ -1637,7 +1646,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1651,6 +1660,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1701,7 +1712,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1715,6 +1726,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1763,7 +1776,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1777,6 +1790,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1826,7 +1841,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1840,6 +1855,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -1900,7 +1917,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Add a book · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -1914,6 +1931,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2005,7 +2024,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2019,6 +2038,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/" aria-current="page">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2160,7 +2181,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2174,6 +2195,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/" aria-current="page">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2299,6 +2322,845 @@ New books added: 53. Already on the shelf: 0.
 </body>
 </html>
 
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="{{token}}">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Kitchen">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>Every book is on the shelf.</p>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /desk/lend
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=kitchen&member=amira&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Lent: Kitchen to Amira, due back on Wednesday, 2 December 2026.</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Due back</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/book?title=Kitchen">Kitchen</a></td>
+                    <td>Amira</td>
+                    <td>Wed 2 Dec 2026</td>
+                    <td><span class="badge ok">due in 14 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <button class="quiet" aria-label="Kitchen is back from Amira">Back</button>
+                        </form>
+                        <form method="post" action="/renew">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <input type="hidden" name="from" value="desk">
+                            <button class="quiet" aria-label="Extend Kitchen for Amira">Extend</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /desk/lend
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&member=Amira&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="error" role="alert">All copies of &quot;Kindred&quot; are on loan</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="Kindred" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="Amira" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Due back</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/book?title=Kitchen">Kitchen</a></td>
+                    <td>Amira</td>
+                    <td>Wed 2 Dec 2026</td>
+                    <td><span class="badge ok">due in 14 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <button class="quiet" aria-label="Kitchen is back from Amira">Back</button>
+                        </form>
+                        <form method="post" action="/renew">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <input type="hidden" name="from" value="desk">
+                            <button class="quiet" aria-label="Extend Kitchen for Amira">Extend</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /renew
+> Content-Type: application/x-www-form-urlencoded
+>
+> loan=1&from=desk&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> POST /desk/return
+> Content-Type: application/x-www-form-urlencoded
+>
+> loan=1&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">&quot;Kitchen&quot; is back from Amira.</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Kitchen">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>Every book is on the shelf.</p>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /members/block
+> Content-Type: application/x-www-form-urlencoded
+>
+> member=Amira&blocked=1&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /members
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/members'" />
+
+        <title>Redirecting to /members</title>
+    </head>
+    <body>
+        Redirecting to <a href="/members">/members</a>.
+    </body>
+</html>
+
+> GET /members
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Members · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members" aria-current="page">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Members</h1>
+            <p class="lead">Who may borrow, and who runs the desk.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Amira is blocked: they can&#039;t borrow until you unblock them.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Amira</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge danger">Blocked</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="blocked" value="0">
+                            <button class="quiet">Unblock <span class="visually-hidden">Amira</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Amira</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Ana</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Ana</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Ana</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Jonas</td>
+                    <td>—</td>
+                    <td>Staff</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <small>You</small>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Kenji</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Lina</td>
+                    <td>lina@example.org</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge warn">Not confirmed</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Lina">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Lina</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Lina">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Lina</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
 > GET /cover?title=Sula
 
 < HTTP/1.1 200 OK
@@ -2322,7 +3184,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2336,6 +3198,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2829,7 +3693,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2843,6 +3707,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -2914,7 +3780,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -2928,6 +3794,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3022,7 +3890,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kindred · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3036,6 +3904,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3068,6 +3938,7 @@ New books added: 53. Already on the shelf: 0.
                     <label>Copies on the shelf <input name="copies" value="3" required inputmode="numeric"></label>
                     <button>Save</button>
                 </form>
+                <p><a href="/desk?title=Kindred">Lend this book at the desk</a></p>
             </section>
             <section class="panel" aria-labelledby="remove">
                 <h2 id="remove">Remove this book</h2>
@@ -3105,7 +3976,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sula · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3119,6 +3990,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3150,6 +4023,7 @@ New books added: 53. Already on the shelf: 0.
                     <label>Copies on the shelf <input name="copies" value="1" required inputmode="numeric"></label>
                     <button>Save</button>
                 </form>
+                <p><a href="/desk?title=Sula">Lend this book at the desk</a></p>
             </section>
             <section class="panel" aria-labelledby="remove">
                 <h2 id="remove">Remove this book</h2>
@@ -3212,7 +4086,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3226,6 +4100,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/" aria-current="page">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3367,7 +4243,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3381,6 +4257,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3428,7 +4306,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Expired · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>
@@ -3442,6 +4320,8 @@ New books added: 53. Already on the shelf: 0.
                 <a href="/">Books</a>
                 <a href="/loans">My loans</a>
                 <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
                 <form class="account" method="post" action="/logout">
                     <input type="hidden" name="_token" value="…">
                     <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
@@ -3478,7 +4358,7 @@ New books added: 53. Already on the shelf: 0.
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Not found · Shelf</title>
     <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
-    <link rel="stylesheet" href="/assets/styles/app-q9OPCP7.css">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
 </head>
 <body>
     <a class="skip" href="#main">Skip to the content</a>

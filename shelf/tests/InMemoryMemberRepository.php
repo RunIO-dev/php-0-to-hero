@@ -53,6 +53,14 @@ final class InMemoryMemberRepository implements MemberRepository
         $this->hashes[mb_strtolower(trim($name))] = $hash;
     }
 
+    public function all(): array
+    {
+        $all = $this->members;
+        usort($all, fn(Member $a, Member $b): int => strcasecmp($a->name, $b->name));
+
+        return $all;
+    }
+
     public function findByEmail(string $email): ?Member
     {
         foreach ($this->members as $member) {

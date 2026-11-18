@@ -755,7 +755,7 @@ label.check input {
     margin-block-start: 0;
 }
 
-.panel form {
+.panel form:not(.inline-form) {
     display: grid;
     gap: 1rem;
 }
@@ -767,6 +767,38 @@ label.check input {
 .aside {
     margin-block-start: 1.25rem;
     color: var(--muted);
+}
+
+/* ---- The lending desk and the members (chapter 83) ---- */
+
+.section-head {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    margin-block: 2rem 0.75rem;
+    font-size: 1.25rem;
+}
+
+.section-head .count {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.row-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: flex-end;
+}
+
+.row-actions form {
+    margin: 0;
+}
+
+.row-actions button {
+    min-block-size: 2.2rem;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.9rem;
 }
 
 /* ---- The pages for errors ---- */

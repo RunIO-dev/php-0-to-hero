@@ -82,7 +82,75 @@ final readonly class Library
         if ($count > 0) {
             throw new InvalidArgumentException('Please return your ' . ($count === 1 ? 'book' : "$count books") . ' first: then you can delete your account.');
         }
+        $this->loans->forget($member); // the books they had are history; the history goes with them
         $this->members->remove($member);
+    }
+
+    /** @return list<Loan> chapter 83: every loan that isn't back, the soonest due first */
+    public function currentLoans(): array
+    {
+        return $this->loans->current();
+    }
+
+    /** Chapter 83: a loan by its number, from a form. */
+    public function loan(int $id): Loan
+    {
+        return $this->loans->find($id) ?? throw new LoanNotFound("There is no loan number $id");
+    }
+
+    /** Chapter 83: the book is back on the shelf. */
+    public function giveBack(int $id, DateTimeImmutable $today): Loan
+    {
+        $loan = $this->loan($id);
+        $this->loans->giveBack($loan, $today);
+
+        return $loan;
+    }
+
+    /** Chapter 83: one more loan period, by Loan's rules. */
+    public function renew(int $id, DateTimeImmutable $today): Loan
+    {
+        $loan = $this->loan($id);
+        $loan->renew($today);
+        $this->loans->update($loan);
+
+        return $loan;
+    }
+
+    /** @return list<Member> chapter 83: every member, by name */
+    public function members(): array
+    {
+        return $this->members->all();
+    }
+
+    /** Chapter 83: $by blocks or unblocks a member; never themselves, so the desk always has someone. */
+    public function setBlocked(string $name, bool $blocked, Member $by): Member
+    {
+        $member = $this->otherMember($name, $by);
+        $blocked ? $member->block() : $member->unblock();
+        $this->members->update($member);
+
+        return $member;
+    }
+
+    /** Chapter 83: $by gives a member another role; never themselves, so staff can't lock out the last of them. */
+    public function changeRole(string $name, Role $role, Member $by): Member
+    {
+        $member = $this->otherMember($name, $by);
+        $member->changeRole($role);
+        $this->members->update($member);
+
+        return $member;
+    }
+
+    private function otherMember(string $name, Member $by): Member
+    {
+        $member = $this->member($name);
+        if ($member === $by || mb_strtolower($member->name) === mb_strtolower($by->name)) {
+            throw new InvalidArgumentException('You can\'t change your own account here: ask another member of staff.');
+        }
+
+        return $member;
     }
 
     /** The book with this title, in any case. */
@@ -95,6 +163,14 @@ final readonly class Library
     {
         $member = $this->member($name);
         $book = $this->find($title);
+        // Chapter 83: a blocked member can't borrow, and nobody more than their role allows.
+        if ($member->blocked) {
+            throw new InvalidArgumentException("$member->name is blocked, and can't borrow books.");
+        }
+        $has = count($this->loans->forMember($member->name));
+        if ($has >= $member->role->maxLoans()) {
+            throw new InvalidArgumentException("$member->name has $has books already: that is the most a {$member->role->value} may have.");
+        }
         if (!$book->isAvailable()) {
             throw new NoCopyLeft("All copies of \"$book->title\" are on loan");
         }

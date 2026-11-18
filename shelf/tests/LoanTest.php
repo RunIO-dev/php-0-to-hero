@@ -41,6 +41,38 @@ final class LoanTest extends TestCase
         self::assertSame('Lent: Kindred to Amira, due back on Monday, 16 March 2026', $loan->line());
     }
 
+    /** Chapter 83: extended by the member's loan period, twice at most. */
+    public function testALoanIsExtendedTwiceAtMost(): void
+    {
+        $loan = Loan::start(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-02'));
+        $loan->renew(new DateTimeImmutable('2026-03-16 23:59'));
+        $loan->renew(new DateTimeImmutable('2026-03-20'));
+
+        self::assertSame(['2026-04-13', 2], [$loan->due->format('Y-m-d'), $loan->renewals]);
+        $this->expectExceptionMessage('was extended 2 times already, which is the most.');
+        $loan->renew(new DateTimeImmutable('2026-03-21'));
+    }
+
+    public function testAnOverdueLoanIsNotExtended(): void
+    {
+        $loan = Loan::start(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-02'));
+
+        self::assertFalse($loan->isOverdue(new DateTimeImmutable('2026-03-16 23:59')));
+        self::assertTrue($loan->isOverdue(new DateTimeImmutable('2026-03-17 00:00')));
+        $this->expectExceptionMessage('is overdue: please bring it back to the library.');
+        $loan->renew(new DateTimeImmutable('2026-03-17'));
+    }
+
+    public function testABookComesBackOnce(): void
+    {
+        $loan = Loan::start(self::book(), new Member('Amira', Role::Reader), new DateTimeImmutable('2026-03-02'));
+        $loan->giveBack(new DateTimeImmutable('2026-03-20 10:00'));
+
+        self::assertFalse($loan->isOverdue(new DateTimeImmutable('2026-04-01')), 'Back, so never overdue');
+        $this->expectExceptionMessage('is back already.');
+        $loan->giveBack(new DateTimeImmutable('2026-03-21'));
+    }
+
     private static function book(): Book
     {
         return new Book('Kindred', 'Octavia E. Butler', 1979);

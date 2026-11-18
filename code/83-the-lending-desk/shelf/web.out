@@ -1,0 +1,4401 @@
+$ php bin/console doctrine:migrations:migrate --no-interaction --quiet
+$ php bin/console shelf:import
+Imported 4 books and 4 members
+$ php bin/console shelf:password Amira < amira-password.txt
+Saved a new password for Amira
+$ php bin/console shelf:password Jonas < jonas-password.txt
+Saved a new password for Jonas
+$ php bin/console shelf:books
+- Kindred (Octavia E. Butler, 1979): all copies on loan
+- Kitchen (Banana Yoshimoto, 1988): available
+- Parable of the Sower (Octavia E. Butler, 1993): available
+- Things Fall Apart (Chinua Achebe, 1958): available
+4 books
+$ php bin/console debug:router
+ ------------------ ---------- -------------------------- 
+  Name               Method     Path                      
+ ------------------ ---------- -------------------------- 
+  _preview_error     ANY        /_error/{code}.{_format}  
+  _logout_main       ANY        /logout                   
+  login              GET|POST   /login                    
+  loans              GET        /loans                    
+  signup             GET|POST   /signup                   
+  confirm            GET|POST   /confirm                  
+  forgot             GET|POST   /forgot                   
+  reset              GET|POST   /reset                    
+  account            GET        /account                  
+  account_password   POST       /account/password         
+  account_email      POST       /account/email            
+  account_delete     POST       /account/delete           
+  api_books          GET        /api/books                
+  api_book           GET        /api/book                 
+  api_add            POST       /api/books                
+  api_login          POST       /api/tokens               
+  api_logout         DELETE     /api/tokens               
+  api_loans          GET        /api/loans                
+  books              GET        /                         
+  book               GET        /book                     
+  add                GET|POST   /add                      
+  copies             POST       /copies                   
+  remove             POST       /remove                   
+  cover              GET        /cover                    
+  desk               GET        /desk                     
+  desk_lend          POST       /desk/lend                
+  desk_return        POST       /desk/return              
+  renew              POST       /renew                    
+  members            GET        /members                  
+  members_block      POST       /members/block            
+  members_role       POST       /members/role             
+ ------------------ ---------- -------------------------- 
+
+$ php bin/console shelf:catalogue catalogue.json
+New books added: 53. Already on the shelf: 0.
+
+> GET /
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        57 books · page 1 of 5    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></h2>
+    <p class="by">Mark Twain · 1884</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">A</span>
+    <h2><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></h2>
+    <p class="by">Erich Maria Remarque · 1929</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Americanah">Americanah</a></h2>
+    <p class="by">Chimamanda Ngozi Adichie · 2013</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Animal%20Farm">Animal Farm</a></h2>
+    <p class="by">George Orwell · 1945</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Anna%20Karenina">Anna Karenina</a></h2>
+    <p class="by">Leo Tolstoy · 1878</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Beloved">Beloved</a></h2>
+    <p class="by">Toni Morrison · 1987</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Brave%20New%20World">Brave New World</a></h2>
+    <p class="by">Aldous Huxley · 1932</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Buddenbrooks">Buddenbrooks</a></h2>
+    <p class="by">Thomas Mann · 1901</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">C</span>
+    <h2><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></h2>
+    <p class="by">Fyodor Dostoevsky · 1866</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Don%20Quixote">Don Quixote</a></h2>
+    <p class="by">Miguel de Cervantes · 1605</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Dracula">Dracula</a></h2>
+    <p class="by">Bram Stoker · 1897</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">F</span>
+    <h2><a href="/book?title=Frankenstein">Frankenstein</a></h2>
+    <p class="by">Mary Shelley · 1818</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?page=1" aria-current="page">1</a></li>
+        <li><a href="/?page=2">2</a></li>
+        <li class="gap" aria-hidden="true">…</li>
+        <li><a href="/?page=5">5</a></li>
+        <li><a href="/?page=2" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /?q=hesse&sort=newest
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="hesse" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title">Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest" selected>Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        2 books for “hesse” · <a href="/">clear</a>    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">S</span>
+    <h2><a href="/book?title=Steppenwolf">Steppenwolf</a></h2>
+    <p class="by">Hermann Hesse · 1927</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">S</span>
+    <h2><a href="/book?title=Siddhartha">Siddhartha</a></h2>
+    <p class="by">Hermann Hesse · 1922</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /?available=1&page=2
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1" checked> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        50 books, on the shelf · page 2 of 5 · <a href="/">clear</a>    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">H</span>
+    <h2><a href="/book?title=Heart%20of%20Darkness">Heart of Darkness</a></h2>
+    <p class="by">Joseph Conrad · 1899</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">I</span>
+    <h2><a href="/book?title=Invisible%20Man">Invisible Man</a></h2>
+    <p class="by">Ralph Ellison · 1952</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">J</span>
+    <h2><a href="/book?title=Jane%20Eyre">Jane Eyre</a></h2>
+    <p class="by">Charlotte Brontë · 1847</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-3" aria-hidden="true">K</span>
+    <h2><a href="/book?title=Kafka%20on%20the%20Shore">Kafka on the Shore</a></h2>
+    <p class="by">Haruki Murakami · 2002</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">K</span>
+    <h2><a href="/book?title=Kitchen">Kitchen</a></h2>
+    <p class="by">Banana Yoshimoto · 1988</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">M</span>
+    <h2><a href="/book?title=Madame%20Bovary">Madame Bovary</a></h2>
+    <p class="by">Gustave Flaubert · 1857</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">M</span>
+    <h2><a href="/book?title=Men%20in%20the%20Sun">Men in the Sun</a></h2>
+    <p class="by">Ghassan Kanafani · 1963</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-3" aria-hidden="true">M</span>
+    <h2><a href="/book?title=Middlemarch">Middlemarch</a></h2>
+    <p class="by">George Eliot · 1871</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">M</span>
+    <h2><a href="/book?title=Midnight%27s%20Children">Midnight&#039;s Children</a></h2>
+    <p class="by">Salman Rushdie · 1981</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">M</span>
+    <h2><a href="/book?title=Moby-Dick">Moby-Dick</a></h2>
+    <p class="by">Herman Melville · 1851</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">N</span>
+    <h2><a href="/book?title=Never%20Let%20Me%20Go">Never Let Me Go</a></h2>
+    <p class="by">Kazuo Ishiguro · 2005</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">N</span>
+    <h2><a href="/book?title=Nineteen%20Eighty-Four">Nineteen Eighty-Four</a></h2>
+    <p class="by">George Orwell · 1949</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?available=1&amp;page=1" rel="prev">Previous</a></li>
+        <li><a href="/?available=1&amp;page=1">1</a></li>
+        <li><a href="/?available=1&amp;page=2" aria-current="page">2</a></li>
+        <li><a href="/?available=1&amp;page=3">3</a></li>
+        <li><a href="/?available=1&amp;page=4">4</a></li>
+        <li><a href="/?available=1&amp;page=5">5</a></li>
+        <li><a href="/?available=1&amp;page=3" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /?q=nothing+like+this
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+    </div>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="nothing like this" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>No book matches this search.</p>
+    <a class="button quiet" href="/">Clear the search</a>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /?sort=price
+
+< HTTP/1.1 400 Bad Request
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not understood · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">400</p>
+        <h1>Not understood</h1>
+        <p>This address asks for something the page doesn't know. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /?page=9
+
+< HTTP/1.1 404 Not Found
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not found · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Not found</h1>
+        <p>There is nothing at this address. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /signup
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup" aria-current="page">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Sign up</h1>
+            <p class="lead">Borrow books, and see when they are due.</p>
+        </div>
+    </div>
+    <form class="card narrow" method="post" action="/signup">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <small>What you log in with, 2 to 40 letters</small>
+            <input name="name" value="" required maxlength="40" autocomplete="username"></label>
+        <label>Email <small>For a link that confirms it, and if you forget your password</small>
+            <input type="email" name="email" value="" required autocomplete="email"></label>
+        <label>Password <small>At least 15 characters: a few words together are easy to remember</small>
+            <input type="password" name="password" required minlength="15" autocomplete="new-password"></label>
+        <p class="actions"><button>Sign up</button></p>
+    </form>
+    <p class="aside">Already a member? <a href="/login">Log in</a>.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /signup
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Lina&email=lina%40example.org&password=short&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup" aria-current="page">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Sign up</h1>
+            <p class="lead">Borrow books, and see when they are due.</p>
+        </div>
+    </div>
+    <p class="error" role="alert">A password needs at least 15 characters. A few words together are long and easy to remember.</p>
+    <form class="card narrow" method="post" action="/signup">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <small>What you log in with, 2 to 40 letters</small>
+            <input name="name" value="Lina" required maxlength="40" autocomplete="username"></label>
+        <label>Email <small>For a link that confirms it, and if you forget your password</small>
+            <input type="email" name="email" value="lina@example.org" required autocomplete="email"></label>
+        <label>Password <small>At least 15 characters: a few words together are easy to remember</small>
+            <input type="password" name="password" required minlength="15" autocomplete="new-password"></label>
+        <p class="actions"><button>Sign up</button></p>
+    </form>
+    <p class="aside">Already a member? <a href="/login">Log in</a>.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /signup
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Lina&email=lina%40example.org&password=a+lantern+on+the+night+ferry&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /login
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/login'" />
+
+        <title>Redirecting to /login</title>
+    </head>
+    <body>
+        Redirecting to <a href="/login">/login</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Almost done: Shelf has sent a link to lina@example.org. Open it within two days to confirm your address.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="/forgot">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="/signup">Sign up</a> to borrow books.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Lina&password=a+lantern+on+the+night+ferry&_token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/login
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/login'" />
+
+        <title>Redirecting to http://localhost:8000/login</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/login">http://localhost:8000/login</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <p class="error" role="alert">Please confirm your email first: the link is in the message Shelf sent you.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="Lina" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="/forgot">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="/signup">Sign up</a> to borrow books.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /forgot
+> Content-Type: application/x-www-form-urlencoded
+>
+> email=nobody%40example.org&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /forgot
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/forgot'" />
+
+        <title>Redirecting to /forgot</title>
+    </head>
+    <body>
+        Redirecting to <a href="/forgot">/forgot</a>.
+    </body>
+</html>
+
+> GET /forgot
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Forgot your password · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Forgot your password?</h1>
+            <p class="lead">Shelf sends a link for a new one to your email address.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">If an account has the address nobody@example.org, Shelf has sent it a link. It works for an hour.</p>
+    <form class="card narrow" method="post" action="/forgot">
+        <input type="hidden" name="_token" value="…">
+        <label>Email <input type="email" name="email" required autocomplete="email"></label>
+        <p class="actions"><button>Send the link</button></p>
+    </form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /reset?member=5&check=0123456789abcdef&_expiration=1795166256&_hash=forged
+
+< HTTP/1.1 410 Gone
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>This link has expired · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">410</p>
+        <h1>This link has expired</h1>
+        <p>It may be too old, already used, or not quite complete. <a href="/forgot">Ask for a new password link</a>, or <a href="/login">log in</a>.</p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /add
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/login
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/login'" />
+
+        <title>Redirecting to http://localhost:8000/login</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/login">http://localhost:8000/login</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="Lina" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="/forgot">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="/signup">Sign up</a> to borrow books.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle&_token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/login
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/login'" />
+
+        <title>Redirecting to http://localhost:8000/login</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/login">http://localhost:8000/login</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <p class="error" role="alert">Wrong name or password.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="Amira" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="/forgot">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="/signup">Sign up</a> to borrow books.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Amira&password=tea+kettle+under+the+lemon+tree&_token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
+
+> GET /
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/loans">My loans</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Amira</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Welcome, Amira.</p>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        57 books · page 1 of 5    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></h2>
+    <p class="by">Mark Twain · 1884</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">A</span>
+    <h2><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></h2>
+    <p class="by">Erich Maria Remarque · 1929</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Americanah">Americanah</a></h2>
+    <p class="by">Chimamanda Ngozi Adichie · 2013</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Animal%20Farm">Animal Farm</a></h2>
+    <p class="by">George Orwell · 1945</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Anna%20Karenina">Anna Karenina</a></h2>
+    <p class="by">Leo Tolstoy · 1878</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Beloved">Beloved</a></h2>
+    <p class="by">Toni Morrison · 1987</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Brave%20New%20World">Brave New World</a></h2>
+    <p class="by">Aldous Huxley · 1932</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Buddenbrooks">Buddenbrooks</a></h2>
+    <p class="by">Thomas Mann · 1901</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">C</span>
+    <h2><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></h2>
+    <p class="by">Fyodor Dostoevsky · 1866</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Don%20Quixote">Don Quixote</a></h2>
+    <p class="by">Miguel de Cervantes · 1605</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Dracula">Dracula</a></h2>
+    <p class="by">Bram Stoker · 1897</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">F</span>
+    <h2><a href="/book?title=Frankenstein">Frankenstein</a></h2>
+    <p class="by">Mary Shelley · 1818</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?page=1" aria-current="page">1</a></li>
+        <li><a href="/?page=2">2</a></li>
+        <li class="gap" aria-hidden="true">…</li>
+        <li><a href="/?page=5">5</a></li>
+        <li><a href="/?page=2" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /add
+
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not allowed · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Amira</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">403</p>
+        <h1>Not allowed</h1>
+        <p>Only the library's staff may change books. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /loans
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My loans · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans" aria-current="page">My loans</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Amira</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>My loans</h1>
+            <p class="lead">The books you have, and when they are due back.</p>
+        </div>
+    </div>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>You have no books on loan.</p>
+<a class="button quiet" href="/">Find a book</a></div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /logout
+> Content-Type: application/x-www-form-urlencoded
+>
+> _token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">You are logged out.</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="/forgot">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="/signup">Sign up</a> to borrow books.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Jonas&password=river+stones+in+the+morning+light&_token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
+
+> GET /add
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Add a book</h1>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="/">Cancel</a></p>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=&author=&year=&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Add a book</h1>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" /></label>
+    <p class="error" role="alert">A book needs a title.</p>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" /></label>
+    <p class="error" role="alert">A book needs an author.</p>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" /></label>
+    <p class="error" role="alert">A book needs a year.</p>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="/">Cancel</a></p>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=kindred&author=Octavia+E.+Butler&year=1979&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Add a book</h1>
+    <p class="error" role="alert">&quot;Kindred&quot; is already on the shelf</p>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="kindred" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Octavia E. Butler" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="1979" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="/">Cancel</a></p>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=%22%3E%3Cscript%3Ex()%3C%2Fscript%3E&author=Someone&year=10000&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Add a book</h1>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="&quot;&gt;&lt;script&gt;x()&lt;/script&gt;" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Someone" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="10000" /></label>
+    <p class="error" role="alert">The year is from 1 to 2100.</p>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="/">Cancel</a></p>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Origin: https://stranger.example
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&author=Toni+Morrison&year=1973
+
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expired · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <h1>This form has expired</h1>
+    <p class="error" role="alert">Nothing was saved.</p>
+    <p>Please <a href="/add">open the form again</a> and send it once more.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Content-Type: multipart/form-data; boundary=ShelfBoundary
+>
+> --ShelfBoundary
+> Content-Disposition: form-data; name="_token"
+>
+> {{token}}
+> --ShelfBoundary
+> Content-Disposition: form-data; name="title"
+>
+> Sula
+> --ShelfBoundary
+> Content-Disposition: form-data; name="author"
+>
+> Toni Morrison
+> --ShelfBoundary
+> Content-Disposition: form-data; name="year"
+>
+> 1973
+> --ShelfBoundary
+> Content-Disposition: form-data; name="cover"; filename="sula.png"
+> Content-Type: image/png
+>
+> < tests/Web/not-a-cover.png
+> --ShelfBoundary--
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add a book · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add" aria-current="page">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <h1>Add a book</h1>
+    <form method="post" action="/add" class="card" enctype="multipart/form-data">
+        <label>Title <input type="text" id="title" name="title" required="required" maxlength="200" value="Sula" /></label>
+        <label>Author <input type="text" id="author" name="author" required="required" maxlength="200" value="Toni Morrison" /></label>
+        <label>Year <input type="number" id="year" name="year" required="required" inputmode="numeric" value="1973" /></label>
+        <label>ISBN <small>optional</small> <input type="text" id="isbn" name="isbn" /></label>
+        <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
+            <input type="file" id="cover" name="cover" accept="image/png, image/jpeg" /></label>
+    <p class="error" role="alert">A cover must be a PNG or JPEG image.</p>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="/">Cancel</a></p>
+    <input type="hidden" id="_token" name="_token" data-controller="csrf-protection" value="…" /></form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /add
+> Content-Type: multipart/form-data; boundary=ShelfBoundary
+>
+> --ShelfBoundary
+> Content-Disposition: form-data; name="_token"
+>
+> {{token}}
+> --ShelfBoundary
+> Content-Disposition: form-data; name="title"
+>
+> Sula
+> --ShelfBoundary
+> Content-Disposition: form-data; name="author"
+>
+> Toni Morrison
+> --ShelfBoundary
+> Content-Disposition: form-data; name="year"
+>
+> 1973
+> --ShelfBoundary
+> Content-Disposition: form-data; name="cover"; filename="sula.png"
+> Content-Type: image/png
+>
+> < tests/Web/cover.png
+> --ShelfBoundary--
+
+< HTTP/1.1 303 See Other
+< Location: /
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/'" />
+
+        <title>Redirecting to /</title>
+    </head>
+    <body>
+        Redirecting to <a href="/">/</a>.
+    </body>
+</html>
+
+> GET /
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+        <a class="button" href="/add">Add a book</a>
+    </div>
+    <p class="flash" role="status">Added &quot;Sula&quot;.</p>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        58 books · page 1 of 5    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></h2>
+    <p class="by">Mark Twain · 1884</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">A</span>
+    <h2><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></h2>
+    <p class="by">Erich Maria Remarque · 1929</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Americanah">Americanah</a></h2>
+    <p class="by">Chimamanda Ngozi Adichie · 2013</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Animal%20Farm">Animal Farm</a></h2>
+    <p class="by">George Orwell · 1945</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Anna%20Karenina">Anna Karenina</a></h2>
+    <p class="by">Leo Tolstoy · 1878</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Beloved">Beloved</a></h2>
+    <p class="by">Toni Morrison · 1987</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Brave%20New%20World">Brave New World</a></h2>
+    <p class="by">Aldous Huxley · 1932</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Buddenbrooks">Buddenbrooks</a></h2>
+    <p class="by">Thomas Mann · 1901</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">C</span>
+    <h2><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></h2>
+    <p class="by">Fyodor Dostoevsky · 1866</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Don%20Quixote">Don Quixote</a></h2>
+    <p class="by">Miguel de Cervantes · 1605</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Dracula">Dracula</a></h2>
+    <p class="by">Bram Stoker · 1897</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">F</span>
+    <h2><a href="/book?title=Frankenstein">Frankenstein</a></h2>
+    <p class="by">Mary Shelley · 1818</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?page=1" aria-current="page">1</a></li>
+        <li><a href="/?page=2">2</a></li>
+        <li class="gap" aria-hidden="true">…</li>
+        <li><a href="/?page=5">5</a></li>
+        <li><a href="/?page=2" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+        <a class="button" href="/add">Add a book</a>
+    </div>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        58 books · page 1 of 5    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></h2>
+    <p class="by">Mark Twain · 1884</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">A</span>
+    <h2><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></h2>
+    <p class="by">Erich Maria Remarque · 1929</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Americanah">Americanah</a></h2>
+    <p class="by">Chimamanda Ngozi Adichie · 2013</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Animal%20Farm">Animal Farm</a></h2>
+    <p class="by">George Orwell · 1945</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Anna%20Karenina">Anna Karenina</a></h2>
+    <p class="by">Leo Tolstoy · 1878</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Beloved">Beloved</a></h2>
+    <p class="by">Toni Morrison · 1987</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Brave%20New%20World">Brave New World</a></h2>
+    <p class="by">Aldous Huxley · 1932</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Buddenbrooks">Buddenbrooks</a></h2>
+    <p class="by">Thomas Mann · 1901</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">C</span>
+    <h2><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></h2>
+    <p class="by">Fyodor Dostoevsky · 1866</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Don%20Quixote">Don Quixote</a></h2>
+    <p class="by">Miguel de Cervantes · 1605</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Dracula">Dracula</a></h2>
+    <p class="by">Bram Stoker · 1897</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">F</span>
+    <h2><a href="/book?title=Frankenstein">Frankenstein</a></h2>
+    <p class="by">Mary Shelley · 1818</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?page=1" aria-current="page">1</a></li>
+        <li><a href="/?page=2">2</a></li>
+        <li class="gap" aria-hidden="true">…</li>
+        <li><a href="/?page=5">5</a></li>
+        <li><a href="/?page=2" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="{{token}}">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Kitchen">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>Every book is on the shelf.</p>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /desk/lend
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=kitchen&member=amira&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Lent: Kitchen to Amira, due back on Wednesday, 2 December 2026.</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Due back</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/book?title=Kitchen">Kitchen</a></td>
+                    <td>Amira</td>
+                    <td>Wed 2 Dec 2026</td>
+                    <td><span class="badge ok">due in 14 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <button class="quiet" aria-label="Kitchen is back from Amira">Back</button>
+                        </form>
+                        <form method="post" action="/renew">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <input type="hidden" name="from" value="desk">
+                            <button class="quiet" aria-label="Extend Kitchen for Amira">Extend</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /desk/lend
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&member=Amira&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="error" role="alert">All copies of &quot;Kindred&quot; are on loan</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="Kindred" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="Amira" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Due back</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/book?title=Kitchen">Kitchen</a></td>
+                    <td>Amira</td>
+                    <td>Wed 2 Dec 2026</td>
+                    <td><span class="badge ok">due in 14 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <button class="quiet" aria-label="Kitchen is back from Amira">Back</button>
+                        </form>
+                        <form method="post" action="/renew">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <input type="hidden" name="from" value="desk">
+                            <button class="quiet" aria-label="Extend Kitchen for Amira">Extend</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /renew
+> Content-Type: application/x-www-form-urlencoded
+>
+> loan=1&from=desk&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> POST /desk/return
+> Content-Type: application/x-www-form-urlencoded
+>
+> loan=1&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /desk
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/desk'" />
+
+        <title>Redirecting to /desk</title>
+    </head>
+    <body>
+        Redirecting to <a href="/desk">/desk</a>.
+    </body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">&quot;Kitchen&quot; is back from Amira.</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Kitchen">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="Sula">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="Things Fall Apart">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+            <option value="Lina">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>Every book is on the shelf.</p>
+</div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /members/block
+> Content-Type: application/x-www-form-urlencoded
+>
+> member=Amira&blocked=1&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /members
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/members'" />
+
+        <title>Redirecting to /members</title>
+    </head>
+    <body>
+        Redirecting to <a href="/members">/members</a>.
+    </body>
+</html>
+
+> GET /members
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Members · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members" aria-current="page">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Members</h1>
+            <p class="lead">Who may borrow, and who runs the desk.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Amira is blocked: they can&#039;t borrow until you unblock them.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Amira</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge danger">Blocked</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="blocked" value="0">
+                            <button class="quiet">Unblock <span class="visually-hidden">Amira</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Amira</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Ana</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Ana</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Ana</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Jonas</td>
+                    <td>—</td>
+                    <td>Staff</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <small>You</small>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Kenji</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Lina</td>
+                    <td>lina@example.org</td>
+                    <td>Reader</td>
+                    <td>0</td>
+                    <td>
+<span class="badge warn">Not confirmed</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Lina">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Lina</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Lina">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Lina</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /cover?title=Sula
+
+< HTTP/1.1 200 OK
+< Content-Type: image/png
+< X-Content-Type-Options: nosniff
+
+(73 bytes of binary data)
+
+> GET /cover?title=Kindred
+
+< HTTP/1.1 404 Not Found
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not found · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Not found</h1>
+        <p>There is nothing at this address. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /api/books
+
+< HTTP/1.1 200 OK
+< Link: </api/books?page=1&per_page=20>; rel="first", </api/books?page=2&per_page=20>; rel="next", </api/books?page=3&per_page=20>; rel="last"
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+[
+    {
+        "title": "Adventures of Huckleberry Finn",
+        "author": "Mark Twain",
+        "year": 1884,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "All Quiet on the Western Front",
+        "author": "Erich Maria Remarque",
+        "year": 1929,
+        "copies": 3,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Americanah",
+        "author": "Chimamanda Ngozi Adichie",
+        "year": 2013,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Animal Farm",
+        "author": "George Orwell",
+        "year": 1945,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Anna Karenina",
+        "author": "Leo Tolstoy",
+        "year": 1878,
+        "copies": 0,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Beloved",
+        "author": "Toni Morrison",
+        "year": 1987,
+        "copies": 0,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Brave New World",
+        "author": "Aldous Huxley",
+        "year": 1932,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Buddenbrooks",
+        "author": "Thomas Mann",
+        "year": 1901,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Crime and Punishment",
+        "author": "Fyodor Dostoevsky",
+        "year": 1866,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Don Quixote",
+        "author": "Miguel de Cervantes",
+        "year": 1605,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Dracula",
+        "author": "Bram Stoker",
+        "year": 1897,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "year": 1818,
+        "copies": 3,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Great Expectations",
+        "author": "Charles Dickens",
+        "year": 1861,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Half of a Yellow Sun",
+        "author": "Chimamanda Ngozi Adichie",
+        "year": 2006,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Heart of Darkness",
+        "author": "Joseph Conrad",
+        "year": 1899,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Invisible Man",
+        "author": "Ralph Ellison",
+        "year": 1952,
+        "copies": 2,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Jane Eyre",
+        "author": "Charlotte Brontë",
+        "year": 1847,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Kafka on the Shore",
+        "author": "Haruki Murakami",
+        "year": 2002,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Kindred",
+        "author": "Octavia E. Butler",
+        "year": 1979,
+        "copies": 0,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Kitchen",
+        "author": "Banana Yoshimoto",
+        "year": 1988,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    }
+]
+
+> GET /api/books?per_page=2&page=2
+
+< HTTP/1.1 200 OK
+< Link: </api/books?page=1&per_page=2>; rel="first", </api/books?page=1&per_page=2>; rel="prev", </api/books?page=3&per_page=2>; rel="next", </api/books?page=29&per_page=2>; rel="last"
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+[
+    {
+        "title": "Americanah",
+        "author": "Chimamanda Ngozi Adichie",
+        "year": 2013,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    },
+    {
+        "title": "Animal Farm",
+        "author": "George Orwell",
+        "year": 1945,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    }
+]
+
+> GET /api/books?author=butler&available=true
+
+< HTTP/1.1 200 OK
+< Link: </api/books?author=butler&available=true&page=1&per_page=20>; rel="first", </api/books?author=butler&available=true&page=1&per_page=20>; rel="last"
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+[
+    {
+        "title": "Parable of the Sower",
+        "author": "Octavia E. Butler",
+        "year": 1993,
+        "copies": 1,
+        "isbn": null,
+        "cover": null
+    }
+]
+
+> GET /api/books?per_page=1000
+
+< HTTP/1.1 400 Bad Request
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Bad Request",
+    "status": 400,
+    "detail": "page is a number from 1, per_page a number from 1 to 100, available is true or false."
+}
+
+> GET /api/book?title=kitchen
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+{
+    "title": "Kitchen",
+    "author": "Banana Yoshimoto",
+    "year": 1988,
+    "copies": 1,
+    "isbn": null,
+    "cover": null
+}
+
+> GET /api/book?title=Nowhere
+
+< HTTP/1.1 404 Not Found
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Not Found",
+    "status": 404,
+    "detail": "There is no book called \"Nowhere\"."
+}
+
+> PUT /api/books
+
+< HTTP/1.1 405 Method Not Allowed
+< Content-Type: application/problem+json
+< Allow: GET, POST
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Method Not Allowed",
+    "status": 405,
+    "detail": "Use GET, POST."
+}
+
+> GET /api/nowhere
+
+< HTTP/1.1 404 Not Found
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Not Found",
+    "status": 404,
+    "detail": "The API has no address /api/nowhere."
+}
+
+> POST /api/tokens
+> Content-Type: application/json
+>
+> {"name": "Amira", "password": "tea kettle"}
+
+< HTTP/1.1 401 Unauthorized
+< Content-Type: application/problem+json
+< WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Unauthorized",
+    "status": 401,
+    "detail": "Wrong name or password."
+}
+
+> POST /api/tokens
+> Content-Type: application/json
+>
+> {"name": "Amira", "password": "tea kettle under the lemon tree"}
+
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+{
+    "token": "{{amiratoken}}",
+    "expires_in": 2592000
+}
+
+> GET /api/loans
+> Authorization: Bearer {{amiratoken}}
+
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+[]
+
+> GET /api/loans
+
+< HTTP/1.1 401 Unauthorized
+< Content-Type: application/problem+json
+< WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Unauthorized",
+    "status": 401,
+    "detail": "Send a valid token: Authorization: Bearer <token>."
+}
+
+> POST /api/books
+> Authorization: Bearer {{amiratoken}}
+> Content-Type: application/json
+>
+> {"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+< HTTP/1.1 403 Forbidden
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Forbidden",
+    "status": 403,
+    "detail": "Only staff may add books."
+}
+
+> POST /api/tokens
+> Content-Type: application/json
+>
+> {"name": "Jonas", "password": "river stones in the morning light"}
+
+< HTTP/1.1 201 Created
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+{
+    "token": "{{jonastoken}}",
+    "expires_in": 2592000
+}
+
+> POST /api/books
+> Authorization: Bearer {{jonastoken}}
+> Content-Type: application/json
+>
+> {"title": "Beloved", "author": "Toni Morrison", "year": 1987}
+
+< HTTP/1.1 409 Conflict
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Conflict",
+    "status": 409,
+    "detail": "\"Beloved\" is already on the shelf"
+}
+
+> POST /api/books
+> Authorization: Bearer {{jonastoken}}
+> Content-Type: application/json
+>
+> {"title": "beloved", "author": "Toni Morrison", "year": 1987}
+
+< HTTP/1.1 409 Conflict
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Conflict",
+    "status": 409,
+    "detail": "\"Beloved\" is already on the shelf"
+}
+
+> POST /api/books
+> Authorization: Bearer {{jonastoken}}
+> Content-Type: application/json
+>
+> {"title": "", "author": "Toni Morrison", "year": "1973", "isbn": "978-0-14-118"}
+
+< HTTP/1.1 422 Unprocessable Content
+< Content-Type: application/problem+json
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "/problems/invalid-book",
+    "title": "Unprocessable Content",
+    "status": 422,
+    "detail": "The book has mistakes: errors names each one.",
+    "errors": [
+        {
+            "field": "year",
+            "message": "The year is a number, such as 1979."
+        },
+        {
+            "field": "title",
+            "message": "A book needs a title."
+        },
+        {
+            "field": "isbn",
+            "message": "\"978-0-14-118\" is not a valid ISBN-13."
+        }
+    ]
+}
+
+> DELETE /api/tokens
+> Authorization: Bearer {{amiratoken}}
+
+< HTTP/1.1 204 No Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+> GET /api/loans
+> Authorization: Bearer {{amiratoken}}
+
+< HTTP/1.1 401 Unauthorized
+< Content-Type: application/problem+json
+< WWW-Authenticate: Bearer
+< X-Content-Type-Options: nosniff
+
+{
+    "type": "about:blank",
+    "title": "Unauthorized",
+    "status": 401,
+    "detail": "Send a valid token: Authorization: Bearer <token>."
+}
+
+> GET /book?title=kindred
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <div class="book-page">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+        <div>
+            <h1>Kindred</h1>
+            <dl class="facts">
+                <dt>Author</dt>
+                <dd>Octavia E. Butler</dd>
+                <dt>Year</dt>
+                <dd>1979</dd>
+                <dt>On the shelf</dt>
+                <dd>
+<span class="badge warn">All copies on loan</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">For the library's staff</h2>
+                <form class="inline-form" method="post" action="/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <label>Copies on the shelf <input name="copies" value="0" required inputmode="numeric"></label>
+                    <button>Save</button>
+                </form>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">Remove this book</h2>
+                <form method="post" action="/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <p>This takes it off the shelf for good, with its cover.</p>
+                    <p class="actions"><button class="danger">Remove this book</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /copies
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&copies=-1&_token={{token}}
+
+< HTTP/1.1 422 Unprocessable Content
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <p class="error" role="alert">Copies must be a whole number from 0 to 999.</p>
+    <div class="book-page">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+        <div>
+            <h1>Kindred</h1>
+            <dl class="facts">
+                <dt>Author</dt>
+                <dd>Octavia E. Butler</dd>
+                <dt>Year</dt>
+                <dd>1979</dd>
+                <dt>On the shelf</dt>
+                <dd>
+<span class="badge warn">All copies on loan</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">For the library's staff</h2>
+                <form class="inline-form" method="post" action="/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <label>Copies on the shelf <input name="copies" value="-1" required inputmode="numeric"></label>
+                    <button>Save</button>
+                </form>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">Remove this book</h2>
+                <form method="post" action="/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <p>This takes it off the shelf for good, with its cover.</p>
+                    <p class="actions"><button class="danger">Remove this book</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /copies
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Kindred&copies=3&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /book?title=Kindred
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/book?title=Kindred'" />
+
+        <title>Redirecting to /book?title=Kindred</title>
+    </head>
+    <body>
+        Redirecting to <a href="/book?title=Kindred">/book?title=Kindred</a>.
+    </body>
+</html>
+
+> GET /book?title=Kindred
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kindred · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <p class="flash" role="status">Saved: the library has 3 copies.</p>
+    <div class="book-page">
+    <span class="cover tone-0" aria-hidden="true">K</span>
+        <div>
+            <h1>Kindred</h1>
+            <dl class="facts">
+                <dt>Author</dt>
+                <dd>Octavia E. Butler</dd>
+                <dt>Year</dt>
+                <dd>1979</dd>
+                <dt>On the shelf</dt>
+                <dd>
+<span class="badge ok">3 copies</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">For the library's staff</h2>
+                <form class="inline-form" method="post" action="/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <label>Copies on the shelf <input name="copies" value="3" required inputmode="numeric"></label>
+                    <button>Save</button>
+                </form>
+                <p><a href="/desk?title=Kindred">Lend this book at the desk</a></p>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">Remove this book</h2>
+                <form method="post" action="/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Kindred">
+                    <p>This takes it off the shelf for good, with its cover.</p>
+                    <p class="actions"><button class="danger">Remove this book</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /book?title=Sula
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sula · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <p class="back"><a href="/">← All books</a></p>
+    <div class="book-page">
+    <img class="cover" src="/cover?title=Sula" alt="" loading="lazy">
+        <div>
+            <h1>Sula</h1>
+            <dl class="facts">
+                <dt>Author</dt>
+                <dd>Toni Morrison</dd>
+                <dt>Year</dt>
+                <dd>1973</dd>
+                <dt>On the shelf</dt>
+                <dd>
+<span class="badge ok">1 copy</span>
+                </dd>
+            </dl>
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">For the library's staff</h2>
+                <form class="inline-form" method="post" action="/copies">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Sula">
+                    <label>Copies on the shelf <input name="copies" value="1" required inputmode="numeric"></label>
+                    <button>Save</button>
+                </form>
+                <p><a href="/desk?title=Sula">Lend this book at the desk</a></p>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">Remove this book</h2>
+                <form method="post" action="/remove">
+                    <input type="hidden" name="_token" value="…">
+                    <input type="hidden" name="title" value="Sula">
+                    <p>This takes it off the shelf for good, with its cover.</p>
+                    <p class="actions"><button class="danger">Remove this book</button></p>
+                </form>
+            </section>
+        </div>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /remove
+> Content-Type: application/x-www-form-urlencoded
+>
+> title=Sula&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/'" />
+
+        <title>Redirecting to /</title>
+    </head>
+    <body>
+        Redirecting to <a href="/">/</a>.
+    </body>
+</html>
+
+> GET /
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/" aria-current="page">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+        <a class="button" href="/add">Add a book</a>
+    </div>
+    <p class="flash" role="status">Removed &quot;Sula&quot;.</p>
+    <form class="search" method="get" action="/" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+                <option value="title" selected>Title, A to Z</option>
+                <option value="author">Author, A to Z</option>
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+    <p class="count" role="status">
+        57 books · page 1 of 5    </p>
+    <ul class="books">
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></h2>
+    <p class="by">Mark Twain · 1884</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">A</span>
+    <h2><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></h2>
+    <p class="by">Erich Maria Remarque · 1929</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Americanah">Americanah</a></h2>
+    <p class="by">Chimamanda Ngozi Adichie · 2013</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Animal%20Farm">Animal Farm</a></h2>
+    <p class="by">George Orwell · 1945</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">A</span>
+    <h2><a href="/book?title=Anna%20Karenina">Anna Karenina</a></h2>
+    <p class="by">Leo Tolstoy · 1878</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-5" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Beloved">Beloved</a></h2>
+    <p class="by">Toni Morrison · 1987</p>
+<span class="badge warn">On loan</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-1" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Brave%20New%20World">Brave New World</a></h2>
+    <p class="by">Aldous Huxley · 1932</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">B</span>
+    <h2><a href="/book?title=Buddenbrooks">Buddenbrooks</a></h2>
+    <p class="by">Thomas Mann · 1901</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">C</span>
+    <h2><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></h2>
+    <p class="by">Fyodor Dostoevsky · 1866</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-4" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Don%20Quixote">Don Quixote</a></h2>
+    <p class="by">Miguel de Cervantes · 1605</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-0" aria-hidden="true">D</span>
+    <h2><a href="/book?title=Dracula">Dracula</a></h2>
+    <p class="by">Bram Stoker · 1897</p>
+<span class="badge ok">Available</span>
+</li>
+<li class="book-card">
+    <span class="cover tone-2" aria-hidden="true">F</span>
+    <h2><a href="/book?title=Frankenstein">Frankenstein</a></h2>
+    <p class="by">Mary Shelley · 1818</p>
+<span class="badge ok">Available</span>
+</li>
+    </ul>
+<nav class="pager" aria-label="Pages">
+    <ul>
+        <li><a href="/?page=1" aria-current="page">1</a></li>
+        <li><a href="/?page=2">2</a></li>
+        <li class="gap" aria-hidden="true">…</li>
+        <li><a href="/?page=5">5</a></li>
+        <li><a href="/?page=2" rel="next">Next</a></li>
+    </ul>
+</nav>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /cover?title=Sula
+
+< HTTP/1.1 404 Not Found
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not found · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Not found</h1>
+        <p>There is nothing at this address. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /remove?title=Kindred
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: POST
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+> GET /logout
+
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Expired · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <h1>This form has expired</h1>
+    <p class="error" role="alert">Nothing was saved.</p>
+    <p>Please <a href="/add">open the form again</a> and send it once more.</p>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /add.php
+
+< HTTP/1.1 404 Not Found
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not found · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-gjFubG1.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+                <a href="/signup">Sign up</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Not found</h1>
+        <p>There is nothing at this address. <a href="/">Back to the books</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> DELETE /add
+
+< HTTP/1.1 405 Method Not Allowed
+< Allow: GET, POST
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8

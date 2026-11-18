@@ -24,6 +24,8 @@ final class AccessibilityTest extends ShelfWebTestCase
         yield 'a forgotten password' => ['/forgot', null];
         yield 'a link that has expired' => ['/reset?member=1&check=x', null];
         yield 'my account' => ['/account', 'Amira'];
+        yield 'the lending desk' => ['/desk', 'Jonas'];
+        yield 'the members' => ['/members', 'Jonas'];
         yield "a book's page" => ['/book?title=Kindred', null];
         yield 'a missing page' => ['/nothing-here', null];
         yield 'a request not understood' => ['/?sort=price', null];

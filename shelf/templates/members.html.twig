@@ -1,0 +1,62 @@
+{# The members (chapter 83), for the staff: each with their role, address, loans and whether they
+   may borrow. Block or unblock, and make a reader staff or the other way round; never oneself. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Members · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Members</h1>
+            <p class="lead">Who may borrow, and who runs the desk.</p>
+        </div>
+    </div>
+{% include '_flash.html.twig' %}
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+{% for person in members %}
+                <tr>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.email ?? '—' }}</td>
+                    <td>{{ person.role.value|capitalize }}</td>
+                    <td>{{ counts[person.name] }}</td>
+                    <td>
+{% if person.blocked %}
+{% include 'components/_badge.html.twig' with {text: 'Blocked', level: 'danger'} only %}
+{% elseif not person.confirmed %}
+{% include 'components/_badge.html.twig' with {text: 'Not confirmed', level: 'warn'} only %}
+{% else %}
+{% include 'components/_badge.html.twig' with {text: 'May borrow', level: 'ok'} only %}
+{% endif %}
+                    </td>
+                    <td><div class="row-actions">
+{% if person.name != member.name %}
+                        <form method="post" action="{{ path('members_block') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                            <input type="hidden" name="member" value="{{ person.name }}">
+                            <input type="hidden" name="blocked" value="{{ person.blocked ? '0' : '1' }}">
+                            <button class="quiet">{{ person.blocked ? 'Unblock' : 'Block' }} <span class="visually-hidden">{{ person.name }}</span></button>
+                        </form>
+                        <form method="post" action="{{ path('members_role') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                            <input type="hidden" name="member" value="{{ person.name }}">
+                            <input type="hidden" name="role" value="{{ person.role.value == 'staff' ? 'reader' : 'staff' }}">
+                            <button class="quiet">{{ person.role.value == 'staff' ? 'Make reader' : 'Make staff' }} <span class="visually-hidden">{{ person.name }}</span></button>
+                        </form>
+{% else %}
+                        <small>You</small>
+{% endif %}
+                    </div></td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

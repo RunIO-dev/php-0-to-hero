@@ -90,6 +90,12 @@ final class Book
         $this->copies--;
     }
 
+    /** A copy comes back from a loan (chapter 83), and is on the shelf again. */
+    public function putBack(): void
+    {
+        $this->copies++;
+    }
+
     /** The library now has $copies copies of this book (chapter 55): more were bought, or some were lost. */
     public function changeCopies(int $copies): void
     {
