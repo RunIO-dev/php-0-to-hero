@@ -20,6 +20,10 @@ final class AccessibilityTest extends ShelfWebTestCase
         yield 'a search' => ['/?q=butler&sort=newest', null];
         yield 'a search that finds nothing' => ['/?q=nothing', null];
         yield 'log in' => ['/login', null];
+        yield 'sign up' => ['/signup', null];
+        yield 'a forgotten password' => ['/forgot', null];
+        yield 'a link that has expired' => ['/reset?member=1&check=x', null];
+        yield 'my account' => ['/account', 'Amira'];
         yield "a book's page" => ['/book?title=Kindred', null];
         yield 'a missing page' => ['/nothing-here', null];
         yield 'a request not understood' => ['/?sort=price', null];

@@ -1,0 +1,64 @@
+# Symfony's security (chapter 76): who the visitor is (the firewalls), and what they may do (roles,
+# access_control, and the voters in src/Security/). In place of chapter 62's login, 63's RequireLogin,
+# and 69's tokens, read by hand.
+security:
+    # Hashes made by password_hash() (chapter 61), as Accounts makes them; "auto" checks those too.
+    password_hashers:
+        Shelf\Member: auto
+
+    # Where a member comes from, by the name typed into the login form.
+    providers:
+        members:
+            entity: { class: Shelf\Member, property: name }
+
+    # Staff may do whatever a reader may.
+    role_hierarchy:
+        ROLE_STAFF: ROLE_READER
+
+    firewalls:
+        # Programs (chapter 69): a token in each request, and never a session.
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: members
+            access_token:
+                token_handler: Shelf\Security\ApiTokenHandler
+                failure_handler: Shelf\Security\ApiTokenFailure
+        # People: the login form, the session, and logging out, each with the CSRF token of chapter 51.
+        main:
+            lazy: true
+            provider: members
+            # Chapter 82: a member who signed up logs in only once their email is confirmed.
+            user_checker: Shelf\Security\ConfirmedMembers
+            form_login:
+                login_path: login
+                check_path: login
+                username_parameter: name
+                password_parameter: password
+                enable_csrf: true
+                csrf_parameter: _token
+                csrf_token_id: shelf
+                default_target_path: books
+            logout:
+                path: /logout
+                target: books
+                enable_csrf: true
+                csrf_parameter: _token
+                csrf_token_id: shelf
+            # Chapter 62's advanced exercise, built in: 5 wrong passwords per name and address, then a pause.
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+
+    # Only the first rule whose path matches counts. The pages for staff check their voter themselves.
+    access_control:
+        - { path: ^/loans$, roles: ROLE_READER }
+        - { path: ^/account, roles: ROLE_READER }
+
+when@test:
+    security:
+        password_hashers:
+            # A hash must be slow on a server; in tests, as fast as bcrypt allows.
+            Shelf\Member:
+                algorithm: auto
+                cost: 4

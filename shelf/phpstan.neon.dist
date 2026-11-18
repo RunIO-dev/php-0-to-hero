@@ -16,4 +16,8 @@ parameters:
         # Doctrine writes each entity's ID, and Member's password hash, itself (chapter 74).
         -
             identifiers: [property.onlyWritten, property.unusedType]
-            paths: [src/Book.php, src/Member.php, src/Loan.php]
+            paths: [src/Book.php, src/Loan.php]
+        # Chapter 82: Member reads its ID (id()) now, so only "never assigned" is left.
+        -
+            identifier: property.unusedType
+            path: src/Member.php

@@ -1,7 +1,7 @@
 # One setup for everyone: the same images run the course examples in CI.
 #   docker compose run --rm php php tools/check.php      PHP 8.6
 #   docker compose run --rm php85 composer verify        PHP 8.5
-#   docker compose up web                                Shelf in the browser (chapter 45)
+#   docker compose up web                                Shelf in the browser (chapter 45), and Mailpit (82)
 #   docker compose up -d --wait db                       MariaDB, for chapter 59 (stop it: docker compose stop db)
 
 # The database users' passwords (chapter 59). They are for the database in Docker on your computer,
@@ -37,6 +37,12 @@ services:
     image: php-0-to-hero:8.6
     command: php -S 0.0.0.0:8000 -t shelf/public shelf/public/index.php
     ports: ["127.0.0.1:8000:8000"]
+    depends_on: [mailpit]
+  # Mailpit (chapter 82): an inbox for every email Shelf sends while you work, at http://localhost:8025.
+  # Nothing it receives leaves your computer.
+  mailpit:
+    image: axllent/mailpit:v1.29
+    ports: ["127.0.0.1:8025:8025"]
   # MariaDB (chapter 59), a database server, in its long-term support version. It has no ports:
   # only the containers above can reach it, by the name db. The data stays in the volume db-data
   # until: docker compose down -v

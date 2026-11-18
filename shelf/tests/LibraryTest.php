@@ -153,6 +153,24 @@ final class LibraryTest extends TestCase
         $this->library->remove('Kindred');
     }
 
+    /** Chapter 82: a member deletes their account. */
+    public function testAMemberCanLeave(): void
+    {
+        $this->library->removeMember($this->library->findMember('Amira') ?? self::fail('No Amira'));
+
+        self::assertNull($this->library->findMember('Amira'));
+    }
+
+    public function testAMemberWithBooksCantLeave(): void
+    {
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        $this->library->lend('Things Fall Apart', 'Amira', new DateTimeImmutable('2026-03-02'));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Please return your 2 books first: then you can delete your account.');
+        $this->library->removeMember($this->library->findMember('Amira') ?? self::fail('No Amira'));
+    }
+
     public function testAPageKnowsHowManyPagesThereAre(): void
     {
         $first = $this->library->page(new BookQuery(), 1, 1);

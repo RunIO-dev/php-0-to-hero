@@ -40,7 +40,7 @@ final class ApiTokensTest extends TestCase
     {
         $token = $this->tokens->issue('Amira', new DateTimeImmutable('2026-03-02 10:00 UTC'))['token'];
 
-        self::assertEquals(new Member('Amira', Role::Reader), $this->tokens->member($token, new DateTimeImmutable('2026-04-01 09:59 UTC')));
+        self::assertSame('Amira', $this->tokens->member($token, new DateTimeImmutable('2026-04-01 09:59 UTC'))?->name);
         self::assertNull($this->tokens->member($token, new DateTimeImmutable('2026-04-01 10:00 UTC')));
         self::assertNull($this->tokens->member('not-a-token', new DateTimeImmutable('2026-03-02 10:00 UTC')));
     }

@@ -21,7 +21,8 @@ use Twig\Environment;
 /**
  * What a visitor or a program gets when a request ends in an exception, as before chapter 73:
  * - under /api/, always problem details (chapter 68), with a reference for an error nothing caught;
- * - for pages, Shelf's own "Not found" for a 404, "Not understood" for a 400 (chapter 81), "Not
+ * - for pages, Shelf's own "Not found" for a 404, "Not understood" for a 400 (chapter 81), "Slow
+ *   down" for a 429 (chapter 82), "Not
  *   allowed" for a 403 (chapter 76: a voter said no, which goes into the log), and the status alone for another HTTP error, such as 405 with its
  *   Allow header;
  * - for an error nothing caught: on a developer's computer (debug), Symfony's page with every detail;
@@ -73,6 +74,7 @@ final readonly class ErrorPages implements EventSubscriberInterface
         return match ($status) {
             Response::HTTP_NOT_FOUND => $this->twig->render('missing.html.twig'),
             Response::HTTP_BAD_REQUEST => $this->twig->render('unclear.html.twig'), // chapter 81
+            Response::HTTP_TOO_MANY_REQUESTS => $this->twig->render('slow-down.html.twig'), // chapter 82
             default => '',
         };
     }

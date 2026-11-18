@@ -1,0 +1,8 @@
+{% extends 'email/base.html.twig' %}
+
+{% block body %}
+<p>Hello {{ name }},</p>
+<p>someone just signed up at Shelf with this address, which already has your account. If it was you: log in as <strong>{{ name }}</strong>, or choose a new password, within an hour:</p>
+<p><a class="button" href="{{ link }}">Choose a new password</a></p>
+<p class="small">If it wasn't you, nothing has changed: you can ignore this message.</p>
+{% endblock %}

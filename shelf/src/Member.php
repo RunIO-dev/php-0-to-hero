@@ -7,12 +7,14 @@ namespace Shelf;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use InvalidArgumentException;
 use UnexpectedValueException;
 
 /**
  * Someone who may borrow books. Chapter 74: an entity, with the password hash of chapter 61, which
  * MemberRepository changes. Chapter 76: a user for Symfony's security, which logs them in by their
- * name and password, and gives them the roles of their Role.
+ * name and password, and gives them the roles of their Role. Chapter 82: an email address, confirmed
+ * by a link, for members who sign up themselves.
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'members')]
@@ -26,6 +28,14 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $passwordHash = null;
 
+    /** Chapter 82: where Shelf sends links; null for the members of members.json, until they add one. */
+    #[ORM\Column(nullable: true, unique: true, options: ['collation' => 'NOCASE'])]
+    public private(set) ?string $email = null;
+
+    /** Chapter 82: false from sign-up until the link in the first email is used; until then, no login. */
+    #[ORM\Column(options: ['default' => true])]
+    public private(set) bool $confirmed = true;
+
     /** @param non-empty-string $name what a member logs in with, so never empty (chapter 76) */
     public function __construct(
         #[ORM\Column(unique: true, options: ['collation' => 'NOCASE'])]
@@ -33,6 +43,38 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
         #[ORM\Column(enumType: Role::class)]
         public readonly Role $role,
     ) {}
+
+    /** The row's number (chapter 82: in the links of emails); the database gives it when the member is stored. */
+    public function id(): int
+    {
+        return $this->id ?? throw new \LogicException("$this->name isn't stored yet");
+    }
+
+    /** A reader who signed up themselves (chapter 82), not confirmed yet. */
+    public static function signUp(string $name, string $email): self
+    {
+        if ($name === '') {
+            throw new InvalidArgumentException('A member needs a name');
+        }
+        $member = new self($name, Role::Reader);
+        $member->email = self::normalEmail($email);
+        $member->confirmed = false;
+
+        return $member;
+    }
+
+    /** The link in an email was used: this address is the member's, and they may log in. */
+    public function confirmEmail(string $email): void
+    {
+        $this->email = self::normalEmail($email);
+        $this->confirmed = true;
+    }
+
+    /** The form that addresses are kept in: trimmed, in lower case, so one address is one account. */
+    public static function normalEmail(string $email): string
+    {
+        return mb_strtolower(trim($email));
+    }
 
     public function getUserIdentifier(): string
     {

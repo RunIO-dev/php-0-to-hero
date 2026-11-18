@@ -12,6 +12,9 @@ services:
       DATABASE_URL: sqlite:////app/data/shelf.sqlite
       SHELF_COVERS: data/covers
       SHELF_LOG: php://stderr
+      # Chapter 82: the server's mail, from its environment, as the secret is; without one, nothing is sent.
+      MAILER_DSN: ${SHELF_MAILER_DSN:-null://null}
+      SHELF_MAIL_FROM: ${SHELF_MAIL_FROM:-Shelf <shelf@localhost>}
     volumes: ["data:/app/data"]
     restart: unless-stopped
   web:

@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Shelf\Tests;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shelf\Accounts;
+use Shelf\EmailInUse;
 use Shelf\Member;
 use Shelf\MemberNotFound;
 use Shelf\Role;
@@ -37,7 +39,7 @@ final class AccountsTest extends TestCase
     {
         $this->accounts->setPassword('Amira', self::PASSWORD);
 
-        self::assertEquals(new Member('Amira', Role::Reader), $this->accounts->authenticate('amira', self::PASSWORD));
+        self::assertSame('Amira', $this->accounts->authenticate('amira', self::PASSWORD)?->name);
     }
 
     public function testAWrongPasswordOrNameFindsNobody(): void
@@ -83,5 +85,57 @@ final class AccountsTest extends TestCase
         self::assertNotSame($old, $new);
         self::assertFalse(password_needs_rehash($new, PASSWORD_DEFAULT, ['cost' => 4]));
         self::assertTrue(password_verify(self::PASSWORD, $new));
+    }
+
+    /** Chapter 82: a new reader, not confirmed, with a hash of their password. */
+    public function testASignUpMakesAReaderWhoWaitsForTheirEmail(): void
+    {
+        $member = $this->accounts->signUp('  Ana Lima ', ' Ana@Example.org ', self::PASSWORD);
+
+        self::assertSame(['Ana Lima', 'ana@example.org', Role::Reader, false], [$member->name, $member->email, $member->role, $member->confirmed]);
+        self::assertSame($member, $this->accounts->authenticate('ana lima', self::PASSWORD));
+        self::assertSame($member, $this->members->findByEmail('ANA@example.org'));
+    }
+
+    /** @return iterable<string, array{string, string, string, string}> name, email, password, message */
+    public static function wrongSignUps(): iterable
+    {
+        yield 'a name of one letter' => ['A', 'a@example.org', self::PASSWORD, 'A name has 2 to 40'];
+        yield 'a name with a tag' => ['<b>Ana</b>', 'a@example.org', self::PASSWORD, 'A name has 2 to 40'];
+        yield 'a name that is taken' => ['JONAS', 'a@example.org', self::PASSWORD, 'The name JONAS is taken'];
+        yield 'not an address' => ['Ana', 'ana at home', self::PASSWORD, 'not an email address'];
+        yield 'a short password' => ['Ana', 'a@example.org', 'short', 'at least 15 characters'];
+    }
+
+    #[DataProvider('wrongSignUps')]
+    public function testASignUpSaysWhatIsWrong(string $name, string $email, string $password, string $message): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
+
+        $this->accounts->signUp($name, $email, $password);
+    }
+
+    public function testAnAddressHasOneAccount(): void
+    {
+        $this->accounts->signUp('Ana', 'ana@example.org', self::PASSWORD);
+
+        $this->expectException(EmailInUse::class);
+        $this->accounts->signUp('Ana Two', 'ANA@example.org', self::PASSWORD);
+    }
+
+    public function testAChangeOfPasswordNeedsTheCurrentOne(): void
+    {
+        $this->accounts->setPassword('Amira', self::PASSWORD);
+
+        try {
+            $this->accounts->changePassword('Amira', 'not the password', 'a whole new sentence of words');
+            self::fail('Changed without the current password');
+        } catch (InvalidArgumentException $e) {
+            self::assertSame('The current password is wrong.', $e->getMessage());
+        }
+        $this->accounts->changePassword('Amira', self::PASSWORD, 'a whole new sentence of words');
+        self::assertNotNull($this->accounts->authenticate('Amira', 'a whole new sentence of words'));
+        self::assertNull($this->accounts->authenticate('Amira', self::PASSWORD));
     }
 }

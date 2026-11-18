@@ -1,0 +1,21 @@
+{# The frame of Shelf's emails (chapter 82). Mail programs ignore most of CSS, and load no stylesheet:
+   the few styles are in the message itself, and the text part says the same without any. #}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+    body { margin: 0; padding: 24px; background: #f7f4ee; color: #1d232e; font: 16px/1.5 system-ui, sans-serif; }
+    .card { max-width: 32rem; margin: 0 auto; padding: 24px; border-radius: 14px; background: #fff; }
+    .brand { margin: 0 0 16px; font: 700 20px Georgia, serif; color: #1d6b58; }
+    .button { display: inline-block; padding: 10px 18px; border-radius: 999px; background: #1d6b58; color: #fff; font-weight: 600; text-decoration: none; }
+    .small { color: #5a6170; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="card">
+<p class="brand">Shelf</p>
+{% block body %}{% endblock %}
+</div>
+</body>
+</html>

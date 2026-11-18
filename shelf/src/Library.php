@@ -72,6 +72,19 @@ final readonly class Library
         ];
     }
 
+    /**
+     * A member deletes their account (chapter 82). Not while they have books: the library would lose
+     * track of them. Their API tokens go with them.
+     */
+    public function removeMember(Member $member): void
+    {
+        $count = count($this->loans->forMember($member->name));
+        if ($count > 0) {
+            throw new InvalidArgumentException('Please return your ' . ($count === 1 ? 'book' : "$count books") . ' first: then you can delete your account.');
+        }
+        $this->members->remove($member);
+    }
+
     /** The book with this title, in any case. */
     public function find(string $title): Book
     {

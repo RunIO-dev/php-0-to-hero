@@ -3,6 +3,8 @@
 # and Jonas, as you would set it up (chapters 54 and 61). Chapter 74: Doctrine makes the tables, and
 # Symfony's commands fill them.
 # docroot public
+# Chapter 82: no email leaves the check; the tests read what would have been sent.
+# env MAILER_DSN=null://null
 # run php bin/console doctrine:migrations:migrate --no-interaction --quiet
 # run php bin/console shelf:import
 # run php bin/console shelf:password Amira < amira-password.txt
@@ -33,6 +35,51 @@ GET /?sort=price
 
 ###
 GET /?page=9
+
+###
+# Chapter 82: anyone may sign up. A mistake comes back with what was typed, never the password.
+# capture token /name="_token" value="([^"]+)"/
+GET /signup
+
+###
+POST /signup
+Content-Type: application/x-www-form-urlencoded
+
+name=Lina&email=lina%40example.org&password=short&_token={{token}}
+
+###
+# Shelf sends a link to the address, and waits for it.
+POST /signup
+Content-Type: application/x-www-form-urlencoded
+
+name=Lina&email=lina%40example.org&password=a+lantern+on+the+night+ferry&_token={{token}}
+
+###
+GET /login
+
+###
+# Until the link is used, even the right password doesn't log Lina in.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Lina&password=a+lantern+on+the+night+ferry&_token={{token}}
+
+###
+GET /login
+
+###
+# A forgotten password: the same answer for every address, known or not.
+POST /forgot
+Content-Type: application/x-www-form-urlencoded
+
+email=nobody%40example.org&_token={{token}}
+
+###
+GET /forgot
+
+###
+# A link that was changed, or is too old: 410 Gone.
+GET /reset?member=5&check=0123456789abcdef&_expiration=1795166256&_hash=forged
 
 ###
 # A page that changes the library sends a visitor to the login.

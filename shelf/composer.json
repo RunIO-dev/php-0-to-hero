@@ -26,7 +26,8 @@
         "symfony/rate-limiter": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/asset": "7.4.*",
-        "symfony/clock": "7.4.*"
+        "symfony/clock": "7.4.*",
+        "symfony/mailer": "7.4.*"
     },
     "autoload": {
         "psr-4": {

@@ -1,0 +1,26 @@
+{# The login form (chapter 62), empty or with the name that was typed. The password never comes back.
+   Chapter 76: the firewall reads what it sends. Chapter 82: error says why the last try failed, and
+   the links lead to sign-up and to a new password. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+{% include '_flash.html.twig' %}
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <form class="card narrow" method="post" action="{{ path('login') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <label>Name <input name="name" value="{{ name }}" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button> <a href="{{ path('forgot') }}">Forgot your password?</a></p>
+    </form>
+    <p class="aside">New here? <a href="{{ path('signup') }}">Sign up</a> to borrow books.</p>
+{% endblock %}

@@ -24,6 +24,9 @@ Then serve it, and open http://localhost:8000:
 docker compose up web
 ```
 
+The emails Shelf sends (chapter 82: sign-up, a new password) arrive in Mailpit,
+at http://localhost:8025. None leaves your computer.
+
 Run its checks, as CI does (chapter 79): the tests (chapter 77; they use their
 own database, in `var/`), PHPStan and the code style:
 

@@ -1,0 +1,12 @@
+{
+    "name": "learner/accounts",
+    "description": "Chapter 82's examples: signed links, links that work once, and an email with Symfony Mailer.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/clock": "7.4.*",
+        "symfony/http-foundation": "7.4.*",
+        "symfony/mailer": "7.4.*"
+    }
+}

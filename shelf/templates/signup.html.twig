@@ -1,0 +1,28 @@
+{# Sign-up (chapter 82): a name, an email address and a password. After a mistake, the form comes back
+   with the name and the address; the password never does. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Sign up · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Sign up</h1>
+            <p class="lead">Borrow books, and see when they are due.</p>
+        </div>
+    </div>
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <form class="card narrow" method="post" action="{{ path('signup') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <label>Name <small>What you log in with, 2 to 40 letters</small>
+            <input name="name" value="{{ name }}" required maxlength="40" autocomplete="username"></label>
+        <label>Email <small>For a link that confirms it, and if you forget your password</small>
+            <input type="email" name="email" value="{{ email }}" required autocomplete="email"></label>
+        <label>Password <small>At least 15 characters: a few words together are easy to remember</small>
+            <input type="password" name="password" required minlength="15" autocomplete="new-password"></label>
+        <p class="actions"><button>Sign up</button></p>
+    </form>
+    <p class="aside">Already a member? <a href="{{ path('login') }}">Log in</a>.</p>
+{% endblock %}

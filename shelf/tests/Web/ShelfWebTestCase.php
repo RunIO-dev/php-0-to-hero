@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Shelf\Tests\Web;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Shelf\Book;
 use Shelf\BookRepository;
 use Shelf\Isbn;
@@ -34,6 +35,7 @@ abstract class ShelfWebTestCase extends WebTestCase
         $covers = $_SERVER['SHELF_COVERS'] ?? null; // from .env.test
         self::assertIsString($covers);
         new Filesystem()->remove($this->client->getKernel()->getProjectDir() . '/' . $covers);
+        self::service(CacheItemPoolInterface::class, 'rate_limiter.test')->clear(); // chapter 82: no email sent yet
 
         self::service(BookRepository::class)->add(new Book('Kindred', 'Octavia E. Butler', 1979, 2, new Isbn('9780807083697')));
         $members = self::service(MemberRepository::class);
@@ -51,14 +53,15 @@ abstract class ShelfWebTestCase extends WebTestCase
 
     /**
      * A service from the test container, which also holds the services that the application keeps private.
+     * $name, when the service's name isn't its class.
      *
      * @template T of object
      * @param class-string<T> $id
      * @return T
      */
-    protected static function service(string $id): object
+    protected static function service(string $id, ?string $name = null): object
     {
-        $service = static::getContainer()->get($id);
+        $service = static::getContainer()->get($name ?? $id);
         self::assertInstanceOf($id, $service);
 
         return $service;

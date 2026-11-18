@@ -1,0 +1,19 @@
+{# "Forgot your password?" (chapter 82): an address, and the same answer whether it has an account or not. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Forgot your password · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Forgot your password?</h1>
+            <p class="lead">Shelf sends a link for a new one to your email address.</p>
+        </div>
+    </div>
+{% include '_flash.html.twig' %}
+    <form class="card narrow" method="post" action="{{ path('forgot') }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <label>Email <input type="email" name="email" required autocomplete="email"></label>
+        <p class="actions"><button>Send the link</button></p>
+    </form>
+{% endblock %}

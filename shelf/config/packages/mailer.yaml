@@ -1,0 +1,6 @@
+# Symfony Mailer (chapter 82): the transport from MAILER_DSN, and the sender of every message.
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+        headers:
+            From: '%env(SHELF_MAIL_FROM)%'

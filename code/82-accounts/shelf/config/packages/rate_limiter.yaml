@@ -1,0 +1,19 @@
+# Chapter 82: every page that sends an email is limited, per visitor's address: 5 messages an hour.
+# Without a limit, a script could make Shelf send thousands of emails to someone, in Shelf's name.
+framework:
+    rate_limiter:
+        account_mail:
+            policy: sliding_window
+            limit: 5
+            interval: '1 hour'
+
+# In the tests, the count has a pool of its own, which ShelfWebTestCase empties before each test.
+when@test:
+    framework:
+        cache:
+            pools:
+                rate_limiter.test:
+                    adapter: cache.adapter.filesystem
+        rate_limiter:
+            account_mail:
+                cache_pool: rate_limiter.test

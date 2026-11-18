@@ -1,0 +1,8 @@
+{% extends 'email/base.html.twig' %}
+
+{% block body %}
+<p>Hello {{ name }},</p>
+<p>please confirm that this address is yours, for your account at Shelf:</p>
+<p><a class="button" href="{{ link }}">Confirm my address</a></p>
+<p class="small">The link works for two days. If you didn't ask for it, nothing happens: you can ignore this message.</p>
+{% endblock %}

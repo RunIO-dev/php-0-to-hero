@@ -1,0 +1,6 @@
+https://shelf.example/confirm?_expiration=1795341600&_hash=D3UK5K499yBJfRmTQGGq5wv9lYBDVuzDgWqcYiqw2KA&email=ana%40example.org&member=7
+
+as sent: valid
+another address: refused, UnverifiedSignedUriException
+no signature: refused, UnsignedUriException
+two days later: refused, ExpiredSignedUriException

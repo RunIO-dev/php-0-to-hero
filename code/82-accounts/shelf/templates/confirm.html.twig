@@ -1,0 +1,20 @@
+{# The page of a confirm link (chapter 82): one button, which posts to the same signed address. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirm your email · Shelf{% endblock %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Confirm your email</h1>
+            <p class="lead">{{ email }}, for {{ person.name }}.</p>
+        </div>
+    </div>
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <form class="card narrow" method="post" action="{{ app.request.requestUri }}">
+        <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+        <p class="actions"><button>Confirm this address</button></p>
+    </form>
+{% endblock %}
