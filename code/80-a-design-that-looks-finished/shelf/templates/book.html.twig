@@ -1,0 +1,58 @@
+{# A book's page (chapter 55), with its cover (chapter 52); the forms to change it only for the library's
+   staff (chapter 76). copies is the form's value; error, if set, says what was wrong with a form.
+   Chapter 80: the cover beside the facts, and the staff's forms in a panel of their own. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ book.title }} · Shelf{% endblock %}
+
+{% block main %}
+    <p class="back"><a href="{{ path('books') }}">← All books</a></p>
+{% include '_flash.html.twig' %}
+{% if error %}
+    <p class="error" role="alert">{{ error }}</p>
+{% endif %}
+    <div class="book-page">
+{% include 'components/_cover.html.twig' with {book: book, hasCover: hasCover} only %}
+        <div>
+            <h1>{{ book.title }}</h1>
+            <dl class="facts">
+                <dt>Author</dt>
+                <dd>{{ book.author }}</dd>
+                <dt>Year</dt>
+                <dd>{{ book.year }}</dd>
+{% if book.isbn %}
+                <dt>ISBN</dt>
+                <dd>{{ book.isbn.digits }}</dd>
+{% endif %}
+                <dt>On the shelf</dt>
+                <dd>
+{% if book.isAvailable %}
+{% include 'components/_badge.html.twig' with {text: book.copies == 1 ? '1 copy' : book.copies ~ ' copies', level: 'ok'} only %}
+{% else %}
+{% include 'components/_badge.html.twig' with {text: 'All copies on loan', level: 'warn'} only %}
+{% endif %}
+                </dd>
+            </dl>
+{% if is_granted('CHANGE_BOOKS') %}
+            <section class="panel" aria-labelledby="staff">
+                <h2 id="staff">For the library's staff</h2>
+                <form class="inline-form" method="post" action="{{ path('copies') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <label>Copies on the shelf <input name="copies" value="{{ copies }}" required inputmode="numeric"></label>
+                    <button>Save</button>
+                </form>
+            </section>
+            <section class="panel" aria-labelledby="remove">
+                <h2 id="remove">Remove this book</h2>
+                <form method="post" action="{{ path('remove') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <p>This takes it off the shelf for good, with its cover.</p>
+                    <p class="actions"><button class="danger">Remove this book</button></p>
+                </form>
+            </section>
+{% endif %}
+        </div>
+    </div>
+{% endblock %}

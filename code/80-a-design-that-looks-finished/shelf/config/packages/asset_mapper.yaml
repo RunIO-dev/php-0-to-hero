@@ -1,0 +1,8 @@
+# AssetMapper (chapter 80): the stylesheet in assets/ gets a name with its content's hash,
+# /assets/styles/app-3f9c1a2b.css, so a browser may keep it for a year and still sees every change.
+# In dev, Symfony serves assets/ itself; in production, asset-map:compile writes public/assets/.
+framework:
+    asset_mapper:
+        paths:
+            - assets/
+        missing_import_mode: strict

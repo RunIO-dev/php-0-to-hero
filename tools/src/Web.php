@@ -129,7 +129,9 @@ final class Web
     {
         $site = self::parse($http);
         $copy = sys_get_temp_dir() . '/web-' . bin2hex(random_bytes(4));
-        Run::copy($dir, $copy);
+        // What a developer's tools made (caches, databases, compiled assets) stays out: the copy starts as a
+        // fresh checkout does, whatever was run in the folder before (chapter 80).
+        Run::copy($dir, $copy, ['var', 'public/assets']);
         $ran = '';
         foreach ($site['runs'] as $line) {
             $ran .= self::run($line, $copy, $site['env']);

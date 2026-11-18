@@ -1,0 +1,13 @@
+<h1>{{ heading }}</h1>
+{% if books is empty %}
+{% embed '_empty.html.twig' with {text: 'No books yet.'} only %}
+{% block action %}    <a href="/add">Add the first one</a>
+{% endblock %}
+{% endembed %}
+{% else %}
+<ul>
+{% for book in books %}
+{% include '_card.html.twig' with {book: book} only %}
+{% endfor %}
+</ul>
+{% endif %}

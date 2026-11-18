@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Shelf\BookRepository;
 use Shelf\EventSubscriber\SecurityHeaders;
 use Shelf\Library;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 /**
  * Shelf's pages (chapter 77), as a browser uses them: each test sends requests to the kernel, follows
@@ -15,13 +16,16 @@ use Shelf\Library;
  */
 final class PagesTest extends ShelfWebTestCase
 {
+    use ClockSensitiveTrait;
+
     public function testTheListShowsEveryBook(): void
     {
         $this->client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextSame('h1', 'Books');
-        self::assertSelectorTextSame('.book h2', 'Kindred');
+        self::assertSelectorTextSame('.book-card h2', 'Kindred');
+        self::assertSelectorTextSame('.book-card .badge', 'Available');
         self::assertSelectorTextSame('.count', '1 book');
         self::assertSelectorNotExists('a.button', 'A visitor sees no "Add a book"');
     }
@@ -132,7 +136,27 @@ final class PagesTest extends ShelfWebTestCase
         $this->client->request('GET', '/loans');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextSame('.loans li', 'Kindred, due back on Tuesday, 1 December 2026');
+        self::assertSelectorTextSame('tbody tr td:first-child', 'Kindred');
+        self::assertSelectorTextSame('tbody tr td:nth-child(2)', 'Tuesday, 1 December 2026');
+    }
+
+    /** Chapter 80: the badge says how the due date reads today, in words and colour. */
+    public function testALoanSaysWhenItIsDue(): void
+    {
+        self::service(Library::class)->lend('Kindred', 'Amira', new DateTimeImmutable('2026-11-17'));
+        $this->logIn('Amira');
+
+        self::mockTime('2026-11-24 10:00');
+        $this->client->request('GET', '/loans');
+        self::assertSelectorTextSame('tbody .badge.ok', 'due in 7 days');
+
+        self::mockTime('2026-11-30 10:00');
+        $this->client->request('GET', '/loans');
+        self::assertSelectorTextSame('tbody .badge.warn', 'due tomorrow');
+
+        self::mockTime('2026-12-03 10:00');
+        $this->client->request('GET', '/loans');
+        self::assertSelectorTextSame('tbody .badge.danger', '2 days overdue');
     }
 
     public function testLoggingOutEndsTheSession(): void

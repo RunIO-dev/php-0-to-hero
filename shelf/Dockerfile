@@ -24,6 +24,8 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-pr
 COPY . .
 # An autoloader that knows every class in advance, and never looks for a file.
 RUN composer dump-autoload --no-dev --classmap-authoritative
+# The stylesheet under its versioned name, in public/assets/ (chapter 80): Caddy serves it as a file.
+RUN APP_ENV=prod php bin/console asset-map:compile
 
 FROM build AS test
 RUN composer install --no-scripts --prefer-dist --no-progress && composer check

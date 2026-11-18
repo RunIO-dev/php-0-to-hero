@@ -6,6 +6,7 @@
 {% block title %}Add a book · Shelf{% endblock %}
 
 {% block main %}
+    <p class="back"><a href="{{ path('books') }}">← All books</a></p>
     <h1>Add a book</h1>{{ form_errors(form) }}
     {{ form_start(form, {attr: {class: 'card'}}) }}
         <label>Title {{ form_widget(form.title) }}</label>{{ form_errors(form.title) }}
@@ -14,6 +15,6 @@
         <label>ISBN <small>optional</small> {{ form_widget(form.isbn) }}</label>{{ form_errors(form.isbn) }}
         <label>Cover <small>PNG or JPEG, up to 2 MB, optional</small>
             {{ form_widget(form.cover) }}</label>{{ form_errors(form.cover) }}
-        <p class="actions"><button>Add the book</button> <a href="{{ path('books') }}">Cancel</a></p>
+        <p class="actions"><button>Add the book</button> <a class="button quiet" href="{{ path('books') }}">Cancel</a></p>
     {{ form_end(form) }}
 {% endblock %}

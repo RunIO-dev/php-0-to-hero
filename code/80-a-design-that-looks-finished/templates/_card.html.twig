@@ -1,0 +1,5 @@
+{# A component that uses another one, and gives it only what it needs. #}
+<li class="card">
+    <h2>{{ book.title }}</h2>
+{% include '_badge.html.twig' with {text: book.copies > 0 ? 'Available' : 'On loan', level: book.copies > 0 ? 'ok' : 'warn'} only %}
+</li>

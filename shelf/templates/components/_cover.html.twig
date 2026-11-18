@@ -1,0 +1,7 @@
+{# A book's cover (chapter 52): the uploaded picture, or a placeholder in the title's own colour with its
+   first letter (chapter 80). Both are decoration next to the title, so screen readers skip them. #}
+{% if hasCover %}
+    <img class="cover" src="{{ path('cover', {title: book.title}) }}" alt="" loading="lazy">
+{% else %}
+    <span class="cover tone-{{ book.title|tone }}" aria-hidden="true">{{ book.title|slice(0, 1)|upper }}</span>
+{% endif %}

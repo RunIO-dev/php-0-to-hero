@@ -1,0 +1,11 @@
+{# A book's availability as a badge (chapter 80), for the book's page. It gets copies, the number of
+   copies on the shelf, and nothing else:
+   - 0: "All copies on loan", level warn;
+   - 1: "1 copy on the shelf", level ok;
+   - more: "3 copies on the shelf", level ok.
+   As <span class="badge LEVEL">TEXT</span>: the words are always there, never the colour alone. #}
+{% if copies == 0 %}
+<span class="badge warn">All copies on loan</span>
+{% else %}
+<span class="badge ok">{{ copies }} {{ copies == 1 ? 'copy' : 'copies' }} on the shelf</span>
+{% endif %}

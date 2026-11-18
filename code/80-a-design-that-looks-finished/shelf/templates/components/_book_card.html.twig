@@ -1,0 +1,12 @@
+{# One book in the grid (chapter 80). Gets only what it needs, through "with {...} only": book, and
+   hasCover, true when the book has an uploaded cover. #}
+<li class="book-card">
+{% include 'components/_cover.html.twig' with {book: book, hasCover: hasCover} only %}
+    <h2><a href="{{ path('book', {title: book.title}) }}">{{ book.title }}</a></h2>
+    <p class="by">{{ book.author }} · {{ book.year }}</p>
+{% if book.isAvailable %}
+{% include 'components/_badge.html.twig' with {text: 'Available', level: 'ok'} only %}
+{% else %}
+{% include 'components/_badge.html.twig' with {text: 'On loan', level: 'warn'} only %}
+{% endif %}
+</li>

@@ -3,7 +3,7 @@
 A free course that takes you from no programming at all to a secure PHP web
 application online: a free book, with every line of code tested.
 
-- **80 chapters in 13 parts.** See the [curriculum](docs/curriculum.md).
+- **89 chapters in 14 parts.** See the [curriculum](docs/curriculum.md).
 - **One project grows through the course:** *Shelf*, a small lending library. It starts
   as a script on the command line and ends as a Symfony app in production.
 - **PHP 8.6**, with every example also tested on PHP 8.5.

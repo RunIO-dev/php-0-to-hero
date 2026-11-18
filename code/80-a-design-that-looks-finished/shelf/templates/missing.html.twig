@@ -1,0 +1,12 @@
+{# An address with nothing behind it, with status 404. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Not found · Shelf{% endblock %}
+
+{% block main %}
+    <div class="problem">
+        <p class="code" aria-hidden="true">404</p>
+        <h1>Not found</h1>
+        <p>There is nothing at this address. <a href="{{ path('books') }}">Back to the books</a></p>
+    </div>
+{% endblock %}

@@ -5,7 +5,12 @@
 {% block title %}Log in · Shelf{% endblock %}
 
 {% block main %}
-    <h1>Log in</h1>
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
 {% include '_flash.html.twig' %}
 {% if failed %}
     <p class="error" role="alert">Wrong name or password.</p>

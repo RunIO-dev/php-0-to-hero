@@ -1,0 +1,17 @@
+<h1>Books</h1>
+<ul>
+<li class="card">
+    <h2>Kindred</h2>
+<span class="badge warn">On loan</span>
+</li>
+<li class="card">
+    <h2>Sula</h2>
+<span class="badge ok">Available</span>
+</li>
+</ul>
+-----
+<h1>Books</h1>
+<div class="empty">
+    <p>No books yet.</p>
+    <a href="/add">Add the first one</a>
+</div>

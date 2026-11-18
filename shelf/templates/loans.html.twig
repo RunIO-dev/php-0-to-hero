@@ -1,19 +1,36 @@
-{# The logged-in member's own loans (chapter 63). #}
+{# The member's loans (chapter 76), as a table with each due date and how it reads today (chapter 80:
+   the filters due and due_level, from Shelf\Twig\ShelfExtension). #}
 {% extends 'base.html.twig' %}
 
 {% block title %}My loans · Shelf{% endblock %}
 
 {% block main %}
-    <h1>My loans</h1>
-{% for loan in loans %}
-{% if loop.first %}
-    <ul class="loans">
-{% endif %}
-        <li><a href="{{ path('book', {title: loan.book.title}) }}">{{ loan.book.title }}</a>, due back on {{ loan.due|date('l, j F Y', false) }}</li>
-{% if loop.last %}
-    </ul>
-{% endif %}
+    <div class="page-head">
+        <div>
+            <h1>My loans</h1>
+            <p class="lead">The books you have, and when they are due back.</p>
+        </div>
+    </div>
+{% if loans is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'You have no books on loan.'} only %}
+{% block action %}<a class="button quiet" href="{{ path('books') }}">Find a book</a>{% endblock %}
+{% endembed %}
 {% else %}
-    <p class="empty">You have no books on loan.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Due back</th><th scope="col">Status</th></tr>
+            </thead>
+            <tbody>
+{% for loan in loans %}
+                <tr>
+                    <td><a href="{{ path('book', {title: loan.book.title}) }}">{{ loan.book.title }}</a></td>
+                    <td>{{ loan.due|date('l, j F Y', false) }}</td>
+                    <td>{% include 'components/_badge.html.twig' with {text: loan.due|due, level: loan.due|due_level} only %}</td>
+                </tr>
 {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
 {% endblock %}

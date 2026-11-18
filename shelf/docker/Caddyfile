@@ -10,6 +10,11 @@
 	php_fastcgi app:9000
 	file_server
 
+	# Chapter 80: a file in /assets/ has its content's hash in its name, so it never changes: browsers
+	# may keep it for a year without asking again. A new stylesheet is a new name.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
 	header {
 		# Browsers come back over HTTPS only, for a year.
 		Strict-Transport-Security "max-age=31536000"

@@ -1,0 +1,10 @@
+{
+    "name": "learner/design",
+    "description": "Chapter 80's examples: Twig components, their scope, and filters from attributes.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "twig/twig": "^3.22"
+    }
+}

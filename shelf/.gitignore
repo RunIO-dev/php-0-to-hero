@@ -15,3 +15,6 @@
 
 # A developer's own PHPUnit settings, which win over phpunit.xml.dist (chapter 79).
 /phpunit.xml
+
+# AssetMapper's compiled files, with the version in their names (chapter 80): made when the image is built.
+/public/assets/

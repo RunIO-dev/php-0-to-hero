@@ -29,11 +29,13 @@ services:
     image: php-0-to-hero:8.5
   # Shelf's web pages at http://localhost:8000, with PHP's built-in server. Stop it with Ctrl+C.
   # 0.0.0.0: answer requests from outside the container; 127.0.0.1 below: only from this computer.
+  # index.php is the router (chapter 80): every request goes to Symfony, which also serves the
+  # stylesheet from assets/ while you work, under its versioned name.
   web:
     <<: *php
     build: { context: ., args: { PHP: 8.6-rc-cli } }
     image: php-0-to-hero:8.6
-    command: php -S 0.0.0.0:8000 -t shelf/public
+    command: php -S 0.0.0.0:8000 -t shelf/public shelf/public/index.php
     ports: ["127.0.0.1:8000:8000"]
   # MariaDB (chapter 59), a database server, in its long-term support version. It has no ports:
   # only the containers above can reach it, by the name db. The data stays in the volume db-data

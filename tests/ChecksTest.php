@@ -240,6 +240,22 @@ final class ChecksTest extends TestCase
         self::assertSame([], Scripts::check($this->root));
     }
 
+    public function testACopyCanLeaveOutWhatToolsMake(): void
+    {
+        $this->put('shelf/src/Book.php', "<?php\n");
+        $this->put('shelf/var/shelf_dev.sqlite', 'your own books');
+        $this->put('shelf/public/assets/app-1a2b3c.css', 'body {}');
+        $this->put('shelf/public/index.php', "<?php\n");
+        $copy = $this->root . '/copy';
+
+        Run::copy($this->root . '/shelf', $copy, ['var', 'public/assets']);
+
+        self::assertFileExists("$copy/src/Book.php");
+        self::assertFileExists("$copy/public/index.php");
+        self::assertDirectoryDoesNotExist("$copy/var");
+        self::assertDirectoryDoesNotExist("$copy/public/assets");
+    }
+
     public function testAToolsSettingsFileIsNoExample(): void
     {
         $this->put('code/79-ci/.php-cs-fixer.dist.php', "<?php\nreturn [];\n");

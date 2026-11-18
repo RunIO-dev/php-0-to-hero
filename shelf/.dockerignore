@@ -3,6 +3,7 @@
 # the test stage (chapter 79); the release stage takes them out again.
 /vendor/
 /var/
+/public/assets/
 /storage/
 /data/
 /.env.local

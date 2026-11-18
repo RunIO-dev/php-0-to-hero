@@ -1,0 +1,32 @@
+{# The books, as a grid of cards (chapters 49 and 55; chapter 80: components). covered holds the titles
+   that have a cover. #}
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="page-head">
+        <div>
+            <h1>Books</h1>
+            <p class="lead">Everything on the shelf, and what is on loan.</p>
+        </div>
+{% if is_granted('CHANGE_BOOKS') %}
+        <a class="button" href="{{ path('add') }}">Add a book</a>
+{% endif %}
+    </div>
+{% include '_flash.html.twig' %}
+{% if books is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'No books yet.'} only %}
+{% block action %}
+{% if is_granted('CHANGE_BOOKS') %}
+    <a class="button" href="{{ path('add') }}">Add the first one</a>
+{% endif %}
+{% endblock %}
+{% endembed %}
+{% else %}
+    <ul class="books">
+{% for book in books %}
+{% include 'components/_book_card.html.twig' with {book: book, hasCover: book.title in covered} only %}
+{% endfor %}
+    </ul>
+    <p class="count">{{ books|length }} {{ books|length == 1 ? 'book' : 'books' }}</p>
+{% endif %}
+{% endblock %}

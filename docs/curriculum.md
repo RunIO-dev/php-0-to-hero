@@ -1,6 +1,6 @@
 # Curriculum
 
-The course has **80 chapters in 13 parts**. Each chapter has goals, an explanation, tested examples, common mistakes, three exercises (beginner, intermediate and advanced) and a summary. The chapter template is in [standards.md](standards.md).
+The course has **89 chapters in 14 parts**. Each chapter has goals, an explanation, tested examples, common mistakes, three exercises (beginner, intermediate and advanced) and a summary. The chapter template is in [standards.md](standards.md).
 
 The course teaches PHP 8.6 (every example also runs on 8.5), with PER Coding Style, PHPUnit and, at the end, Symfony as its one framework. Secure code, KISS, DRY and YAGNI are taught where they apply, from the first example on.
 
@@ -119,8 +119,20 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 78. Production setup: configuration, a production image, the cache, and HTTPS. ◆ a Dockerfile in stages, PHP-FPM and Caddy, `compose.prod.yaml`; logs to stderr. Found: the security headers were missing since chapter 73.
 79. CI with every check (tests, PHPStan, style), and a simple deployment. ◆ *Shelf* online: a test stage, GitHub Actions, images per commit on ghcr.io, `deploy.sh` behind a restricted SSH key, a smoke test. Found: the test bootstrap ended with status 0.
 
-## Part 13: What next (1)
-80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance); a short look at Fibers. ◆ No new code: where each next topic would fit *Shelf*, and its README with every command.
+## Part 13: Shelf, complete (9)
+*Shelf* becomes the library app a real library could run: every chapter adds what its readers and its librarian expect, with what the course taught.
+80. A design that looks finished: a layout, Twig components, covers on the list, mobile first, accessible, and still no JavaScript under the strict CSP. ◆ *Shelf*'s new look.
+81. Finding books: search, filters, sorting and pages on the pages, with availability. ◆ the catalogue.
+82. Accounts: sign-up with email confirmation, password reset, a profile, deleting your account; Symfony Mailer. ◆ readers register themselves.
+83. The lending desk: lend, return and extend in the browser; members, roles and blocking. ◆ the librarian works without the console.
+84. Reservations: a queue per book, "ready for pickup", expiry; readers extend their own loans, under rules. ◆ holds.
+85. Reminders: due-soon, overdue and pickup emails, sent by Messenger and Scheduler in a worker. ◆ the worker.
+86. The librarian's dashboard: overdue loans, holds to prepare, statistics with queries, the loan history. ◆ the dashboard.
+87. Three languages: English, German and Arabic, right to left; Symfony's translations. ◆ *Shelf* in three languages.
+88. Launch: a demo mode that resets every night, backups, a health check, error pages, and a launch checklist. ◆ *Shelf* online, for everyone to try.
+
+## Part 14: What next (1)
+89. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance); a short look at Fibers. ◆ No new code: where each next topic would fit *Shelf*, and its README with every command.
 
 ---
 
@@ -128,5 +140,5 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 - a second framework;
 - Nginx and Apache in depth, beyond the one Docker setup;
 - Kubernetes;
-- Fibers, which are rarely needed in application code. A short mention goes in 80.
+- Fibers, which are rarely needed in application code. A short mention goes in 89.
 - design patterns as a catalogue. The few we use (repository, value object, front controller) are taught where they appear.

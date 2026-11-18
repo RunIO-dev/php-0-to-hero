@@ -85,12 +85,22 @@ final class Run
         return $found;
     }
 
-    /** Copies a folder, without following links out of it. */
-    public static function copy(string $from, string $to): void
+    /**
+     * Copies a folder, without following links out of it.
+     *
+     * @param list<string> $skip folders and files to leave out, relative to $from (var, public/assets)
+     */
+    public static function copy(string $from, string $to, array $skip = []): void
     {
         mkdir($to, 0o777, true);
         $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($from, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($items as $item) {
+            $relative = substr((string) $item, strlen($from) + 1);
+            foreach ($skip as $path) {
+                if ($relative === $path || str_starts_with($relative, "$path/")) {
+                    continue 2;
+                }
+            }
             $target = $to . substr((string) $item, strlen($from));
             if ($item instanceof \SplFileInfo && $item->isDir() && !$item->isLink()) {
                 mkdir($target, 0o777, true);

@@ -1,0 +1,5 @@
+{# A component with a hole in it: the page that embeds it fills the block "action". #}
+<div class="empty">
+    <p>{{ text }}</p>
+{% block action %}{% endblock %}
+</div>

@@ -4,6 +4,9 @@
 {% block title %}Not allowed · Shelf{% endblock %}
 
 {% block main %}
-    <h1>Not allowed</h1>
-    <p>Only the library's staff may change books. <a href="{{ path('books') }}">Back to the books</a></p>
+    <div class="problem">
+        <p class="code" aria-hidden="true">403</p>
+        <h1>Not allowed</h1>
+        <p>Only the library's staff may change books. <a href="{{ path('books') }}">Back to the books</a></p>
+    </div>
 {% endblock %}
