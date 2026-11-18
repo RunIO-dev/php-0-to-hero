@@ -68,6 +68,12 @@ final class Member implements UserInterface, PasswordAuthenticatedUserInterface
         return $member;
     }
 
+    /** Chapter 85: whether Shelf may send this member reminders: only to an address they confirmed. */
+    public function canBeMailed(): bool
+    {
+        return $this->email !== null && $this->confirmed;
+    }
+
     /** The link in an email was used: this address is the member's, and they may log in. */
     public function confirmEmail(string $email): void
     {

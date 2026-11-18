@@ -1,0 +1,7 @@
+{% extends 'email/base.html.twig' %}
+
+{% block body %}
+<p>Hello {{ name }},</p>
+<p>The copy of “{{ title }}” that you reserved is waiting for you at the desk, until {{ day }}. After that, it goes to the next in line.</p>
+<p><a class="button" href="{{ link }}">My reservations</a></p>
+{% endblock %}

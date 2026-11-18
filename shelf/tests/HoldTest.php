@@ -71,4 +71,16 @@ final class HoldTest extends TestCase
 
         $hold->expire(new DateTimeImmutable('2026-03-09'));
     }
+
+    public function testOnlyACopyThatWaitsNeedsAMail(): void
+    {
+        $hold = $this->hold();
+        self::assertFalse($hold->needsPickupMail(), 'Still in the queue');
+
+        $hold->ready(new DateTimeImmutable('2026-03-02'));
+        self::assertTrue($hold->needsPickupMail());
+
+        $hold->notify(new DateTimeImmutable('2026-03-02'));
+        self::assertFalse($hold->needsPickupMail());
+    }
 }

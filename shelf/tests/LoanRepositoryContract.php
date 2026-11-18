@@ -174,4 +174,18 @@ abstract class LoanRepositoryContract extends TestCase
         self::assertNull($loans->find($id));
         self::assertNull($books->find('Sula'));
     }
+
+    /** Chapter 85: a reminder is claimed once; a caller who read an older state gets false. */
+    public function testAReminderIsClaimedOnce(): void
+    {
+        $sula = new Book('Sula', 'Toni Morrison', 1973, 2);
+        [, $loans] = $this->repositories($sula);
+        $loans->add($loan = $this->loan($sula, $this->amira, '2026-03-16'));
+        $today = new DateTimeImmutable('2026-03-14');
+
+        self::assertTrue($loans->markReminded($loan, null, $today));
+        self::assertFalse($loans->markReminded($loan, null, $today), 'Another worker read "never reminded" too');
+        self::assertSame('2026-03-14', $loans->find($loan->id())?->remindedOn?->format('Y-m-d'));
+        self::assertTrue($loans->markReminded($loan, $today, new DateTimeImmutable('2026-03-17')), 'The next one');
+    }
 }

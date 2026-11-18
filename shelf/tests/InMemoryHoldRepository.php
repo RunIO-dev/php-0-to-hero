@@ -88,6 +88,16 @@ final class InMemoryHoldRepository implements HoldRepository
 
     public function update(Hold $hold): void {}
 
+    public function markNotified(Hold $hold, DateTimeImmutable $today): bool
+    {
+        if ($hold->notifiedOn !== null) {
+            return false;
+        }
+        $hold->notify($today);
+
+        return true;
+    }
+
     public function forget(Member $member): void
     {
         $this->holds = $this->where(fn(Hold $hold): bool => !$this->same($hold->member, $member));

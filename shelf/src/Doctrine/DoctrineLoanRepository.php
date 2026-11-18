@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shelf\Doctrine;
 
 use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Shelf\Book;
 use Shelf\Hold;
@@ -85,6 +86,21 @@ final readonly class DoctrineLoanRepository implements LoanRepository
     public function update(Loan $loan): void
     {
         $this->entities->flush();
+    }
+
+    public function markReminded(Loan $loan, ?DateTimeImmutable $seen, DateTimeImmutable $today): bool
+    {
+        $query = $this->entities->createQuery('UPDATE ' . Loan::class . ' l SET l.remindedOn = :today WHERE l.id = :id AND '
+            . ($seen === null ? 'l.remindedOn IS NULL' : 'l.remindedOn = :seen'))
+            ->setParameter('today', $today, Types::DATE_IMMUTABLE)
+            ->setParameter('id', $loan->id());
+        if ($seen !== null) {
+            $query->setParameter('seen', $seen, Types::DATE_IMMUTABLE);
+        }
+        $claimed = $query->execute() === 1;
+        $this->entities->refresh($loan); // the UPDATE went past the object
+
+        return $claimed;
     }
 
     public function forget(Member $member): void

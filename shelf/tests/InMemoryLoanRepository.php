@@ -73,6 +73,16 @@ final class InMemoryLoanRepository implements LoanRepository
 
     public function update(Loan $loan): void {}
 
+    public function markReminded(Loan $loan, ?DateTimeImmutable $seen, DateTimeImmutable $today): bool
+    {
+        if ($loan->remindedOn?->format('Y-m-d') !== $seen?->format('Y-m-d')) {
+            return false;
+        }
+        $loan->remind($today);
+
+        return true;
+    }
+
     public function forget(Member $member): void
     {
         $this->loans = array_values(array_filter($this->loans, fn(Loan $loan): bool => $loan->member !== $member || !$loan->isReturned()));

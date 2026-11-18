@@ -10,6 +10,8 @@ services:
         resource: '../src/'
         exclude:
             - '../src/functions.php'
+            # Chapter 85: messages are made with new, like values.
+            - '../src/Message/'
             # Entities and other values are made with new, or by Doctrine; never by the container.
             - '../src/{Book,Member,Loan,Hold,ApiToken,Isbn,BookQuery}.php'
 

@@ -1,0 +1,7 @@
+{% extends 'email/base.html.twig' %}
+
+{% block body %}
+<p>Hello {{ name }},</p>
+<p>“{{ title }}” is due back on {{ day }}. You can extend it on your loans page, unless someone has reserved it.</p>
+<p><a class="button" href="{{ link }}">My loans</a></p>
+{% endblock %}

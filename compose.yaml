@@ -2,6 +2,7 @@
 #   docker compose run --rm php php tools/check.php      PHP 8.6
 #   docker compose run --rm php85 composer verify        PHP 8.5
 #   docker compose up web                                Shelf in the browser (chapter 45), and Mailpit (82)
+#   docker compose up web worker                         and the worker that sends the emails (85)
 #   docker compose up -d --wait db                       MariaDB, for chapter 59 (stop it: docker compose stop db)
 
 # The database users' passwords (chapter 59). They are for the database in Docker on your computer,
@@ -37,6 +38,16 @@ services:
     image: php-0-to-hero:8.6
     command: php -S 0.0.0.0:8000 -t shelf/public shelf/public/index.php
     ports: ["127.0.0.1:8000:8000"]
+    depends_on: [mailpit]
+  # The worker (chapter 85): it takes messages from the queue (emails) and from Shelf's schedule
+  # (reminders every hour, expired reservations every night), one after the other. --time-limit: it
+  # stops after an hour, and Docker starts a new one, which reads any changed code and settings.
+  worker:
+    <<: *php
+    build: { context: ., args: { PHP: 8.6-rc-cli } }
+    image: php-0-to-hero:8.6
+    command: php shelf/bin/console messenger:consume async scheduler_shelf --time-limit=3600 -vv
+    restart: unless-stopped
     depends_on: [mailpit]
   # Mailpit (chapter 82): an inbox for every email Shelf sends while you work, at http://localhost:8025.
   # Nothing it receives leaves your computer.

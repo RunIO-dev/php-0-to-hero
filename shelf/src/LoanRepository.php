@@ -38,6 +38,13 @@ interface LoanRepository
     /** Chapter 83: stores a change to a loan (its new due date). */
     public function update(Loan $loan): void;
 
+    /**
+     * Chapter 85: notes that a reminder about the loan goes out today, but only if its last reminder is
+     * still $seen, the one the caller read. One UPDATE that checks it: if another worker sent a reminder
+     * since, no row changes, and the answer is false: don't send it again.
+     */
+    public function markReminded(Loan $loan, ?DateTimeImmutable $seen, DateTimeImmutable $today): bool;
+
     /** Chapter 83: deletes the member's returned loans, when the member deletes their account. */
     public function forget(Member $member): void;
 

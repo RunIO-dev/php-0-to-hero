@@ -21,6 +21,7 @@ use Shelf\Loan;
 use Shelf\Member;
 use Shelf\MemberNotFound;
 use Shelf\NoCopyLeft;
+use Shelf\Reminder;
 use Shelf\Role;
 
 final class LibraryTest extends TestCase
@@ -379,5 +380,35 @@ final class LibraryTest extends TestCase
         $this->library->removeMember($this->member('Ben'), new DateTimeImmutable('2026-03-06'));
 
         self::assertSame(1, $this->library->find('Kindred')->copies, 'Nobody else waits: back on the shelf');
+    }
+
+    /** Chapter 85: Ben has a confirmed address; Amira has none, so she gets no email. */
+    public function testRemindersGoOnlyToConfirmedAddressesAndOnce(): void
+    {
+        $ben = $this->member('Ben');
+        $ben->confirmEmail('ben@example.org');
+        $this->library->lend('Kindred', 'Amira', new DateTimeImmutable('2026-03-02'));
+        $this->library->lend('Things Fall Apart', 'Ben', new DateTimeImmutable('2026-03-02'));
+        $today = new DateTimeImmutable('2026-03-14');
+
+        $due = $this->library->remindersDue($today);
+
+        self::assertCount(1, $due);
+        [$loan, $kind] = $due[0];
+        self::assertSame(['Ben', Reminder::DueSoon], [$loan->member->name, $kind]);
+        self::assertTrue($this->library->claimReminder($loan, $today));
+        self::assertSame([], $this->library->remindersDue($today), 'Claimed: not due any more');
+    }
+
+    public function testACopySetAsideNeedsAPickupMail(): void
+    {
+        $ben = $this->member('Ben');
+        $ben->confirmEmail('ben@example.org');
+        $this->benWaitsForKindred();
+        $this->library->giveBack(1, new DateTimeImmutable('2026-03-05'));
+
+        $due = $this->library->remindersDue(new DateTimeImmutable('2026-03-05'));
+
+        self::assertSame(Reminder::Pickup, $due[0][1] ?? null);
     }
 }

@@ -45,6 +45,16 @@ final class Loan
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     public private(set) ?DateTimeImmutable $returnedOn = null;
 
+    /** Chapter 85: a reminder goes this many days before the due date. */
+    public const int REMIND_BEFORE = 2;
+
+    /** Chapter 85: an overdue loan is reminded of again after this many days. */
+    public const int REMIND_EVERY = 7;
+
+    /** Chapter 85: the day the last reminder about this loan was sent; null if none was. */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    public private(set) ?DateTimeImmutable $remindedOn = null;
+
     /** The row's number, for the forms that return or extend this loan. */
     public function id(): int
     {
@@ -77,6 +87,37 @@ final class Loan
         }
         $this->due = $this->due->modify('+' . $this->member->role->loanDays() . ' days');
         $this->renewals++;
+    }
+
+    /**
+     * Which reminder this loan needs today, if any (chapter 85). "Due soon" once, from REMIND_BEFORE days
+     * before the due date; "overdue" from the day after it, and again every REMIND_EVERY days. A loan
+     * that was extended has a new due date, so it gets its "due soon" again. Only the dates count.
+     */
+    public function reminderDue(DateTimeImmutable $today): ?Reminder
+    {
+        if ($this->isReturned()) {
+            return null;
+        }
+        $day = fn(DateTimeImmutable $date): string => $date->format('Y-m-d');
+        $last = $this->remindedOn === null ? null : $day($this->remindedOn);
+        $soon = $day($this->due->modify('-' . self::REMIND_BEFORE . ' days'));
+        if ($this->isOverdue($today)) {
+            $again = $day($today->modify('-' . self::REMIND_EVERY . ' days'));
+
+            return $last === null || $last <= $day($this->due) || $last <= $again ? Reminder::Overdue : null;
+        }
+        if ($day($today) >= $soon) {
+            return $last === null || $last < $soon ? Reminder::DueSoon : null;
+        }
+
+        return null;
+    }
+
+    /** Chapter 85: a reminder about this loan was sent today. LoanRepository::markReminded() stores it. */
+    public function remind(DateTimeImmutable $today): void
+    {
+        $this->remindedOn = new DateTimeImmutable($today->format('Y-m-d'));
     }
 
     /** The book is back (chapter 83). LoanRepository::giveBack() puts the copy on the shelf with it. */

@@ -1,0 +1,5 @@
+php queue.php send "Remind Amira: Kindred is due back on Monday"
+php queue.php send "Remind Ben: Sula, while the mail server is offline"
+php queue.php send "Tell Chen: Beloved waits at the desk"
+php queue.php work
+php queue.php status

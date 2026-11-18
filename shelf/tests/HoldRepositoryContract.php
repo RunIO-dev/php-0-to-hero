@@ -122,4 +122,17 @@ abstract class HoldRepositoryContract extends TestCase
 
         self::assertNull($holds->find($id));
     }
+
+    /** Chapter 85: the member hears once that their copy waits. */
+    public function testAPickupMailIsClaimedOnce(): void
+    {
+        [, $holds] = $this->repositories();
+        $hold = $this->reserve($holds, $this->amira);
+        $holds->passOn($this->sula, $this->today);
+        self::assertTrue($hold->needsPickupMail());
+
+        self::assertTrue($holds->markNotified($hold, $this->today));
+        self::assertFalse($holds->markNotified($hold, $this->today));
+        self::assertFalse($holds->find($hold->id())?->needsPickupMail());
+    }
 }

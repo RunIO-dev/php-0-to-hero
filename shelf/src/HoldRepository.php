@@ -48,6 +48,12 @@ interface HoldRepository
      */
     public function release(Hold $hold, DateTimeImmutable $today): ?Hold;
 
+    /**
+     * Chapter 85: notes that the member is told today that their copy waits, if nobody has told them
+     * yet: one UPDATE that checks it. False if someone else did, a moment ago.
+     */
+    public function markNotified(Hold $hold, DateTimeImmutable $today): bool;
+
     /** Stores a change to a reservation. */
     public function update(Hold $hold): void;
 

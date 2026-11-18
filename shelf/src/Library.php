@@ -230,6 +230,41 @@ final readonly class Library
         return $done;
     }
 
+    /**
+     * Chapter 85: what needs a reminder today: loans due soon or overdue, and copies set aside that
+     * nobody has told their member about. Only members with a confirmed address get email.
+     *
+     * @return list<array{Loan|Hold, Reminder}>
+     */
+    public function remindersDue(DateTimeImmutable $today): array
+    {
+        $due = [];
+        foreach ($this->loans->current() as $loan) {
+            $kind = $loan->reminderDue($today);
+            if ($kind !== null && $loan->member->canBeMailed()) {
+                $due[] = [$loan, $kind];
+            }
+        }
+        foreach ($this->holds->ready() as $hold) {
+            if ($hold->needsPickupMail() && $hold->member->canBeMailed()) {
+                $due[] = [$hold, Reminder::Pickup];
+            }
+        }
+
+        return $due;
+    }
+
+    /**
+     * Chapter 85: claims a reminder before it is sent. True for the one caller that may send it; false
+     * if it was sent already, by an earlier run of the same job or by another worker at the same time.
+     */
+    public function claimReminder(Loan|Hold $about, DateTimeImmutable $today): bool
+    {
+        return $about instanceof Loan
+            ? $this->loans->markReminded($about, $about->remindedOn, $today)
+            : $this->holds->markNotified($about, $today);
+    }
+
     /** @return list<Member> chapter 83: every member, by name */
     public function members(): array
     {

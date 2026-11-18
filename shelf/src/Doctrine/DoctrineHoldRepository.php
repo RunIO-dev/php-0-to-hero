@@ -118,6 +118,17 @@ final readonly class DoctrineHoldRepository implements HoldRepository
         });
     }
 
+    public function markNotified(Hold $hold, DateTimeImmutable $today): bool
+    {
+        $claimed = $this->entities->createQuery('UPDATE ' . Hold::class . ' h SET h.notifiedOn = :today WHERE h.id = :id AND h.notifiedOn IS NULL')
+            ->setParameter('today', $today, Types::DATE_IMMUTABLE)
+            ->setParameter('id', $hold->id())
+            ->execute() === 1;
+        $this->entities->refresh($hold);
+
+        return $claimed;
+    }
+
     public function update(Hold $hold): void
     {
         $this->entities->flush();

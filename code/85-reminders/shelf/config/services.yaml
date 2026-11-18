@@ -1,0 +1,45 @@
+# Shelf's services (chapter 72): every class in src/ can be made by the container, which passes each
+# constructor what its types ask for (autowiring).
+# Chapter 73: what front controller and App made by hand. Paths in .env are relative to shelf/.
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Shelf\:
+        resource: '../src/'
+        exclude:
+            - '../src/functions.php'
+            # Chapter 85: messages are made with new, like values.
+            - '../src/Message/'
+            # Entities and other values are made with new, or by Doctrine; never by the container.
+            - '../src/{Book,Member,Loan,Hold,ApiToken,Isbn,BookQuery}.php'
+
+    # Where an interface is asked for, the class that answers for it. Chapter 74: Doctrine's.
+    Shelf\BookRepository: '@Shelf\Doctrine\DoctrineBookRepository'
+    Shelf\MemberRepository: '@Shelf\Doctrine\DoctrineMemberRepository'
+    Shelf\LoanRepository: '@Shelf\Doctrine\DoctrineLoanRepository'
+    Shelf\HoldRepository: '@Shelf\Doctrine\DoctrineHoldRepository'
+    Shelf\TokenRepository: '@Shelf\Doctrine\DoctrineTokenRepository'
+
+    # SQLite checks REFERENCES only when asked, on each connection (chapter 56): Doctrine asks.
+    Doctrine\DBAL\Driver\AbstractSQLiteDriver\Middleware\EnableForeignKeys:
+        tags: [doctrine.middleware]
+
+    Shelf\Web\Covers:
+        arguments: ['%kernel.project_dir%/%env(SHELF_COVERS)%']
+
+    # Shelf's own log (chapter 66), for Shelf's classes; Symfony's own messages go to the server's console.
+    # Chapter 78: a whole path or a stream, such as php://stderr in a container; resolve: fills in
+    # %kernel.project_dir% in .env's value.
+    Shelf\FileLogger:
+        arguments: ['%env(resolve:SHELF_LOG)%']
+    Psr\Log\LoggerInterface: '@Shelf\FileLogger'
+
+# Chapter 77: in the tests, Symfony's own messages go into a file, not between PHPUnit's lines. Only
+# warnings and worse: each refused request of a test is one line there.
+when@test:
+    services:
+        logger:
+            class: Symfony\Component\HttpKernel\Log\Logger
+            arguments: ['warning', '%kernel.logs_dir%/symfony_test.log']

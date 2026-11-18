@@ -10,6 +10,9 @@ framework:
         cookie_samesite: lax
     # Chapter 51's tokens, from symfony/security-csrf: csrf_token() in the templates, CheckCsrf on every POST.
     csrf_protection: true
+    # Chapter 85: absolute links made without a request, by the worker, start with the site's address.
+    router:
+        default_uri: '%env(SHELF_URL)%'
 
 when@test:
     framework:

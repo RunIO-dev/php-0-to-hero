@@ -1,4 +1,5 @@
-# Shelf in production (chapter 78): two containers, from the Dockerfile next to this file.
+# Shelf in production (chapter 78): two containers, from the Dockerfile next to this file. Chapter 85:
+# three, with the worker.
 #   SHELF_APP_SECRET=$(openssl rand -hex 32) SHELF_HOST=shelf.example docker compose -f compose.prod.yaml up -d --build
 # Chapter 79: on a server, the images come ready from a registry, named by SHELF_IMAGE and the commit
 # in SHELF_TAG; deploy.sh pulls them, and builds nothing.
@@ -7,7 +8,7 @@ services:
   app:
     image: ${SHELF_IMAGE:-shelf}-app:${SHELF_TAG:-latest}
     build: { context: ., target: app }
-    environment:
+    environment: &app-environment
       APP_SECRET: ${SHELF_APP_SECRET:?Set SHELF_APP_SECRET to a long random value}
       DATABASE_URL: sqlite:////app/data/shelf.sqlite
       SHELF_COVERS: data/covers
@@ -15,7 +16,18 @@ services:
       # Chapter 82: the server's mail, from its environment, as the secret is; without one, nothing is sent.
       MAILER_DSN: ${SHELF_MAILER_DSN:-null://null}
       SHELF_MAIL_FROM: ${SHELF_MAIL_FROM:-Shelf <shelf@localhost>}
+      # Chapter 85: the address in the links of the emails the worker sends.
+      SHELF_URL: https://${SHELF_HOST:-localhost}
     volumes: ["data:/app/data"]
+    restart: unless-stopped
+  # Chapter 85: the worker, from the same image: it sends the queued emails and runs the schedule.
+  # Its own entrypoint, so only app runs the migrations; until they are done, it fails and starts again.
+  worker:
+    image: ${SHELF_IMAGE:-shelf}-app:${SHELF_TAG:-latest}
+    entrypoint: ["php", "bin/console", "messenger:consume", "async", "scheduler_shelf", "--time-limit=3600", "--memory-limit=128M"]
+    environment: *app-environment
+    volumes: ["data:/app/data"]
+    depends_on: [app]
     restart: unless-stopped
   web:
     image: ${SHELF_IMAGE:-shelf}-web:${SHELF_TAG:-latest}

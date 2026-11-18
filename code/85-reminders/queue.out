@@ -1,0 +1,13 @@
+$ php queue.php send "Remind Amira: Kindred is due back on Monday"
+queued #1: Remind Amira: Kindred is due back on Monday
+$ php queue.php send "Remind Ben: Sula, while the mail server is offline"
+queued #2: Remind Ben: Sula, while the mail server is offline
+$ php queue.php send "Tell Chen: Beloved waits at the desk"
+queued #3: Tell Chen: Beloved waits at the desk
+$ php queue.php work
+#1 Remind Amira: Kindred is due back on Monday: done
+#2 Remind Ben: Sula, while the mail server is offline: the mail server does not answer, try 1 of 3, again in 60 s
+#3 Tell Chen: Beloved waits at the desk: done
+nothing more to do now
+$ php queue.php status
+#2 Remind Ben: Sula, while the mail server is offline: waiting, tried once

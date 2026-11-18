@@ -34,6 +34,10 @@ final class Hold
     #[ORM\Column(type: 'date_immutable', nullable: true)]
     public private(set) ?DateTimeImmutable $readyUntil = null;
 
+    /** Chapter 85: the day the member was told that a copy waits for them; null until then. */
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
+    public private(set) ?DateTimeImmutable $notifiedOn = null;
+
     public function __construct(
         #[ORM\ManyToOne]
         #[ORM\JoinColumn(nullable: false)]
@@ -93,6 +97,18 @@ final class Hold
             throw new InvalidArgumentException("The reservation of \"{$this->book->title}\" hasn't expired.");
         }
         $this->status = HoldStatus::Expired;
+    }
+
+    /** Chapter 85: the member was told today that a copy waits for them. */
+    public function notify(DateTimeImmutable $today): void
+    {
+        $this->notifiedOn = new DateTimeImmutable($today->format('Y-m-d'));
+    }
+
+    /** Chapter 85: a copy waits for the member, and nobody has told them yet. */
+    public function needsPickupMail(): bool
+    {
+        return $this->status === HoldStatus::Ready && $this->notifiedOn === null;
     }
 
     /** Whether a copy was set aside for it: one that must go on when the reservation ends unused. */
