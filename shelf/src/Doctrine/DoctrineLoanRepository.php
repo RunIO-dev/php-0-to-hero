@@ -7,6 +7,9 @@ namespace Shelf\Doctrine;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Shelf\Book;
+use Shelf\Hold;
+use Shelf\HoldRepository;
+use Shelf\HoldStatus;
 use Shelf\Loan;
 use Shelf\Member;
 use Shelf\LoanRepository;
@@ -14,22 +17,26 @@ use Shelf\NoCopyLeft;
 
 /**
  * The loans, through Doctrine (chapter 74). A loan's book and member come back as objects with it:
- * the JOINs that PdoLoanRepository wrote by hand, Doctrine writes from the mapping.
+ * the JOINs that PdoLoanRepository wrote by hand, Doctrine writes from the mapping. Chapter 84: a copy
+ * that comes back goes to the reservations first.
  */
 final readonly class DoctrineLoanRepository implements LoanRepository
 {
-    public function __construct(private EntityManagerInterface $entities) {}
+    public function __construct(private EntityManagerInterface $entities, private HoldRepository $holds) {}
 
-    public function add(Loan $loan): void
+    public function add(Loan $loan, ?Hold $hold = null): void
     {
-        $this->entities->wrapInTransaction(function () use ($loan): void {
-            // Only if a copy is left, checked and taken in one statement: another request can't come in between (chapter 57).
-            $taken = $this->entities->createQuery('UPDATE ' . Book::class . ' b SET b.copies = b.copies - 1 WHERE b.id = :book AND b.copies > 0')
-                ->setParameter('book', $loan->book)
-                ->execute();
-            if ($taken === 0) {
-                throw new NoCopyLeft("All copies of \"{$loan->book->title}\" are on loan");
+        $this->entities->wrapInTransaction(function () use ($loan, $hold): void {
+            if ($hold?->status !== HoldStatus::Ready) { // a copy set aside (chapter 84) is off the shelf already
+                // Only if a copy is left, checked and taken in one statement: another request can't come in between (chapter 57).
+                $taken = $this->entities->createQuery('UPDATE ' . Book::class . ' b SET b.copies = b.copies - 1 WHERE b.id = :book AND b.copies > 0')
+                    ->setParameter('book', $loan->book)
+                    ->execute();
+                if ($taken === 0) {
+                    throw new NoCopyLeft("All copies of \"{$loan->book->title}\" are on loan");
+                }
             }
+            $hold?->collect();
             $this->entities->persist($loan);
         });
         $this->entities->refresh($loan->book); // the UPDATE went past the object: read its copies again
@@ -63,16 +70,16 @@ final readonly class DoctrineLoanRepository implements LoanRepository
         )->getResult();
     }
 
-    public function giveBack(Loan $loan, DateTimeImmutable $today): void
+    public function giveBack(Loan $loan, DateTimeImmutable $today): ?Hold
     {
-        $this->entities->wrapInTransaction(function () use ($loan, $today): void {
+        /** @var ?Hold */
+        return $this->entities->wrapInTransaction(function () use ($loan, $today): ?Hold {
             $loan->giveBack($today);
-            // As add() takes a copy: in SQL, so two returns at once can't lose one.
-            $this->entities->createQuery('UPDATE ' . Book::class . ' b SET b.copies = b.copies + 1 WHERE b.id = :book')
-                ->setParameter('book', $loan->book)
-                ->execute();
+            $this->entities->flush();
+
+            // Chapter 84: to the first in the queue, or on the shelf; in SQL, so two returns at once can't lose one.
+            return $this->holds->passOn($loan->book, $today);
         });
-        $this->entities->refresh($loan->book);
     }
 
     public function update(Loan $loan): void

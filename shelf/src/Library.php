@@ -9,7 +9,8 @@ use InvalidArgumentException;
 
 /**
  * The library: its books, members and loans, and the rules for lending and adding. It has
- * repositories; it isn't one. Chapter 56: members and loans are stored too.
+ * repositories; it isn't one. Chapter 56: members and loans are stored too. Chapter 84: and
+ * reservations, a queue for each book whose copies are all out.
  */
 final readonly class Library
 {
@@ -20,6 +21,7 @@ final readonly class Library
         private BookRepository $books,
         private MemberRepository $members,
         private LoanRepository $loans,
+        private HoldRepository $holds,
     ) {}
 
     /** @return list<Book> every book, sorted by title */
@@ -76,12 +78,17 @@ final readonly class Library
      * A member deletes their account (chapter 82). Not while they have books: the library would lose
      * track of them. Their API tokens go with them.
      */
-    public function removeMember(Member $member): void
+    public function removeMember(Member $member, DateTimeImmutable $today = new DateTimeImmutable()): void
     {
         $count = count($this->loans->forMember($member->name));
         if ($count > 0) {
             throw new InvalidArgumentException('Please return your ' . ($count === 1 ? 'book' : "$count books") . ' first: then you can delete your account.');
         }
+        foreach ($this->holds->ofMember($member) as $hold) { // chapter 84: a copy set aside goes to the next in line
+            $hold->cancel();
+            $this->holds->release($hold, $today);
+        }
+        $this->holds->forget($member);
         $this->loans->forget($member); // the books they had are history; the history goes with them
         $this->members->remove($member);
     }
@@ -98,23 +105,129 @@ final readonly class Library
         return $this->loans->find($id) ?? throw new LoanNotFound("There is no loan number $id");
     }
 
-    /** Chapter 83: the book is back on the shelf. */
-    public function giveBack(int $id, DateTimeImmutable $today): Loan
+    /**
+     * Chapter 83: the book is back on the shelf. Chapter 84: or set aside for the first in its queue,
+     * whose reservation comes back with the loan.
+     *
+     * @return array{Loan, ?Hold}
+     */
+    public function giveBack(int $id, DateTimeImmutable $today): array
     {
         $loan = $this->loan($id);
-        $this->loans->giveBack($loan, $today);
 
-        return $loan;
+        return [$loan, $this->loans->giveBack($loan, $today)];
     }
 
-    /** Chapter 83: one more loan period, by Loan's rules. */
+    /** Chapter 83: one more loan period, by Loan's rules. Chapter 84: not while someone waits for the book. */
     public function renew(int $id, DateTimeImmutable $today): Loan
     {
         $loan = $this->loan($id);
+        if (!$loan->isReturned() && $this->holds->isWaitedFor($loan->book)) {
+            throw new InvalidArgumentException("\"{$loan->book->title}\" is reserved by another member, so it can't be extended: please bring it back by {$loan->due->format('l, j F Y')}.");
+        }
         $loan->renew($today);
         $this->loans->update($loan);
 
         return $loan;
+    }
+
+    /**
+     * Chapter 84: the loans of these whose book someone is waiting for, which can't be extended.
+     *
+     * @param list<Loan> $loans
+     * @return list<int> their numbers
+     */
+    public function reserved(array $loans): array
+    {
+        return array_values(array_map(
+            fn(Loan $loan): int => $loan->id(),
+            array_filter($loans, fn(Loan $loan): bool => $this->holds->isWaitedFor($loan->book)),
+        ));
+    }
+
+    /**
+     * Chapter 84: $member reserves a book whose copies are all out, and joins its queue. Not a book
+     * on the shelf, one they have, or one they reserved already; and not while they are blocked.
+     */
+    public function reserve(string $title, Member $member, DateTimeImmutable $today): Hold
+    {
+        $book = $this->find($title);
+        if ($member->blocked) {
+            throw new InvalidArgumentException("$member->name is blocked, and can't reserve books.");
+        }
+        if ($book->isAvailable()) {
+            throw new InvalidArgumentException("\"$book->title\" is on the shelf: borrow it at the desk, no need to reserve it.");
+        }
+        if (array_any($this->loans->forMember($member->name), fn(Loan $loan): bool => sameTitle($loan->book->title, $book->title))) {
+            throw new InvalidArgumentException("$member->name has \"$book->title\" already.");
+        }
+        if ($this->holds->openFor($book, $member) !== null) {
+            throw new InvalidArgumentException("$member->name has reserved \"$book->title\" already.");
+        }
+        $hold = new Hold($book, $member, $today);
+        $this->holds->add($hold);
+
+        return $hold;
+    }
+
+    /**
+     * Chapter 84: the member's open reservations, each with its place in the queue (0 once a copy is
+     * set aside for it).
+     *
+     * @return list<array{hold: Hold, position: int}>
+     */
+    public function holdsOf(Member $member): array
+    {
+        return array_map(
+            fn(Hold $hold): array => ['hold' => $hold, 'position' => $hold->status === HoldStatus::Waiting ? $this->holds->position($hold) : 0],
+            $this->holds->ofMember($member),
+        );
+    }
+
+    /** Chapter 84: the member's open reservation of a book, if there is one. */
+    public function holdOf(Book $book, Member $member): ?Hold
+    {
+        return $this->holds->openFor($book, $member);
+    }
+
+    /**
+     * Chapter 84: the member cancels their reservation; a copy set aside for it goes to the next in
+     * line. Someone else's reservation is as if it didn't exist.
+     *
+     * @return array{Hold, ?Hold} the cancelled reservation, and the one its copy went to
+     */
+    public function cancelHold(int $id, Member $member, DateTimeImmutable $today): array
+    {
+        $hold = $this->holds->find($id);
+        if ($hold === null || mb_strtolower($hold->member->name) !== mb_strtolower($member->name) || !$hold->status->isOpen()) {
+            throw new HoldNotFound("You have no reservation number $id");
+        }
+        $hold->cancel();
+
+        return [$hold, $this->holds->release($hold, $today)];
+    }
+
+    /** @return list<Hold> chapter 84: the copies set aside at the desk, the soonest to expire first */
+    public function readyHolds(): array
+    {
+        return $this->holds->ready();
+    }
+
+    /**
+     * Chapter 84: the copies nobody came for in time go to the next in line, or back on the shelf.
+     * For a timer once a day (chapter 85); bin/console shelf:holds runs it.
+     *
+     * @return list<array{Hold, ?Hold}> each expired reservation, and the one its copy went to
+     */
+    public function expireHolds(DateTimeImmutable $today): array
+    {
+        $done = [];
+        foreach ($this->holds->expired($today) as $hold) {
+            $hold->expire($today);
+            $done[] = [$hold, $this->holds->release($hold, $today)];
+        }
+
+        return $done;
     }
 
     /** @return list<Member> chapter 83: every member, by name */
@@ -171,11 +284,13 @@ final readonly class Library
         if ($has >= $member->role->maxLoans()) {
             throw new InvalidArgumentException("$member->name has $has books already: that is the most a {$member->role->value} may have.");
         }
-        if (!$book->isAvailable()) {
+        // Chapter 84: a copy set aside for this member is theirs, though none is on the shelf.
+        $hold = $this->holds->openFor($book, $member);
+        if ($hold?->status !== HoldStatus::Ready && !$book->isAvailable()) {
             throw new NoCopyLeft("All copies of \"$book->title\" are on loan");
         }
         $loan = Loan::start($book, $member, $today);
-        $this->loans->add($loan); // stores the loan and takes the copy, together (chapter 57)
+        $this->loans->add($loan, $hold); // stores the loan and takes the copy, together (chapter 57); collects the reservation
 
         return $loan;
     }
@@ -186,18 +301,32 @@ final readonly class Library
         return $this->loans->forMember($this->member($name)->name);
     }
 
-    /** Sets how many copies the library has of a book. $copies is as typed into the form. */
-    public function changeCopies(string $title, string $copies): Book
+    /**
+     * Sets how many copies the library has of a book. $copies is as typed into the form.
+     * Chapter 84: copies added while members wait go to the queue first, one by one, as a copy that
+     * comes back does.
+     *
+     * @return array{Book, list<Hold>} the book, and the reservations that got one of the new copies
+     */
+    public function changeCopies(string $title, string $copies, DateTimeImmutable $today = new DateTimeImmutable()): array
     {
         $book = $this->find($title);
         $count = filter_var($copies, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0, 'max_range' => self::MOST_COPIES]]);
         if ($count === false) {
             throw new InvalidArgumentException('Copies must be a whole number from 0 to ' . self::MOST_COPIES . '.');
         }
-        $book->changeCopies($count);
+        $added = max(0, $count - $book->copies);
+        $book->changeCopies($count - $added);
         $this->books->update($book);
+        $served = [];
+        for ($i = 0; $i < $added; $i++) {
+            $hold = $this->holds->passOn($book, $today);
+            if ($hold !== null) {
+                $served[] = $hold;
+            }
+        }
 
-        return $book;
+        return [$this->find($book->title), $served]; // read again: passOn() may have put copies on the shelf
     }
 
     /**
@@ -210,7 +339,12 @@ final readonly class Library
         if ($this->loans->isOnLoan($book->title)) {
             throw new InvalidArgumentException("\"$book->title\" is on loan, so it can't be removed.");
         }
+        $setAside = array_any($this->holds->ready(), fn(Hold $hold): bool => sameTitle($hold->book->title, $book->title));
+        if ($setAside || $this->holds->isWaitedFor($book)) { // chapter 84
+            throw new InvalidArgumentException("\"$book->title\" is reserved, so it can't be removed.");
+        }
         $this->loans->forgetBook($book);
+        $this->holds->forgetBook($book);
         $this->books->remove($book->title);
 
         return $book;

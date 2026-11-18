@@ -7,6 +7,8 @@ namespace Shelf\Tests;
 use DateTimeImmutable;
 use Shelf\Book;
 use Shelf\BookNotFound;
+use Shelf\Hold;
+use Shelf\HoldStatus;
 use Shelf\Loan;
 use Shelf\Member;
 use Shelf\LoanRepository;
@@ -19,13 +21,22 @@ final class InMemoryLoanRepository implements LoanRepository
     /** @var list<Loan> */
     private array $loans = [];
 
-    public function __construct(private readonly InMemoryBookRepository $books) {}
+    private readonly InMemoryHoldRepository $holds;
 
-    public function add(Loan $loan): void
+    /** Chapter 84: with the reservations, which a copy that comes back goes to first. */
+    public function __construct(private readonly InMemoryBookRepository $books, ?InMemoryHoldRepository $holds = null)
     {
-        $book = $this->books->find($loan->book->title) ?? throw new BookNotFound("There is no book titled \"{$loan->book->title}\"");
-        $book->lend();
-        $this->books->update($book);
+        $this->holds = $holds ?? new InMemoryHoldRepository($books);
+    }
+
+    public function add(Loan $loan, ?Hold $hold = null): void
+    {
+        if ($hold?->status !== HoldStatus::Ready) {
+            $book = $this->books->find($loan->book->title) ?? throw new BookNotFound("There is no book titled \"{$loan->book->title}\"");
+            $book->lend();
+            $this->books->update($book);
+        }
+        $hold?->collect();
         $this->loans[] = $loan;
         new \ReflectionProperty(Loan::class, 'id')->setValue($loan, count($this->loans)); // as the database would
     }
@@ -53,12 +64,11 @@ final class InMemoryLoanRepository implements LoanRepository
         return $found;
     }
 
-    public function giveBack(Loan $loan, DateTimeImmutable $today): void
+    public function giveBack(Loan $loan, DateTimeImmutable $today): ?Hold
     {
         $loan->giveBack($today);
-        $book = $this->books->find($loan->book->title) ?? throw new BookNotFound("There is no book titled \"{$loan->book->title}\"");
-        $book->putBack();
-        $this->books->update($book);
+
+        return $this->holds->passOn($loan->book, $today);
     }
 
     public function update(Loan $loan): void {}

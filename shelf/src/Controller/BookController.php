@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Shelf\Controller;
 
 use InvalidArgumentException;
+use Psr\Clock\ClockInterface;
 use Shelf\Book;
 use Shelf\BookNotFound;
 use Shelf\BookQuery;
 use Shelf\BookSort;
 use Shelf\Form\BookData;
 use Shelf\Form\BookType;
+use Shelf\Hold;
 use Shelf\Library;
+use Shelf\Member;
 use Shelf\Web\Covers;
 use Shelf\Web\Pager;
 use Shelf\Security\BookVoter;
@@ -23,6 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
@@ -115,18 +119,19 @@ final class BookController extends AbstractController
 
     #[Route('/copies', name: 'copies', methods: ['POST'])]
     #[IsGranted(BookVoter::CHANGE)]
-    public function copies(Request $request): Response
+    public function copies(Request $request, ClockInterface $clock): Response
     {
         $title = trim($request->request->getString('title'));
         $copies = trim($request->request->getString('copies'));
         try {
-            $book = $this->library->changeCopies($title, $copies);
+            [$book, $served] = $this->library->changeCopies($title, $copies, $clock->now());
         } catch (BookNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
             return $this->bookPage($title, $copies, $e->getMessage());
         }
-        $this->addFlash('notice', "Saved: the library has $book->copies " . ($book->copies === 1 ? 'copy' : 'copies') . '.');
+        $this->addFlash('notice', "Saved: the library has $book->copies " . ($book->copies === 1 ? 'copy' : 'copies') . ' on the shelf'
+            . ($served === [] ? '.' : ', and ' . count($served) . ' set aside for ' . implode(', ', array_map(fn(Hold $hold): string => $hold->member->name, $served)) . '.'));
 
         return $this->redirectToRoute('book', ['title' => $book->title], Response::HTTP_SEE_OTHER);
     }
@@ -149,6 +154,24 @@ final class BookController extends AbstractController
         return $this->redirectToRoute('books', status: Response::HTTP_SEE_OTHER);
     }
 
+    /** Chapter 84: a member reserves a book whose copies are all out, and joins its queue. */
+    #[Route('/reserve', name: 'reserve', methods: ['POST'])]
+    #[IsGranted('ROLE_READER')]
+    public function reserve(#[CurrentUser] Member $member, Request $request, ClockInterface $clock): Response
+    {
+        $title = trim($request->request->getString('title'));
+        try {
+            $hold = $this->library->reserve($title, $member, $clock->now());
+        } catch (BookNotFound) {
+            throw new NotFoundHttpException();
+        } catch (InvalidArgumentException $e) {
+            return $this->bookPage($title, error: $e->getMessage());
+        }
+        $this->addFlash('notice', "You reserved \"{$hold->book->title}\". The next copy that comes back is kept for you.");
+
+        return $this->redirectToRoute('book', ['title' => $hold->book->title], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/cover', name: 'cover', methods: ['GET'])]
     public function cover(#[MapQueryParameter] string $title = ''): Response
     {
@@ -166,8 +189,15 @@ final class BookController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+        // Chapter 84: the member's reservation of this book, with its place in the queue.
+        $member = $this->getUser();
+        $hold = $member instanceof Member
+            ? array_find($this->library->holdsOf($member), fn(array $entry): bool => $entry['hold']->book->title === $book->title)
+            : null;
+
         return $this->render('book.html.twig', [
             'book' => $book,
+            'hold' => $hold,
             'hasCover' => $this->covers->find($book->title) !== null,
             'copies' => $copies ?? (string) $book->copies,
             'error' => $error,

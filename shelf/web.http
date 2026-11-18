@@ -282,6 +282,23 @@ member=Amira&blocked=1&_token={{token}}
 GET /members
 
 ###
+# Chapter 84: every copy of Kindred is out, so the page offers to reserve it.
+GET /book?title=Kindred
+
+###
+# Jonas reserves it, and waits in its queue.
+POST /reserve
+Content-Type: application/x-www-form-urlencoded
+
+title=Kindred&_token={{token}}
+
+###
+GET /book?title=Kindred
+
+###
+GET /loans
+
+###
 GET /cover?title=Sula
 
 ###
@@ -404,6 +421,10 @@ title=Kindred&copies=3&_token={{token}}
 
 ###
 GET /book?title=Kindred
+
+###
+# Chapter 84: of the three copies, the first goes to Jonas's reservation, set aside at the desk.
+GET /desk
 
 ###
 GET /book?title=Sula

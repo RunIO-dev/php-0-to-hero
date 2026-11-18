@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Shelf\Controller;
 
 use InvalidArgumentException;
+use Psr\Clock\ClockInterface;
 use Shelf\Accounts;
 use Shelf\EmailInUse;
+use Shelf\HoldNotFound;
 use Shelf\Library;
 use Shelf\Member;
 use Shelf\MemberRepository;
@@ -60,7 +62,24 @@ final class AccountController extends AbstractController
     #[Route('/loans', name: 'loans', methods: ['GET'])]
     public function loans(#[CurrentUser] Member $member, Library $library): Response
     {
-        return $this->render('loans.html.twig', ['loans' => $library->loansOf($member->name)]);
+        $loans = $library->loansOf($member->name);
+
+        // Chapter 84: and the member's reservations; a loan someone waits for can't be extended.
+        return $this->render('loans.html.twig', ['loans' => $loans, 'reserved' => $library->reserved($loans), 'holds' => $library->holdsOf($member)]);
+    }
+
+    /** Chapter 84: the member cancels one of their reservations; anyone else's is a 404. */
+    #[Route('/reservations/cancel', name: 'cancel_hold', methods: ['POST'])]
+    public function cancelHold(#[CurrentUser] Member $member, Request $request, Library $library, ClockInterface $clock): Response
+    {
+        try {
+            [$hold] = $library->cancelHold($request->request->getInt('hold'), $member, $clock->now());
+        } catch (HoldNotFound) {
+            throw $this->createNotFoundException();
+        }
+        $this->addFlash('notice', "Your reservation of \"{$hold->book->title}\" is cancelled.");
+
+        return $this->redirectToRoute('loans', status: Response::HTTP_SEE_OTHER);
     }
 
     /**

@@ -1,6 +1,8 @@
 {# A book's page (chapter 55), with its cover (chapter 52); the forms to change it only for the library's
    staff (chapter 76). copies is the form's value; error, if set, says what was wrong with a form.
-   Chapter 80: the cover beside the facts, and the staff's forms in a panel of their own. #}
+   Chapter 80: the cover beside the facts, and the staff's forms in a panel of their own.
+   Chapter 84: hold, the member's reservation of this book and its place in the queue; "Reserve"
+   while every copy is out. #}
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ book.title }} · Shelf{% endblock %}
@@ -33,6 +35,22 @@
 {% endif %}
                 </dd>
             </dl>
+{% if hold %}
+            <section class="panel" aria-labelledby="hold-head">
+                <h2 id="hold-head">Your reservation</h2>
+                <p>{% if hold.position > 0 %}You are number {{ hold.position }} in the queue.{% else %}A copy is set aside for you at the desk until {{ hold.hold.readyUntil|date('l, j F', false) }}.{% endif %} <a href="{{ path('loans') }}">All your reservations</a></p>
+            </section>
+{% elseif not book.isAvailable and is_granted('ROLE_READER') %}
+            <section class="panel" aria-labelledby="reserve-head">
+                <h2 id="reserve-head">Reserve</h2>
+                <form method="post" action="{{ path('reserve') }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                    <input type="hidden" name="title" value="{{ book.title }}">
+                    <p>Every copy is out. Reserve it, and the next copy that comes back is kept for you.</p>
+                    <p class="actions"><button>Reserve</button></p>
+                </form>
+            </section>
+{% endif %}
 {% if is_granted('CHANGE_BOOKS') %}
             <section class="panel" aria-labelledby="staff">
                 <h2 id="staff">For the library's staff</h2>

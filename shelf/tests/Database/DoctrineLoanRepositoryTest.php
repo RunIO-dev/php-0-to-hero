@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Shelf\Book;
 use Shelf\Doctrine\DoctrineBookRepository;
+use Shelf\Doctrine\DoctrineHoldRepository;
 use Shelf\Doctrine\DoctrineLoanRepository;
 use Shelf\Doctrine\DoctrineMemberRepository;
 use Shelf\Loan;
@@ -32,7 +33,7 @@ final class DoctrineLoanRepositoryTest extends LoanRepositoryContract
         $members->add($this->amira);
         $members->add($this->jonas);
 
-        return [$bookRepository, new DoctrineLoanRepository($this->entities)];
+        return [$bookRepository, new DoctrineLoanRepository($this->entities, new DoctrineHoldRepository($this->entities))];
     }
 
     public function testALoanThatFailsTakesNoCopy(): void

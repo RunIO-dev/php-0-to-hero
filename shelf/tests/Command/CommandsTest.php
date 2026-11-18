@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace Shelf\Tests\Command;
 
 use Shelf\Accounts;
+use DateTimeImmutable;
 use Shelf\BookRepository;
+use Shelf\Library;
+use Shelf\MemberRepository;
 use Shelf\LoanRepository;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -17,6 +21,8 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 final class CommandsTest extends KernelTestCase
 {
+    use ClockSensitiveTrait;
+
     public function testImportFillsAnEmptyDatabase(): void
     {
         $import = self::command('shelf:import');
@@ -58,6 +64,25 @@ final class CommandsTest extends KernelTestCase
         self::assertStringStartsWith('Lent: Kitchen to Amira, due back on ', $lend->getDisplay());
         self::assertTrue(self::service(LoanRepository::class)->isOnLoan('Kitchen'));
         self::assertSame(0, self::service(BookRepository::class)->find('Kitchen')?->copies);
+    }
+
+    /** Chapter 84: a copy nobody collected in a week goes back on the shelf. */
+    public function testHoldsPassesOnUncollectedCopies(): void
+    {
+        self::command('shelf:import')->execute([]);
+        $library = self::service(Library::class);
+        $loan = $library->lend('Kitchen', 'Amira', new DateTimeImmutable('2026-03-01'));
+        $library->reserve('Kitchen', self::service(MemberRepository::class)->find('Jonas') ?? self::fail('No Jonas'), new DateTimeImmutable('2026-03-01'));
+        $library->giveBack($loan->id(), new DateTimeImmutable('2026-03-02'));
+        self::mockTime('2026-03-10 06:00');
+
+        $holds = self::command('shelf:holds');
+        $holds->execute([]);
+
+        self::assertSame("- \"Kitchen\" waited for Jonas until 9 March: back on the shelf\n", $holds->getDisplay());
+        self::assertSame(1, self::service(BookRepository::class)->find('Kitchen')?->copies);
+        $holds->execute([]);
+        self::assertSame("No reservation has expired.\n", $holds->getDisplay(), 'Once is enough');
     }
 
     /** Chapter 81: the catalogue may run after every deployment; the second run adds nothing. */

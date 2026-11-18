@@ -17,7 +17,7 @@ parameters:
         -
             identifiers: [property.onlyWritten, property.unusedType]
             paths: [src/Book.php]
-        # Chapters 82 and 83: Member and Loan read their IDs (id()), so only "never assigned" is left.
+        # Chapters 82 to 84: Member, Loan and Hold read their IDs (id()), so only "never assigned" is left.
         -
             identifier: property.unusedType
-            paths: [src/Member.php, src/Loan.php]
+            paths: [src/Member.php, src/Loan.php, src/Hold.php]

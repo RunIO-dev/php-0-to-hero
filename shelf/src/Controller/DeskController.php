@@ -27,6 +27,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
  * give one another role. Every rule stays in Library and Loan; each action answers with a message,
  * or with the desk again and what went wrong.
  * Readers extend their own loans from "My loans"; renew() is for both.
+ * Chapter 84: a copy that comes back goes to the first in its queue, and the desk lists the copies
+ * set aside, ready to lend to whoever reserved them.
  */
 final class DeskController extends AbstractController
 {
@@ -60,13 +62,14 @@ final class DeskController extends AbstractController
     public function giveBack(Request $request): Response
     {
         try {
-            $loan = $this->library->giveBack($request->request->getInt('loan'), $this->clock->now());
+            [$loan, $hold] = $this->library->giveBack($request->request->getInt('loan'), $this->clock->now());
         } catch (LoanNotFound) {
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
             return $this->deskPage($e->getMessage());
         }
-        $this->addFlash('notice', "\"{$loan->book->title}\" is back from {$loan->member->name}.");
+        $this->addFlash('notice', "\"{$loan->book->title}\" is back from {$loan->member->name}."
+            . ($hold === null ? '' : " Please set it aside for {$hold->member->name}, who reserved it."));
 
         return $this->redirectToRoute('desk', status: Response::HTTP_SEE_OTHER);
     }
@@ -90,7 +93,12 @@ final class DeskController extends AbstractController
             throw $this->createNotFoundException();
         } catch (InvalidArgumentException $e) {
             return $staff ? $this->deskPage($e->getMessage())
-                : $this->render('loans.html.twig', ['loans' => $this->library->loansOf($member->name), 'error' => $e->getMessage()], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
+                : $this->render('loans.html.twig', [
+                    'loans' => $loans = $this->library->loansOf($member->name),
+                    'reserved' => $this->library->reserved($loans),
+                    'holds' => $this->library->holdsOf($member),
+                    'error' => $e->getMessage(),
+                ], new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY));
         }
         $this->addFlash('notice', "\"{$loan->book->title}\" is now due back on {$loan->due->format('l, j F Y')}.");
 
@@ -141,8 +149,12 @@ final class DeskController extends AbstractController
     /** @param array{title?: string, member?: string} $typed what the lend form had, after a mistake */
     private function deskPage(?string $error = null, array $typed = []): Response
     {
+        $loans = $this->library->currentLoans();
+
         return $this->render('desk.html.twig', [
-            'loans' => $this->library->currentLoans(),
+            'loans' => $loans,
+            'reserved' => $this->library->reserved($loans),
+            'ready' => $this->library->readyHolds(),
             'members' => $this->library->members(),
             'available' => array_filter($this->library->books(), fn(Book $book): bool => $book->isAvailable()),
             'today' => $this->clock->now(),

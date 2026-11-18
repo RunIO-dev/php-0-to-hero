@@ -1,6 +1,7 @@
 {# The lending desk (chapter 83), for the staff: a form to lend a book, and every loan that isn't back,
    the soonest due first, each with "Back" and "Extend". The datalists suggest titles and names as
-   they are typed, without JavaScript. #}
+   they are typed, without JavaScript. Chapter 84: the copies set aside for reservations, each lent
+   with one button; no "Extend" for a loan someone waits for. #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Lending desk · Shelf{% endblock %}
@@ -35,6 +36,33 @@
 {% endfor %}
         </datalist>
     </section>
+{% if ready is not empty %}
+    <h2 class="section-head" id="ready">Set aside <span class="count">{{ ready|length }}</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">For</th><th scope="col">Until</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+{% for hold in ready %}
+                <tr>
+                    <td><a href="{{ path('book', {title: hold.book.title}) }}">{{ hold.book.title }}</a></td>
+                    <td>{{ hold.member.name }}</td>
+                    <td>{{ hold.readyUntil|date('D j M Y', false) }}</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="{{ path('desk_lend') }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
+                            <input type="hidden" name="title" value="{{ hold.book.title }}">
+                            <input type="hidden" name="member" value="{{ hold.member.name }}">
+                            <button class="quiet" aria-label="Lend {{ hold.book.title }} to {{ hold.member.name }}">Lend</button>
+                        </form>
+                    </div></td>
+                </tr>
+{% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}
     <h2 class="section-head">On loan <span class="count">{{ loans|length }}</span></h2>
 {% if loans is empty %}
 {% embed 'components/_empty.html.twig' with {text: 'Every book is on the shelf.'} only %}{% endembed %}
@@ -57,7 +85,7 @@
                             <input type="hidden" name="loan" value="{{ loan.id }}">
                             <button class="quiet" aria-label="{{ loan.book.title }} is back from {{ loan.member.name }}">Back</button>
                         </form>
-{% if not loan.isOverdue(today) and loan.renewals < constant('Shelf\\Loan::MAX_RENEWALS') %}
+{% if not loan.isOverdue(today) and loan.renewals < constant('Shelf\\Loan::MAX_RENEWALS') and loan.id not in reserved %}
                         <form method="post" action="{{ path('renew') }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('shelf') }}">
                             <input type="hidden" name="loan" value="{{ loan.id }}">

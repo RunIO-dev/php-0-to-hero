@@ -12,8 +12,10 @@ interface LoanRepository
     /**
      * Stores the loan and takes one copy of its book off the shelf: both, or neither (chapter 57).
      * Throws NoCopyLeft if no copy is left, even when another request took the last one a moment ago.
+     * Chapter 84: $hold, the member's open reservation of the book, is collected with it; a copy set
+     * aside for it is off the shelf already, so none is taken.
      */
-    public function add(Loan $loan): void;
+    public function add(Loan $loan, ?Hold $hold = null): void;
 
     /** @return list<Loan> the member's loans that aren't back yet, the soonest due first */
     public function forMember(string $name): array;
@@ -27,8 +29,11 @@ interface LoanRepository
     /** @return list<Loan> chapter 83: every loan that isn't back yet, the soonest due first */
     public function current(): array;
 
-    /** Chapter 83: the loan is back, and its copy on the shelf again: both, or neither. */
-    public function giveBack(Loan $loan, DateTimeImmutable $today): void;
+    /**
+     * Chapter 83: the loan is back, and its copy on the shelf again: both, or neither.
+     * Chapter 84: or set aside for the first in the book's queue, whose reservation is returned.
+     */
+    public function giveBack(Loan $loan, DateTimeImmutable $today): ?Hold;
 
     /** Chapter 83: stores a change to a loan (its new due date). */
     public function update(Loan $loan): void;
