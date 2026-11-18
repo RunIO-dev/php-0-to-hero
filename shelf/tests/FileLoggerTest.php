@@ -49,4 +49,12 @@ final class FileLoggerTest extends TestCase
         self::assertCount(1, file($this->file) ?: []);
         self::assertStringContainsString('Amira\n2026', (string) file_get_contents($this->file));
     }
+
+    /** Chapter 78: in a container, the log goes to a stream (php://stderr), which has no folder and no lock. */
+    public function testAStreamIsWrittenToo(): void
+    {
+        $this->expectOutputString("2026-03-16T10:00:00+00:00 INFO Amira logged in\n");
+
+        new FileLogger('php://output', new DateTimeImmutable('2026-03-16 10:00:00 UTC'))->info('{name} logged in', ['name' => 'Amira']);
+    }
 }

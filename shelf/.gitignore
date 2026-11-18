@@ -12,3 +12,6 @@
 # Settings for one computer only (chapter 65), which may hold a password.
 /.env.local
 /.env.*.local
+
+# A developer's own PHPUnit settings, which win over phpunit.xml.dist (chapter 79).
+/phpunit.xml

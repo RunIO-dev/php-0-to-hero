@@ -2,7 +2,7 @@
 <!-- Shelf's tests (chapter 41). From the course folder: vendor/bin/phpunit -c shelf
      Chapter 77: in Symfony's test environment, with its own settings (.env.test) and database. -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="../vendor/phpunit/phpunit/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="tests/bootstrap.php"
          cacheDirectory=".phpunit.cache"
          failOnWarning="true"

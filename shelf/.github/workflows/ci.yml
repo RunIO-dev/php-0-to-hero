@@ -1,0 +1,74 @@
+# Shelf's CI (chapter 79), for Shelf in a repository of its own. Every push and pull request runs every
+# check; a push to main that passes them is deployed: new images, then the server takes them.
+#
+# Set up once, in the repository's settings:
+#   environment "production", with the variable SHELF_HOST (shelf.example) and two secrets:
+#     DEPLOY_SSH_KEY      the private key that may only run deploy/deploy.sh on the server
+#     DEPLOY_KNOWN_HOSTS  the server's line for ~/.ssh/known_hosts (ssh-keyscan shelf.example), checked once
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # The tests, PHPStan and the code style, in the same PHP as production (the Dockerfile's test stage).
+      - run: docker build --target test .
+
+  deploy:
+    needs: checks
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: production
+    # One deploy at a time; a newer push waits for the one before.
+    concurrency:
+      group: production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write # push the images to GitHub's registry, ghcr.io
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Values from GitHub go into env:, never straight into the script: a branch name or a commit
+      # message can't become a command.
+      - name: Build the images, named after the commit, and push them
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          image="ghcr.io/$(echo "$GITHUB_REPOSITORY" | tr '[:upper:]' '[:lower:]')"
+          echo "$TOKEN" | docker login ghcr.io --username "$GITHUB_ACTOR" --password-stdin
+          for target in app web; do
+            docker build --target "$target" --tag "$image-$target:$GITHUB_SHA" .
+            docker push "$image-$target:$GITHUB_SHA"
+          done
+      - name: Deploy
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          HOST: ${{ vars.SHELF_HOST }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy "deploy@$HOST" "$GITHUB_SHA"
+      # A few requests to the live site: the page answers, with its security headers, and so does the API.
+      - name: Smoke test
+        env:
+          HOST: ${{ vars.SHELF_HOST }}
+        run: |
+          curl --fail --silent --show-error --head "https://$HOST/" | grep -i '^content-security-policy:'
+          curl --fail --silent --show-error --output /dev/null "https://$HOST/api/books"

@@ -1,0 +1,17 @@
+# What Git leaves out of Shelf's repository (chapter 43): files that tools make,
+# and can make again at any time.
+/vendor/
+/.phpunit.cache/
+# Covers that visitors upload (chapter 52): data, not code.
+/storage/
+# The database (chapter 54): data, made by Shelf the first time it runs. From chapter 72 also
+# Symfony's cache.
+/var/
+# Made by Symfony in debug mode, for configuration written in PHP; Shelf's is in YAML (chapter 72).
+/config/reference.php
+# Settings for one computer only (chapter 65), which may hold a password.
+/.env.local
+/.env.*.local
+
+# A developer's own PHPUnit settings, which win over phpunit.xml.dist (chapter 79).
+/phpunit.xml

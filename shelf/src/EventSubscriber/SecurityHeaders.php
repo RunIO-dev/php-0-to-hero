@@ -29,7 +29,8 @@ final class SecurityHeaders implements EventSubscriberInterface
     {
         $headers = $event->getResponse()->headers;
         $headers->set('X-Content-Type-Options', 'nosniff');
-        if (str_starts_with((string) $headers->get('Content-Type'), 'text/html')) {
+        // Chapter 78: a page from render() has no Content-Type yet; Symfony adds text/html after this event.
+        if (str_starts_with($headers->get('Content-Type') ?? 'text/html', 'text/html')) {
             $headers->add(self::FOR_PAGES);
         }
     }

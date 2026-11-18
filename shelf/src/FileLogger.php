@@ -28,10 +28,12 @@ final class FileLogger extends AbstractLogger
         if ($rest !== []) {
             $line .= ' ' . json_encode($rest, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
         }
-        if (!is_dir(dirname($this->file)) && !mkdir(dirname($this->file), 0o755, true) && !is_dir(dirname($this->file))) {
+        // Chapter 78: a stream such as php://stderr (in a container) has no folder, and can't be locked.
+        $isStream = str_contains($this->file, '://');
+        if (!$isStream && !is_dir(dirname($this->file)) && !mkdir(dirname($this->file), 0o755, true) && !is_dir(dirname($this->file))) {
             throw new RuntimeException('Could not make the folder for the log: ' . dirname($this->file));
         }
-        file_put_contents($this->file, addcslashes($line, "\0..\37") . "\n", FILE_APPEND | LOCK_EX);
+        file_put_contents($this->file, addcslashes($line, "\0..\37") . "\n", $isStream ? FILE_APPEND : FILE_APPEND | LOCK_EX);
     }
 
     /**

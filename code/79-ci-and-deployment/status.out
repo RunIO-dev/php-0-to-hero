@@ -1,0 +1,5 @@
+tests: exit 0, OK (141 tests, 472 assertions)
+static analysis: exit 1, Line 12: Method lend() has no return type.
+The job stops here, and fails.
+exit("..."): exit 0, The test database could not be migrated
+exit(1): exit 1, The test database could not be migrated

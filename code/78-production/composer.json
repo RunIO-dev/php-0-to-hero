@@ -1,0 +1,13 @@
+{
+    "name": "learner/production",
+    "description": "Chapter 78's examples: settings from the environment, and an autoloader for production.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.5",
+        "symfony/dotenv": "7.4.*"
+    },
+    "autoload": {
+        "psr-4": { "Library\\": "src/" }
+    }
+}

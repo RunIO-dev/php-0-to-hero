@@ -116,8 +116,8 @@ Dependencies run in order: each part needs the parts before it. Notes are in bra
 77. Testing a Symfony app. ◆ `PagesTest`, `ApiContractTest` and command tests; a transaction per test. Found: lending a book with an ISBN failed.
 
 ## Part 12: Putting it online (2)
-78. Production setup: configuration, a production image, the cache, and HTTPS.
-79. CI with every check (tests, PHPStan, style), and a simple deployment. ◆ *Shelf* online.
+78. Production setup: configuration, a production image, the cache, and HTTPS. ◆ a Dockerfile in stages, PHP-FPM and Caddy, `compose.prod.yaml`; logs to stderr. Found: the security headers were missing since chapter 73.
+79. CI with every check (tests, PHPStan, style), and a simple deployment. ◆ *Shelf* online: a test stage, GitHub Actions, images per commit on ghcr.io, `deploy.sh` behind a restricted SSH key, a smoke test. Found: the test bootstrap ended with status 0.
 
 ## Part 13: What next (1)
 80. Where to go from here: reading the PHP manual, contributing to open source, and the next topics (queues, events, performance).

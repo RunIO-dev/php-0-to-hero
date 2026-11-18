@@ -27,8 +27,10 @@ services:
         arguments: ['%kernel.project_dir%/%env(SHELF_COVERS)%']
 
     # Shelf's own log (chapter 66), for Shelf's classes; Symfony's own messages go to the server's console.
+    # Chapter 78: a whole path or a stream, such as php://stderr in a container; resolve: fills in
+    # %kernel.project_dir% in .env's value.
     Shelf\FileLogger:
-        arguments: ['%kernel.project_dir%/%env(SHELF_LOG)%']
+        arguments: ['%env(resolve:SHELF_LOG)%']
     Psr\Log\LoggerInterface: '@Shelf\FileLogger'
 
 # Chapter 77: in the tests, Symfony's own messages go into a file, not between PHPUnit's lines. Only

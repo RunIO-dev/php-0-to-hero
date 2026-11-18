@@ -1,0 +1,19 @@
+# What the production image leaves out (chapter 78): what tools make again, data, settings for one
+# computer, the tests, the sample passwords of the course, and the files only the build and the
+# developers read.
+/vendor/
+/var/
+/storage/
+/data/
+/.env.local
+/.env.*.local
+/tests/
+/phpunit.xml.dist
+/.phpunit.cache/
+/web.http
+/web.out
+/*-password.txt
+/Dockerfile
+/compose.prod.yaml
+/phpstan.neon.dist
+/README.md

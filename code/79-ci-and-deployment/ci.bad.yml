@@ -1,0 +1,9 @@
+# ✗ A deploy job that trusts too much.
+jobs:
+  deploy: # no "needs: checks": it deploys even when the tests fail
+    runs-on: ubuntu-24.04
+    steps:
+      # The commit message goes straight into the script: a message with $(...) in it runs as a command.
+      - run: echo "Deploying ${{ github.event.head_commit.message }}"
+      # The server's password, written into the log of every run.
+      - run: echo "${{ secrets.SERVER_PASSWORD }}" && sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh root@shelf.example "cd shelf && git pull && composer install"

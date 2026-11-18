@@ -217,6 +217,13 @@ final class ChecksTest extends TestCase
         self::assertSame('code/05-first/other.php: no .out file next to it', $problems[1]);
     }
 
+    public function testAToolsSettingsFileIsNoExample(): void
+    {
+        $this->put('code/79-ci/.php-cs-fixer.dist.php', "<?php\nreturn [];\n");
+
+        self::assertSame([], Examples::check($this->root));
+    }
+
     public function testATestFileRunsWithPhpunitWithoutTheLinesThatChange(): void
     {
         $this->put('code/41-tests/fee.php', "<?php\nfunction fee(int \$days): int\n{\n    return \$days * 20;\n}\n");

@@ -6,6 +6,7 @@ namespace Shelf\Tests\Web;
 
 use DateTimeImmutable;
 use Shelf\BookRepository;
+use Shelf\EventSubscriber\SecurityHeaders;
 use Shelf\Library;
 
 /**
@@ -23,6 +24,18 @@ final class PagesTest extends ShelfWebTestCase
         self::assertSelectorTextSame('.book h2', 'Kindred');
         self::assertSelectorTextSame('.count', '1 book');
         self::assertSelectorNotExists('a.button', 'A visitor sees no "Add a book"');
+    }
+
+    /** Chapter 78: every page has the headers of chapter 64; from chapter 73 to 77 they were missing. */
+    public function testEveryPageSendsItsSecurityHeaders(): void
+    {
+        foreach (['/', '/login', '/book?title=Sula'] as $path) {
+            $this->client->request('GET', $path);
+
+            self::assertResponseHeaderSame('Content-Security-Policy', SecurityHeaders::FOR_PAGES['Content-Security-Policy'], $path);
+            self::assertResponseHeaderSame('Referrer-Policy', 'same-origin', $path);
+            self::assertResponseHeaderSame('X-Content-Type-Options', 'nosniff', $path);
+        }
     }
 
     public function testAnUnknownBookIsNotFound(): void

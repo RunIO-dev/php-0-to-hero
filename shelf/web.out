@@ -38,6 +38,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -116,6 +118,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -175,6 +179,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -236,6 +242,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -296,6 +304,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 403 Forbidden
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -329,6 +339,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -388,6 +400,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -449,6 +463,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -494,6 +510,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -542,6 +560,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -588,6 +608,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -635,6 +657,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 403 Forbidden
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -694,6 +718,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -783,6 +809,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -850,6 +878,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -924,6 +954,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 404 Not Found
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1274,6 +1306,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 204 No Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 
 > GET /api/loans
 > Authorization: Bearer {{amiratoken}}
@@ -1294,6 +1328,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1349,6 +1385,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 422 Unprocessable Content
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1427,6 +1465,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1480,6 +1520,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1557,6 +1599,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 200 OK
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1624,6 +1668,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 404 Not Found
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1659,12 +1705,16 @@ $ php bin/console debug:router
 < HTTP/1.1 405 Method Not Allowed
 < Allow: POST
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 > GET /logout
 
 < HTTP/1.1 403 Forbidden
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1700,6 +1750,8 @@ $ php bin/console debug:router
 
 < HTTP/1.1 404 Not Found
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8
 
 <!doctype html>
@@ -1730,4 +1782,6 @@ $ php bin/console debug:router
 < HTTP/1.1 405 Method Not Allowed
 < Allow: GET, POST
 < X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
 < Content-Type: text/html; charset=UTF-8

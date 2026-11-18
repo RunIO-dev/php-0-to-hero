@@ -7,6 +7,7 @@ namespace Tools;
 /**
  * Every code/**.php example runs, and prints exactly its .out file (docs/standards.md §6.1).
  * Shelf's scripts with a .out file are checked the same way.
+ * A dotfile (.php-cs-fixer.dist.php) is a tool's settings, not an example.
  * A file marked "// PHP 8.6+" is skipped on older PHP. A *.bad.php file is only syntax-checked.
  * A *.error.php file shows an error on purpose: its .out holds the error message.
  * An optional .run file holds the command a learner types, with arguments and input:
@@ -29,8 +30,9 @@ final class Examples
         foreach ([...Run::files($root . '/code', '.php'), ...$shelf] as $file) {
             $name = substr($file, strlen($root) + 1);
             if (in_array(basename($file), self::required(dirname($file)), true) || Projects::isAutoloaded($file) || self::isTemplate($file)
+                || str_starts_with(basename($file), '.')
                 || in_array($file, Web::served(dirname($file)), true) && !Web::has($file)) {
-                continue; // loaded by its neighbours, or by the autoloader: checked through them
+                continue; // loaded by its neighbours, by the autoloader or by a tool: checked through them
             }
             if (str_ends_with($file, '.bad.php') && !Web::has($file)) {
                 $lint = Run::capture([PHP_BINARY, '-l', $file]);

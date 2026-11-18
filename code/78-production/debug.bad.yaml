@@ -1,0 +1,7 @@
+# ✗ A server started as on a developer's computer: debug pages for everyone, and a secret in Git.
+services:
+  app:
+    environment:
+      APP_ENV: dev
+      APP_DEBUG: 1
+      APP_SECRET: shelf-secret-2026

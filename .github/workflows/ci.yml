@@ -33,6 +33,31 @@ jobs:
           if [ "${{ github.event_name }}" = schedule ]; then links=--links; else links=; fi
           docker compose run --rm ${{ matrix.service }} composer verify -- $links
 
+  # Shelf's production setup (chapters 78 and 79): the checks in the Dockerfile's test stage, then the
+  # two production containers on this runner, and the requests of Shelf's own smoke test.
+  shelf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: shelf
+    env:
+      SHELF_HTTP_PORT: 8080
+      SHELF_HTTPS_PORT: 8443
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker build --target test .
+      - run: SHELF_APP_SECRET=$(openssl rand -hex 32) docker compose -f compose.prod.yaml up -d --build
+      - name: smoke test (Caddy's own certificate for localhost, so --insecure)
+        run: |
+          curl --insecure --retry 10 --retry-all-errors --retry-delay 2 --fail --silent --show-error --head https://localhost:8443/ | grep -i '^content-security-policy:'
+          curl --insecure --fail --silent --show-error --output /dev/null https://localhost:8443/api/books
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://localhost:8080/)" = 308
+      - if: always()
+        run: SHELF_APP_SECRET=x docker compose -f compose.prod.yaml logs; SHELF_APP_SECRET=x docker compose -f compose.prod.yaml down -v
+
   book:
     needs: verify
     runs-on: ubuntu-latest
