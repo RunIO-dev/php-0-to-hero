@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Shelf\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Shelf\Book;
 use Shelf\BookNotFound;
 use Shelf\BookQuery;
+use Shelf\BookSort;
+use Shelf\Isbn;
 use Shelf\BookRepository;
 
 /**
@@ -88,6 +91,37 @@ abstract class BookRepositoryContract extends TestCase
         self::assertSame(['Dawn'], array_column($books->page(new BookQuery('butler', availableOnly: true), 0, 10), 'title'));
         self::assertSame(3, $books->count(new BookQuery(availableOnly: true)));
         self::assertSame(0, $books->count(new BookQuery('%')), 'A % is a letter, not a wildcard');
+    }
+
+    /** Chapter 81: one search for the title, the author or the ISBN, in any case. */
+    public function testATextSearchFindsTitlesAuthorsAndIsbns(): void
+    {
+        $books = $this->repository(...self::shelf(), ...[new Book('Kitchen', 'Banana Yoshimoto', 1988, isbn: new Isbn('9780802142443'))]);
+
+        self::assertSame(['Beloved', 'Sula'], array_column($books->page(new BookQuery(text: 'MORRISON'), 0, 10), 'title'));
+        self::assertSame(['Dawn'], array_column($books->page(new BookQuery(text: 'daw'), 0, 10), 'title'));
+        self::assertSame(['Kitchen'], array_column($books->page(new BookQuery(text: '978-0-8021-4244'), 0, 10), 'title'));
+        self::assertSame(1, $books->count(new BookQuery(text: 'butler', availableOnly: true)));
+        self::assertSame(0, $books->count(new BookQuery(text: '_')), 'A _ is a letter, not a wildcard');
+    }
+
+    /** @return iterable<string, array{BookSort, list<string>}> */
+    public static function orders(): iterable
+    {
+        yield 'title' => [BookSort::Title, ['Beloved', 'Dawn', 'kindred', 'Sula']];
+        yield 'author, then title' => [BookSort::Author, ['Dawn', 'kindred', 'Beloved', 'Sula']];
+        yield 'newest, then title' => [BookSort::Newest, ['Beloved', 'Dawn', 'kindred', 'Sula']];
+        yield 'oldest, then title' => [BookSort::Oldest, ['Sula', 'kindred', 'Beloved', 'Dawn']];
+    }
+
+    /** @param list<string> $titles */
+    #[DataProvider('orders')]
+    public function testAPageHasTheQuerysOrder(BookSort $sort, array $titles): void
+    {
+        $books = $this->repository(...self::shelf());
+
+        self::assertSame($titles, array_column($books->page(new BookQuery(sort: $sort), 0, 10), 'title'));
+        self::assertSame(array_slice($titles, 2), array_column($books->page(new BookQuery(sort: $sort), 2, 2), 'title'), 'The next page goes on in the same order');
     }
 
     /** @return list<Book> */

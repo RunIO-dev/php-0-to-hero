@@ -1,0 +1,23 @@
+{# The links to the other pages of a list (chapter 81). Gets numbers (from Pager: null is a gap), page,
+   pages, and search: the address's other values, which every link keeps. Nothing when there is one page. #}
+{% if pages > 1 %}
+<nav class="pager" aria-label="Pages">
+    <ul>
+{% if page > 1 %}
+        <li><a href="{{ path('books', search|merge({page: page - 1})) }}" rel="prev">Previous</a></li>
+{% endif %}
+{% for number in numbers %}
+{% if number is null %}
+        <li class="gap" aria-hidden="true">…</li>
+{% elseif number == page %}
+        <li><a href="{{ path('books', search|merge({page: number})) }}" aria-current="page">{{ number }}</a></li>
+{% else %}
+        <li><a href="{{ path('books', search|merge({page: number})) }}">{{ number }}</a></li>
+{% endif %}
+{% endfor %}
+{% if page < pages %}
+        <li><a href="{{ path('books', search|merge({page: page + 1})) }}" rel="next">Next</a></li>
+{% endif %}
+    </ul>
+</nav>
+{% endif %}

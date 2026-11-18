@@ -1,0 +1,10 @@
+Without an index:
+  by author       SCAN books; USE TEMP B-TREE FOR ORDER BY
+  newest          SCAN books; USE TEMP B-TREE FOR ORDER BY
+  one author      SCAN books
+  part of a name  SCAN books
+With indexes on author and year:
+  by author       SCAN books USING INDEX books_author; USE TEMP B-TREE FOR LAST TERM OF ORDER BY
+  newest          SCAN books USING INDEX books_year; USE TEMP B-TREE FOR LAST TERM OF ORDER BY
+  one author      SEARCH books USING INDEX books_author (author=?)
+  part of a name  SCAN books

@@ -28,7 +28,7 @@ final class InMemoryBookRepository implements BookRepository
     public function page(BookQuery $query, int $offset, int $limit): array
     {
         $found = array_values(array_filter($this->all(), $query->matches(...)));
-        usort($found, fn(Book $a, Book $b): int => strcasecmp($a->title, $b->title));
+        usort($found, $query->sort->compare(...));
 
         return array_slice($found, $offset, $limit);
     }

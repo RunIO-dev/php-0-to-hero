@@ -7,10 +7,13 @@ namespace Shelf\Controller;
 use InvalidArgumentException;
 use Shelf\Book;
 use Shelf\BookNotFound;
+use Shelf\BookQuery;
+use Shelf\BookSort;
 use Shelf\Form\BookData;
 use Shelf\Form\BookType;
 use Shelf\Library;
 use Shelf\Web\Covers;
+use Shelf\Web\Pager;
 use Shelf\Security\BookVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -31,13 +34,50 @@ final class BookController extends AbstractController
 {
     public function __construct(private readonly Library $library, private readonly Covers $covers) {}
 
-    #[Route('/', name: 'books', methods: ['GET'])]
-    public function list(): Response
-    {
-        $books = $this->library->books();
-        $covered = array_map(fn(Book $book): string => $book->title, array_filter($books, fn(Book $book): bool => $this->covers->find($book->title) !== null));
+    /** Books per page of the list (chapter 81): four rows of three on a wide screen. */
+    public const int PER_PAGE = 12;
 
-        return $this->render('list.html.twig', ['books' => $books, 'covered' => array_values($covered)]);
+    /** The longest search the list takes; a longer one is cut, not refused. */
+    public const int MAX_SEARCH = 100;
+
+    /**
+     * The list (chapter 81): ?q= searches titles, authors and ISBNs, ?available=1 keeps the books on the
+     * shelf, ?sort= orders them, ?page= picks the page. A value that isn't one of these (?sort=price,
+     * ?page=0) is a 400; a page after the last is a 404, as for any address that shows nothing.
+     */
+    #[Route('/', name: 'books', methods: ['GET'])]
+    public function list(
+        #[MapQueryParameter(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        string $q = '',
+        #[MapQueryParameter(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        bool $available = false,
+        #[MapQueryParameter(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        BookSort $sort = BookSort::Title,
+        #[MapQueryParameter(options: ['min_range' => 1], validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        int $page = 1,
+    ): Response {
+        $q = mb_substr(trim($q), 0, self::MAX_SEARCH);
+        $found = $this->library->page(new BookQuery(availableOnly: $available, text: $q, sort: $sort), $page, self::PER_PAGE);
+        if ($page > $found['pages']) {
+            throw $this->createNotFoundException("There is no page $page.");
+        }
+        $covered = array_filter($found['books'], fn(Book $book): bool => $this->covers->find($book->title) !== null);
+        // What the address keeps from page to page: only what differs from the defaults, so /?page=2 stays short.
+        $search = array_filter(['q' => $q, 'available' => $available ? '1' : '', 'sort' => $sort === BookSort::Title ? '' : $sort->value]);
+
+        return $this->render('list.html.twig', [
+            'books' => $found['books'],
+            'covered' => array_column($covered, 'title'),
+            'total' => $found['total'],
+            'page' => $page,
+            'pages' => $found['pages'],
+            'numbers' => Pager::numbers($page, $found['pages']),
+            'search' => $search,
+            'q' => $q,
+            'available' => $available,
+            'sort' => $sort,
+            'sorts' => BookSort::cases(),
+        ]);
     }
 
     #[Route('/book', name: 'book', methods: ['GET'])]

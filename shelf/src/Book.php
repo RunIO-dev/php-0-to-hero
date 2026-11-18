@@ -16,6 +16,10 @@ use UnexpectedValueException;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'books')]
+// Chapter 81: the list is sorted by author or by year, and an index keeps each order ready. (A search
+// for part of a name, LIKE '%...%', reads every row all the same: code/81-finding-books/explain.php.)
+#[ORM\Index(name: 'books_author', columns: ['author'])]
+#[ORM\Index(name: 'books_year', columns: ['year'])]
 final class Book
 {
     public const int FIRST_YEAR = 1;

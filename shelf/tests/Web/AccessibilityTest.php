@@ -17,9 +17,12 @@ final class AccessibilityTest extends ShelfWebTestCase
     public static function pages(): iterable
     {
         yield 'the books' => ['/', null];
+        yield 'a search' => ['/?q=butler&sort=newest', null];
+        yield 'a search that finds nothing' => ['/?q=nothing', null];
         yield 'log in' => ['/login', null];
         yield "a book's page" => ['/book?title=Kindred', null];
         yield 'a missing page' => ['/nothing-here', null];
+        yield 'a request not understood' => ['/?sort=price', null];
         yield 'my loans' => ['/loans', 'Jonas'];
         yield "a book's page, for staff" => ['/book?title=Kindred', 'Amira'];
         yield 'add a book' => ['/add', 'Amira'];

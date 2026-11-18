@@ -11,8 +11,12 @@ each pull, make its database, and fill it, from the repository folder:
 composer install --working-dir=shelf
 php shelf/bin/console doctrine:migrations:migrate --no-interaction
 php shelf/bin/console shelf:import
+php shelf/bin/console shelf:catalogue shelf/catalogue.json
 php shelf/bin/console shelf:password Amira
 ```
+
+`shelf:catalogue` (chapter 81) adds about fifty classic books, so search and
+pages have something to show; it adds only titles that aren't there yet.
 
 Then serve it, and open http://localhost:8000:
 

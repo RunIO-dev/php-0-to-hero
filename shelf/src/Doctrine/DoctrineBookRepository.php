@@ -27,8 +27,13 @@ final readonly class DoctrineBookRepository implements BookRepository
 
     public function page(BookQuery $query, int $offset, int $limit): array
     {
+        $builder = $this->matching($query)->setFirstResult($offset)->setMaxResults($limit);
+        foreach ($query->sort->fields() as $field => $direction) {
+            $builder->addOrderBy("b.$field", $direction);
+        }
+
         /** @var list<Book> */
-        return $this->matching($query)->orderBy('b.title')->setFirstResult($offset)->setMaxResults($limit)->getQuery()->getResult();
+        return $builder->getQuery()->getResult();
     }
 
     public function count(BookQuery $query): int
@@ -61,18 +66,36 @@ final readonly class DoctrineBookRepository implements BookRepository
         $this->entities->flush();
     }
 
-    /** LIKE finds part of the name; % and _ that a visitor types are taken as letters, not as wildcards. */
+    /**
+     * LIKE finds part of a name; % and _ that a visitor types are taken as letters, not as wildcards.
+     * Chapter 81: the search text in the title or the author, or the digits of the ISBN.
+     */
     private function matching(BookQuery $query): QueryBuilder
     {
         $builder = $this->entities->createQueryBuilder()->select('b')->from(Book::class, 'b');
         if ($query->author !== '') {
-            $builder->andWhere("LOWER(b.author) LIKE :pattern ESCAPE '\\'")
-                ->setParameter('pattern', '%' . addcslashes(mb_strtolower($query->author), '%_\\') . '%');
+            $builder->andWhere("LOWER(b.author) LIKE :author ESCAPE '\\'")->setParameter('author', self::pattern($query->author));
+        }
+        if ($query->text !== '') {
+            $either = $builder->expr()->orX("LOWER(b.title) LIKE :text ESCAPE '\\'", "LOWER(b.author) LIKE :text ESCAPE '\\'");
+            $builder->setParameter('text', self::pattern($query->text));
+            $digits = BookQuery::isbnDigits($query->text);
+            if ($digits !== '') {
+                $either->add('b.isbn LIKE :digits');
+                $builder->setParameter('digits', "%$digits%");
+            }
+            $builder->andWhere($either);
         }
         if ($query->availableOnly) {
             $builder->andWhere('b.copies > 0');
         }
 
         return $builder;
+    }
+
+    /** "%part%" for LIKE, in lower case, with the wildcards of the text itself escaped. */
+    private static function pattern(string $text): string
+    {
+        return '%' . addcslashes(mb_strtolower($text), '%_\\') . '%';
     }
 }

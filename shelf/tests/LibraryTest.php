@@ -158,9 +158,9 @@ final class LibraryTest extends TestCase
         $first = $this->library->page(new BookQuery(), 1, 1);
         $last = $this->library->page(new BookQuery(), 2, 1);
 
-        self::assertSame([['Kindred'], 2], [array_column($first['books'], 'title'), $first['pages']]);
+        self::assertSame([['Kindred'], 2, 2], [array_column($first['books'], 'title'), $first['pages'], $first['total']]);
         self::assertSame(['Things Fall Apart'], array_column($last['books'], 'title'));
-        self::assertSame(['books' => [], 'pages' => 1], $this->library->page(new BookQuery('Morrison'), 1, 20), 'Nothing found is still one page');
+        self::assertSame(['books' => [], 'pages' => 1, 'total' => 0], $this->library->page(new BookQuery('Morrison'), 1, 20), 'Nothing found is still one page');
     }
 
     public function testPagesCountFromOne(): void

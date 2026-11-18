@@ -1,0 +1,320 @@
+[
+    {
+        "title": "Don Quixote",
+        "author": "Miguel de Cervantes",
+        "year": 1605,
+        "copies": 2
+    },
+    {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "year": 1813,
+        "copies": 1
+    },
+    {
+        "title": "Frankenstein",
+        "author": "Mary Shelley",
+        "year": 1818,
+        "copies": 3
+    },
+    {
+        "title": "Jane Eyre",
+        "author": "Charlotte Brontë",
+        "year": 1847,
+        "copies": 1
+    },
+    {
+        "title": "Wuthering Heights",
+        "author": "Emily Brontë",
+        "year": 1847,
+        "copies": 0
+    },
+    {
+        "title": "Moby-Dick",
+        "author": "Herman Melville",
+        "year": 1851,
+        "copies": 2
+    },
+    {
+        "title": "Madame Bovary",
+        "author": "Gustave Flaubert",
+        "year": 1857,
+        "copies": 1
+    },
+    {
+        "title": "Great Expectations",
+        "author": "Charles Dickens",
+        "year": 1861,
+        "copies": 1
+    },
+    {
+        "title": "Crime and Punishment",
+        "author": "Fyodor Dostoevsky",
+        "year": 1866,
+        "copies": 2
+    },
+    {
+        "title": "War and Peace",
+        "author": "Leo Tolstoy",
+        "year": 1869,
+        "copies": 3
+    },
+    {
+        "title": "Middlemarch",
+        "author": "George Eliot",
+        "year": 1871,
+        "copies": 1
+    },
+    {
+        "title": "Anna Karenina",
+        "author": "Leo Tolstoy",
+        "year": 1878,
+        "copies": 0
+    },
+    {
+        "title": "The Brothers Karamazov",
+        "author": "Fyodor Dostoevsky",
+        "year": 1880,
+        "copies": 1
+    },
+    {
+        "title": "Adventures of Huckleberry Finn",
+        "author": "Mark Twain",
+        "year": 1884,
+        "copies": 2
+    },
+    {
+        "title": "The Picture of Dorian Gray",
+        "author": "Oscar Wilde",
+        "year": 1890,
+        "copies": 1
+    },
+    {
+        "title": "Dracula",
+        "author": "Bram Stoker",
+        "year": 1897,
+        "copies": 1
+    },
+    {
+        "title": "Heart of Darkness",
+        "author": "Joseph Conrad",
+        "year": 1899,
+        "copies": 2
+    },
+    {
+        "title": "Buddenbrooks",
+        "author": "Thomas Mann",
+        "year": 1901,
+        "copies": 2
+    },
+    {
+        "title": "The Metamorphosis",
+        "author": "Franz Kafka",
+        "year": 1915,
+        "copies": 1
+    },
+    {
+        "title": "Ulysses",
+        "author": "James Joyce",
+        "year": 1922,
+        "copies": 3
+    },
+    {
+        "title": "Siddhartha",
+        "author": "Hermann Hesse",
+        "year": 1922,
+        "copies": 1
+    },
+    {
+        "title": "Mrs Dalloway",
+        "author": "Virginia Woolf",
+        "year": 1925,
+        "copies": 0
+    },
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "year": 1925,
+        "copies": 2
+    },
+    {
+        "title": "The Trial",
+        "author": "Franz Kafka",
+        "year": 1925,
+        "copies": 1
+    },
+    {
+        "title": "To the Lighthouse",
+        "author": "Virginia Woolf",
+        "year": 1927,
+        "copies": 1
+    },
+    {
+        "title": "Steppenwolf",
+        "author": "Hermann Hesse",
+        "year": 1927,
+        "copies": 2
+    },
+    {
+        "title": "All Quiet on the Western Front",
+        "author": "Erich Maria Remarque",
+        "year": 1929,
+        "copies": 3
+    },
+    {
+        "title": "Brave New World",
+        "author": "Aldous Huxley",
+        "year": 1932,
+        "copies": 1
+    },
+    {
+        "title": "Their Eyes Were Watching God",
+        "author": "Zora Neale Hurston",
+        "year": 1937,
+        "copies": 0
+    },
+    {
+        "title": "The Grapes of Wrath",
+        "author": "John Steinbeck",
+        "year": 1939,
+        "copies": 1
+    },
+    {
+        "title": "The Stranger",
+        "author": "Albert Camus",
+        "year": 1942,
+        "copies": 2
+    },
+    {
+        "title": "The Little Prince",
+        "author": "Antoine de Saint-Exupéry",
+        "year": 1943,
+        "copies": 1
+    },
+    {
+        "title": "Animal Farm",
+        "author": "George Orwell",
+        "year": 1945,
+        "copies": 1
+    },
+    {
+        "title": "Nineteen Eighty-Four",
+        "author": "George Orwell",
+        "year": 1949,
+        "copies": 2
+    },
+    {
+        "title": "Invisible Man",
+        "author": "Ralph Ellison",
+        "year": 1952,
+        "copies": 2
+    },
+    {
+        "title": "The Old Man and the Sea",
+        "author": "Ernest Hemingway",
+        "year": 1952,
+        "copies": 1
+    },
+    {
+        "title": "Palace Walk",
+        "author": "Naguib Mahfouz",
+        "year": 1956,
+        "copies": 3
+    },
+    {
+        "title": "Men in the Sun",
+        "author": "Ghassan Kanafani",
+        "year": 1963,
+        "copies": 1
+    },
+    {
+        "title": "Season of Migration to the North",
+        "author": "Tayeb Salih",
+        "year": 1966,
+        "copies": 0
+    },
+    {
+        "title": "One Hundred Years of Solitude",
+        "author": "Gabriel García Márquez",
+        "year": 1967,
+        "copies": 2
+    },
+    {
+        "title": "The Left Hand of Darkness",
+        "author": "Ursula K. Le Guin",
+        "year": 1969,
+        "copies": 1
+    },
+    {
+        "title": "The Dispossessed",
+        "author": "Ursula K. Le Guin",
+        "year": 1974,
+        "copies": 1
+    },
+    {
+        "title": "The Name of the Rose",
+        "author": "Umberto Eco",
+        "year": 1980,
+        "copies": 2
+    },
+    {
+        "title": "Midnight's Children",
+        "author": "Salman Rushdie",
+        "year": 1981,
+        "copies": 3
+    },
+    {
+        "title": "The Color Purple",
+        "author": "Alice Walker",
+        "year": 1982,
+        "copies": 1
+    },
+    {
+        "title": "Beloved",
+        "author": "Toni Morrison",
+        "year": 1987,
+        "copies": 0
+    },
+    {
+        "title": "Norwegian Wood",
+        "author": "Haruki Murakami",
+        "year": 1987,
+        "copies": 1
+    },
+    {
+        "title": "The Remains of the Day",
+        "author": "Kazuo Ishiguro",
+        "year": 1989,
+        "copies": 2
+    },
+    {
+        "title": "The God of Small Things",
+        "author": "Arundhati Roy",
+        "year": 1997,
+        "copies": 1
+    },
+    {
+        "title": "Kafka on the Shore",
+        "author": "Haruki Murakami",
+        "year": 2002,
+        "copies": 1
+    },
+    {
+        "title": "Never Let Me Go",
+        "author": "Kazuo Ishiguro",
+        "year": 2005,
+        "copies": 2
+    },
+    {
+        "title": "Half of a Yellow Sun",
+        "author": "Chimamanda Ngozi Adichie",
+        "year": 2006,
+        "copies": 2
+    },
+    {
+        "title": "Americanah",
+        "author": "Chimamanda Ngozi Adichie",
+        "year": 2013,
+        "copies": 1
+    }
+]

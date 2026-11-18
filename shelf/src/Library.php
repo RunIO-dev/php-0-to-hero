@@ -50,10 +50,12 @@ final readonly class Library
     }
 
     /**
-     * One page of the books that match the query, sorted by title (chapter 70), and how many pages
+     * One page of the books that match the query, in its order (chapter 70), and how many pages
      * there are. $page counts from 1.
      *
-     * @return array{books: list<Book>, pages: int}
+     * Chapter 81: and how many books match in all.
+     *
+     * @return array{books: list<Book>, pages: int, total: int}
      */
     public function page(BookQuery $query, int $page, int $perPage): array
     {
@@ -61,9 +63,12 @@ final readonly class Library
             throw new InvalidArgumentException('Pages count from 1, and hold at least one book');
         }
 
+        $total = $this->books->count($query);
+
         return [
             'books' => $this->books->page($query, ($page - 1) * $perPage, $perPage),
-            'pages' => max(1, (int) ceil($this->books->count($query) / $perPage)),
+            'pages' => max(1, (int) ceil($total / $perPage)),
+            'total' => $total,
         ];
     }
 

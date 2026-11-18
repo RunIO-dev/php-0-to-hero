@@ -10,8 +10,29 @@
 # run php bin/console shelf:books
 # Chapter 72: Symfony answers now. Chapter 73: every page has its route and its controller.
 # run php bin/console debug:router
-# A visitor sees the books, and no "Add a book".
+# Chapter 81: fifty classic books more, so the list has pages.
+# run php bin/console shelf:catalogue catalogue.json
+# A visitor sees the books, a page at a time, and no "Add a book".
 GET /
+
+###
+# A search is an address: part of a title, an author or an ISBN, in any case; here, newest first.
+GET /?q=hesse&sort=newest
+
+###
+# Only the books on the shelf, page 2: the pager's links keep the search.
+GET /?available=1&page=2
+
+###
+# Nothing found: the page offers a way back.
+GET /?q=nothing+like+this
+
+###
+# An order the list doesn't know is a mistake in the request; a page after the last doesn't exist.
+GET /?sort=price
+
+###
+GET /?page=9
 
 ###
 # A page that changes the library sends a visitor to the login.

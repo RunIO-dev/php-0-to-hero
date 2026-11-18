@@ -60,6 +60,35 @@ final class CommandsTest extends KernelTestCase
         self::assertSame(0, self::service(BookRepository::class)->find('Kitchen')?->copies);
     }
 
+    /** Chapter 81: the catalogue may run after every deployment; the second run adds nothing. */
+    public function testTheCatalogueAddsOnlyWhatIsNew(): void
+    {
+        $file = self::bootKernel()->getProjectDir() . '/catalogue.json';
+        $first = self::command('shelf:catalogue');
+        $first->execute(['file' => $file]);
+        $again = self::command('shelf:catalogue');
+        $again->execute(['file' => $file]);
+
+        $first->assertCommandIsSuccessful();
+        self::assertSame("New books added: 53. Already on the shelf: 0.\n", $first->getDisplay());
+        self::assertSame("New books added: 0. Already on the shelf: 53.\n", $again->getDisplay());
+        self::assertSame('Ursula K. Le Guin', self::service(BookRepository::class)->find('the dispossessed')?->author);
+    }
+
+    public function testATitleTwiceInTheFileIsAddedOnce(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'shelf');
+        self::assertIsString($file);
+        file_put_contents($file, '[{"title": "Sula", "author": "Toni Morrison", "year": 1973, "copies": 1},'
+            . ' {"title": "SULA", "author": "Toni Morrison", "year": 1973, "copies": 2}]');
+        $catalogue = self::command('shelf:catalogue');
+        $catalogue->execute(['file' => $file]);
+        unlink($file);
+
+        self::assertSame("New books added: 1. Already on the shelf: 1.\n", $catalogue->getDisplay());
+        self::assertSame(1, self::service(BookRepository::class)->find('Sula')?->copies);
+    }
+
     private static function command(string $name): CommandTester
     {
         return new CommandTester(new Application(self::$kernel ?? self::bootKernel())->find($name));

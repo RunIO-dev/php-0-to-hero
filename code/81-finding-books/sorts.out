@@ -1,0 +1,6 @@
+?sort=newest: ORDER BY year DESC, title
+?sort=price: not an order, a 400
+?sort=: not an order, a 400
+page 1: Kitchen (1988), Beloved (1987)
+page 2: Dawn (1987), Norwegian Wood (1987)
+?q=butler&sort=newest&page=2

@@ -1,5 +1,7 @@
-{# The books, as a grid of cards (chapters 49 and 55; chapter 80: components). covered holds the titles
-   that have a cover. #}
+{# The books, as a grid of cards (chapters 49 and 55; chapter 80: components). Chapter 81: a search form
+   that sends GET, so a search is an address to keep or share; a page at a time, with a pager. The
+   controller gives books (this page's), covered (their titles with a cover), total, page, pages,
+   numbers (the pager's), search (what the address keeps), q, available, sort and sorts. #}
 {% extends 'base.html.twig' %}
 
 {% block main %}
@@ -13,7 +15,21 @@
 {% endif %}
     </div>
 {% include '_flash.html.twig' %}
-{% if books is empty %}
+    <form class="search" method="get" action="{{ path('books') }}" role="search">
+        <label class="grow">Search
+            <input type="search" name="q" value="{{ q }}" maxlength="100" placeholder="Title, author or ISBN">
+        </label>
+        <label>Sort by
+            <select name="sort">
+{% for option in sorts %}
+                <option value="{{ option.value }}"{{ option == sort ? ' selected' }}>{{ option.label }}</option>
+{% endfor %}
+            </select>
+        </label>
+        <label class="check"><input type="checkbox" name="available" value="1"{{ available ? ' checked' }}> Only on the shelf</label>
+        <button type="submit">Search</button>
+    </form>
+{% if books is empty and search is empty %}
 {% embed 'components/_empty.html.twig' with {text: 'No books yet.'} only %}
 {% block action %}
 {% if is_granted('CHANGE_BOOKS') %}
@@ -21,12 +37,23 @@
 {% endif %}
 {% endblock %}
 {% endembed %}
+{% elseif books is empty %}
+{% embed 'components/_empty.html.twig' with {text: 'No book matches this search.'} only %}
+{% block action %}
+    <a class="button quiet" href="{{ path('books') }}">Clear the search</a>
+{% endblock %}
+{% endembed %}
 {% else %}
+    <p class="count" role="status">
+        {{ total }} {{ total == 1 ? 'book' : 'books' }}{% if q is not empty %} for “{{ q }}”{% endif %}{% if available %}, on the shelf{% endif %}
+{%- if pages > 1 %} · page {{ page }} of {{ pages }}{% endif %}
+{%- if search is not empty %} · <a href="{{ path('books') }}">clear</a>{% endif %}
+    </p>
     <ul class="books">
 {% for book in books %}
 {% include 'components/_book_card.html.twig' with {book: book, hasCover: book.title in covered} only %}
 {% endfor %}
     </ul>
-    <p class="count">{{ books|length }} {{ books|length == 1 ? 'book' : 'books' }}</p>
+{% include 'components/_pager.html.twig' with {numbers: numbers, page: page, pages: pages, search: search} only %}
 {% endif %}
 {% endblock %}

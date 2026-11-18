@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shelf\Tests\Web;
 
 use DateTimeImmutable;
+use Shelf\Book;
 use Shelf\BookRepository;
 use Shelf\EventSubscriber\SecurityHeaders;
 use Shelf\Library;
@@ -28,6 +29,55 @@ final class PagesTest extends ShelfWebTestCase
         self::assertSelectorTextSame('.book-card .badge', 'Available');
         self::assertSelectorTextSame('.count', '1 book');
         self::assertSelectorNotExists('a.button', 'A visitor sees no "Add a book"');
+    }
+
+    /** Chapter 81: a search, an order and a page are all in the address, and the pager keeps them. */
+    public function testTheListSearchesSortsAndPages(): void
+    {
+        $books = self::service(BookRepository::class);
+        foreach (range(1, 13) as $n) {
+            $books->add(new Book("Story $n", 'Ana Writer', 1990 + $n));
+        }
+
+        $this->client->request('GET', '/?q=WRITER&sort=newest&page=2');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextSame('.count', '13 books for “WRITER” · page 2 of 2 · clear');
+        self::assertSelectorTextSame('.book-card h2', 'Story 1', 'The oldest is last');
+        self::assertSelectorTextSame('.pager [aria-current="page"]', '2');
+        self::assertSelectorExists('.pager a[rel="prev"][href="/?q=WRITER&sort=newest&page=1"]');
+        self::assertSelectorExists('select[name="sort"] option[value="newest"][selected]');
+        self::assertInputValueSame('q', 'WRITER');
+    }
+
+    public function testTheSearchFindsAnIsbnAndOnlyBooksOnTheShelf(): void
+    {
+        self::service(BookRepository::class)->add(new Book('Dawn', 'Octavia E. Butler', 1987, 0));
+
+        $this->client->request('GET', '/?q=978-0-8070');
+        self::assertSelectorTextSame('.book-card h2', 'Kindred');
+
+        $this->client->request('GET', '/?q=butler&available=1');
+        self::assertSelectorTextSame('.count', '1 book for “butler”, on the shelf · clear');
+    }
+
+    public function testASearchWithoutResultsOffersAWayBack(): void
+    {
+        $this->client->request('GET', '/?q=nothing+like+this');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('.empty', 'No book matches this search.');
+        self::assertSelectorExists('.empty a[href="/"]');
+    }
+
+    public function testTheListRefusesWhatItDoesntKnow(): void
+    {
+        foreach (['/?sort=price' => 400, '/?page=0' => 400, '/?page=two' => 400, '/?page=2' => 404] as $path => $status) {
+            $this->client->request('GET', $path);
+
+            self::assertResponseStatusCodeSame($status, $path);
+            self::assertSelectorTextSame('h1', $status === 400 ? 'Not understood' : 'Not found', $path);
+        }
     }
 
     /** Chapter 78: every page has the headers of chapter 64; from chapter 73 to 77 they were missing. */

@@ -655,6 +655,88 @@ form .error {
     color: var(--muted);
 }
 
+/* ---- Searching and paging a list (chapter 81) ---- */
+
+.search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    align-items: end;
+    margin-block-end: 1.5rem;
+    padding: 1rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+}
+
+.search .grow {
+    flex: 1 1 16rem;
+}
+
+.search select {
+    inline-size: auto;
+}
+
+label.check {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    min-block-size: 2.6rem;
+    font-weight: 400;
+}
+
+label.check input {
+    inline-size: 1.15rem;
+    min-block-size: 1.15rem;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.count[role="status"] {
+    margin-block: 0 1rem;
+}
+
+.pager ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-block: 2rem 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pager a,
+.pager .gap {
+    display: inline-grid;
+    place-items: center;
+    min-inline-size: 2.6rem;
+    min-block-size: 2.6rem;
+    padding-inline: 0.75rem;
+    border-radius: var(--radius-small);
+}
+
+.pager a {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-decoration: none;
+}
+
+.pager a:hover {
+    border-color: var(--accent);
+}
+
+.pager a[aria-current="page"] {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 700;
+}
+
+.pager .gap {
+    color: var(--muted);
+}
+
 /* ---- The pages for errors ---- */
 
 .problem {
