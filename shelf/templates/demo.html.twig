@@ -1,0 +1,12 @@
+{# Chapter 88: what the demo doesn't do, with status 403 (DemoGuard). #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Not in the demo'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <div class="problem">
+        <p class="code" aria-hidden="true">403</p>
+        <h1>{{ 'Not in the demo'|trans }}</h1>
+        <p>{{ 'In the demo, nobody signs up, gets emails or changes a shared account: everyone logs in as Jonas or Amira.'|trans }} <a href="{{ path('login') }}">{{ 'Log in'|trans }}</a></p>
+    </div>
+{% endblock %}

@@ -27,7 +27,8 @@ use Twig\Environment;
  *   allowed" for a 403 (chapter 76: a voter said no, which goes into the log), and the status alone for another HTTP error, such as 405 with its
  *   Allow header;
  * - for an error nothing caught: on a developer's computer (debug), Symfony's page with every detail;
- *   on a server, a short page with a reference that finds the details in the log (chapter 66).
+ *   on a server, a short page with a reference that finds the details in the log (chapter 66), from
+ *   chapter 88 in Shelf's layout and the page's language.
  * Chapter 87: in the language of the address, also when no route matched it.
  * After the security's listener (priority 1), which sends a visitor who isn't logged in to the login,
  * and before Symfony's error page (priority -128): an answer set here is the one sent.
@@ -64,10 +65,7 @@ final readonly class ErrorPages implements EventSubscriberInterface
         } elseif ($e instanceof HttpExceptionInterface) {
             $event->setResponse(new Response($this->page($e->getStatusCode(), $event->getRequest()), $e->getStatusCode(), $e->getHeaders()));
         } elseif (!$this->debug) {
-            // Plain HTML, without templates: they may be what failed.
-            $reference = $this->log($e);
-            $event->setResponse(new Response("<!doctype html>\n<title>Error · Shelf</title>\n<h1>Something went wrong</h1>\n"
-                . "<p>It has been noted, with the reference $reference. Please try again later.</p>\n", Response::HTTP_INTERNAL_SERVER_ERROR));
+            $event->setResponse(new Response($this->failed($this->log($e)), Response::HTTP_INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -85,6 +83,20 @@ final readonly class ErrorPages implements EventSubscriberInterface
             Response::HTTP_TOO_MANY_REQUESTS => $this->twig->render('slow-down.html.twig'), // chapter 82
             default => '',
         };
+    }
+
+    /**
+     * Chapter 88: Shelf's own page, in the page's language, with the layout. If that fails too (the
+     * error may be in the templates, or the database the layout asks), plain HTML, without templates.
+     */
+    private function failed(string $reference): string
+    {
+        try {
+            return $this->twig->render('error.html.twig', ['reference' => $reference]);
+        } catch (Throwable) {
+            return "<!doctype html>\n<title>Error · Shelf</title>\n<h1>Something went wrong</h1>\n"
+                . "<p>It has been noted, with the reference $reference. Please try again later.</p>\n";
+        }
     }
 
     private function problem(Throwable $e, string $path): Response

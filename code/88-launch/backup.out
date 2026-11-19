@@ -1,0 +1,4 @@
+bool(true)
+Books in the backup: 2
+SQLite's check of the backup: ok
+Books in the database, after the commit: 3

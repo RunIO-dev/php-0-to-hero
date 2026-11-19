@@ -1,0 +1,30 @@
+# Caddy, Shelf's web server (chapter 78). For a real domain, it gets a certificate from Let's Encrypt
+# on its own, renews it, and sends every http:// request to https://. For localhost, it makes a
+# certificate of its own, which browsers warn about: fine for a try on your computer.
+{$SHELF_HOST:localhost} {
+	root * /app/public
+	encode zstd gzip
+
+	# Files that exist in public/ (the stylesheet) come from Caddy; every other request goes to
+	# index.php in the app container, through FastCGI, with HTTPS=on.
+	php_fastcgi app:9000
+	file_server
+
+	# Chapter 80: a file in /assets/ has its content's hash in its name, so it never changes: browsers
+	# may keep it for a year without asking again. A new stylesheet is a new name.
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	# Chapter 88: while PHP doesn't answer (a deploy, a crash), a page that says so, not Caddy's empty
+	# 502. A static file, so it needs nothing that may be down. The status stays: monitors see it.
+	handle_errors 502 503 504 {
+		rewrite * /down.html
+		file_server
+	}
+
+	header {
+		# Browsers come back over HTTPS only, for a year.
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+}

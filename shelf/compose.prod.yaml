@@ -18,6 +18,10 @@ services:
       SHELF_MAIL_FROM: ${SHELF_MAIL_FROM:-Shelf <shelf@localhost>}
       # Chapter 85: the address in the links of the emails the worker sends.
       SHELF_URL: https://${SHELF_HOST:-localhost}
+      # Chapter 88: backups and the worker's heartbeat, in the volume both containers share. And,
+      # with SHELF_DEMO=1 in the server's .env, a demo that resets every night.
+      SHELF_DATA: data
+      SHELF_DEMO: ${SHELF_DEMO:-0}
     volumes: ["data:/app/data"]
     restart: unless-stopped
   # Chapter 85: the worker, from the same image: it sends the queued emails and runs the schedule.

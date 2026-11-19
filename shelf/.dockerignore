@@ -12,6 +12,8 @@
 /.github/
 /web.http
 /web.out
+/demo.http
+/demo.out
 /*-password.txt
 /Dockerfile
 /compose.prod.yaml

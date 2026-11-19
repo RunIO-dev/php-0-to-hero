@@ -1,0 +1,54 @@
+# Shelf in production (chapter 78): two containers, from the Dockerfile next to this file. Chapter 85:
+# three, with the worker.
+#   SHELF_APP_SECRET=$(openssl rand -hex 32) SHELF_HOST=shelf.example docker compose -f compose.prod.yaml up -d --build
+# Chapter 79: on a server, the images come ready from a registry, named by SHELF_IMAGE and the commit
+# in SHELF_TAG; deploy.sh pulls them, and builds nothing.
+# The secret and the host come from the server's environment, never from a file in Git (chapter 65).
+services:
+  app:
+    image: ${SHELF_IMAGE:-shelf}-app:${SHELF_TAG:-latest}
+    build: { context: ., target: app }
+    environment: &app-environment
+      APP_SECRET: ${SHELF_APP_SECRET:?Set SHELF_APP_SECRET to a long random value}
+      DATABASE_URL: sqlite:////app/data/shelf.sqlite
+      SHELF_COVERS: data/covers
+      SHELF_LOG: php://stderr
+      # Chapter 82: the server's mail, from its environment, as the secret is; without one, nothing is sent.
+      MAILER_DSN: ${SHELF_MAILER_DSN:-null://null}
+      SHELF_MAIL_FROM: ${SHELF_MAIL_FROM:-Shelf <shelf@localhost>}
+      # Chapter 85: the address in the links of the emails the worker sends.
+      SHELF_URL: https://${SHELF_HOST:-localhost}
+      # Chapter 88: backups and the worker's heartbeat, in the volume both containers share. And,
+      # with SHELF_DEMO=1 in the server's .env, a demo that resets every night.
+      SHELF_DATA: data
+      SHELF_DEMO: ${SHELF_DEMO:-0}
+    volumes: ["data:/app/data"]
+    restart: unless-stopped
+  # Chapter 85: the worker, from the same image: it sends the queued emails and runs the schedule.
+  # Its own entrypoint, so only app runs the migrations; until they are done, it fails and starts again.
+  worker:
+    image: ${SHELF_IMAGE:-shelf}-app:${SHELF_TAG:-latest}
+    entrypoint: ["php", "bin/console", "messenger:consume", "async", "scheduler_shelf", "--time-limit=3600", "--memory-limit=128M"]
+    environment: *app-environment
+    volumes: ["data:/app/data"]
+    depends_on: [app]
+    restart: unless-stopped
+  web:
+    image: ${SHELF_IMAGE:-shelf}-web:${SHELF_TAG:-latest}
+    build: { context: ., target: web }
+    environment:
+      SHELF_HOST: ${SHELF_HOST:-localhost}
+    ports:
+      - "${SHELF_HTTP_PORT:-80}:80"
+      - "${SHELF_HTTPS_PORT:-443}:443"
+      - "${SHELF_HTTPS_PORT:-443}:443/udp"
+    # Caddy's certificates, kept when the container is made again.
+    volumes: ["caddy-data:/data", "caddy-config:/config"]
+    depends_on: [app]
+    restart: unless-stopped
+
+# Data that outlives every new image: the database and covers, and the certificates.
+volumes:
+  data:
+  caddy-data:
+  caddy-config:

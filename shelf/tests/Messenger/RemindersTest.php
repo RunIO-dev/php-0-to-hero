@@ -94,6 +94,7 @@ final class RemindersTest extends ShelfWebTestCase
         self::assertSame(1, $this->library->find('Kindred')->copies, 'Nobody else waits: on the shelf');
     }
 
+    /** Chapter 88: and the heartbeat, every 5 minutes, and the backup, every night. */
     public function testTheScheduleSendsRemindersHourlyAndExpiresDaily(): void
     {
         $triggers = array_map(
@@ -101,6 +102,6 @@ final class RemindersTest extends ShelfWebTestCase
             self::service(Schedule::class)->getSchedule()->getRecurringMessages(),
         );
 
-        self::assertSame(['every 1 hour', 'every 1 day'], array_values($triggers));
+        self::assertSame(['every 1 hour', 'every 1 day', 'every 5 minutes', 'every 1 day'], array_values($triggers), 'No demo reset: SHELF_DEMO=0');
     }
 }

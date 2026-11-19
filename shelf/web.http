@@ -17,6 +17,8 @@
 # run php bin/console debug:router
 # Chapter 81: fifty classic books more, so the list has pages.
 # run php bin/console shelf:catalogue catalogue.json
+# Chapter 88: a backup, checked, as the worker makes one every night.
+# run php bin/console shelf:backup
 # A visitor sees the books, a page at a time, and no "Add a book".
 GET /
 
@@ -310,6 +312,11 @@ GET /cover?title=Kindred
 ###
 # Programs read the books as JSON (chapter 67): the same data, and where each cover is.
 GET /api/books
+
+###
+# Chapter 88: the health check, for a monitor. The database answers and the backup is fresh, but no
+# worker runs here: 503, until one does.
+GET /api/health
 
 ###
 # A page at a time, and filtered (chapter 70): the Link header names the other pages.

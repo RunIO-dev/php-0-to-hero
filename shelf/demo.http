@@ -1,0 +1,51 @@
+# Shelf as a demo (chapter 88), served as by: docker compose up web, with SHELF_DEMO=1 in .env.local.
+# shelf:demo puts the library back as the worker does every night at 03:00 UTC: the books, the
+# members, a few loans and a reservation, and the shared accounts with their password.
+# docroot public
+# env MAILER_DSN=null://null
+# env SHELF_DEMO=1
+# today 2026-11-18 10:00
+# run php bin/console doctrine:migrations:migrate --no-interaction --quiet
+# run php bin/console shelf:demo
+# Every page says that it is a demo; the login page names the shared accounts.
+# capture token /name="_token" value="([^"]+)"/
+GET /login
+
+###
+# Signing up would send an email to any address a visitor types: not in the demo.
+GET /signup
+
+###
+# The librarian's account, with the password the page shows.
+POST /login
+Content-Type: application/x-www-form-urlencoded
+
+name=Jonas&password=shelf+demo+for+everyone&_token={{token}}
+
+###
+# The desk has something to show: an overdue book, one due soon, a reservation.
+GET /desk
+
+###
+GET /dashboard
+
+###
+# The shared accounts stay as they are: Amira can't be blocked, so the next visitor can log in.
+# capture token /name="_token" value="([^"]+)"/
+GET /members
+
+###
+POST /members/block
+Content-Type: application/x-www-form-urlencoded
+
+member=Amira&blocked=1&_token={{token}}
+
+###
+# Another member may be blocked, as in any library.
+POST /members/block
+Content-Type: application/x-www-form-urlencoded
+
+member=Kenji&blocked=1&_token={{token}}
+
+###
+GET /members

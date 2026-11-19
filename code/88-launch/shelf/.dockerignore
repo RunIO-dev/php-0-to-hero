@@ -1,0 +1,20 @@
+# What never goes into an image (chapter 78): what tools make again, data, settings for one computer,
+# the sample passwords of the course, and the files only developers and CI read. The tests go in, for
+# the test stage (chapter 79); the release stage takes them out again.
+/vendor/
+/var/
+/public/assets/
+/storage/
+/data/
+/.env.local
+/.env.*.local
+/.phpunit.cache/
+/.github/
+/web.http
+/web.out
+/demo.http
+/demo.out
+/*-password.txt
+/Dockerfile
+/compose.prod.yaml
+/README.md

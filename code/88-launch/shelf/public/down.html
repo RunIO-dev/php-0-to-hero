@@ -1,0 +1,37 @@
+<!doctype html>
+<!-- Chapter 88: the page the web server shows while PHP doesn't answer (Caddy's handle_errors). It
+     needs nothing else: no PHP, no stylesheet, no database. Three languages on one page, because
+     the web server can't tell which the visitor reads. -->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Back soon · Shelf</title>
+    <style>
+        :root { color-scheme: light dark; --bg: #f7f4ee; --ink: #1d232e; --muted: #5a6170; --line: #e3ddd1; }
+        @media (prefers-color-scheme: dark) { :root { --bg: #12151b; --ink: #e8eaee; --muted: #a2a9b6; --line: #2d3441; } }
+        body { margin: 0; min-block-size: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--ink);
+            font: 1.0625rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", "Noto Sans Arabic", sans-serif; }
+        main { max-inline-size: 34rem; padding: 2rem 1.25rem; }
+        section + section { margin-block-start: 1.5rem; padding-block-start: 1.5rem; border-block-start: 1px solid var(--line); }
+        h1, h2 { margin: 0 0 0.25rem; font-family: ui-serif, Georgia, "Noto Naskh Arabic", serif; }
+        p { margin: 0; color: var(--muted); }
+    </style>
+</head>
+<body>
+<main>
+    <section>
+        <h1>Shelf is back in a minute</h1>
+        <p>The library is being updated, or something went wrong. Please try again soon.</p>
+    </section>
+    <section lang="de">
+        <h2>Shelf ist gleich wieder da</h2>
+        <p>Die Bibliothek wird gerade aktualisiert, oder etwas ist schiefgegangen. Bitte versuchen Sie es gleich noch einmal.</p>
+    </section>
+    <section lang="ar" dir="rtl">
+        <h2>يعود Shelf بعد قليل</h2>
+        <p>المكتبة قيد التحديث، أو حدث خطأ ما. يُرجى المحاولة مرة أخرى بعد قليل.</p>
+    </section>
+</main>
+</body>
+</html>

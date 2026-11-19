@@ -1,0 +1,922 @@
+$ php bin/console doctrine:migrations:migrate --no-interaction --quiet
+$ php bin/console shelf:demo
+The demo is back as it was: 57 books, 4 members.
+
+> GET /login
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/login">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/login">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login" aria-current="page">Log in</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="page-head">
+        <div>
+            <h1>Log in</h1>
+            <p class="lead">To see your loans, or to look after the books.</p>
+        </div>
+    </div>
+    <p class="notice">Try Shelf with a shared account: Jonas works at the library, Amira borrows books. Both have the password: shelf demo for everyone</p>
+    <form class="card narrow" method="post" action="/login">
+        <input type="hidden" name="_token" value="…">
+        <label>Name <input name="name" value="" required autocomplete="username"></label>
+        <label>Password <input type="password" name="password" required autocomplete="current-password"></label>
+        <p class="actions"><button>Log in</button></p>
+    </form>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/login" lang="en" aria-current="true">English</a>
+                <a href="/de/login" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/login" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /signup
+
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not in the demo · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/signup">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/signup">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/login">Log in</a>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="problem">
+        <p class="code" aria-hidden="true">403</p>
+        <h1>Not in the demo</h1>
+        <p>In the demo, nobody signs up, gets emails or changes a shared account: everyone logs in as Jonas or Amira. <a href="/login">Log in</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/signup" lang="en" aria-current="true">English</a>
+                <a href="/de/signup" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/signup" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /login
+> Content-Type: application/x-www-form-urlencoded
+>
+> name=Jonas&password=shelf+demo+for+everyone&_token={{token}}
+
+< HTTP/1.1 302 Found
+< Location: http://localhost:8000/
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Set-Cookie: shelf=…; path=/; secure; httponly; samesite=lax
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='http://localhost:8000/'" />
+
+        <title>Redirecting to http://localhost:8000/</title>
+    </head>
+    <body>
+        Redirecting to <a href="http://localhost:8000/">http://localhost:8000/</a>.
+    </body>
+</html>
+
+> GET /desk
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lending desk · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/desk">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/desk">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk" aria-current="page">Desk</a>
+                <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="page-head">
+        <div>
+            <h1>Lending desk</h1>
+            <p class="lead">Lend books, take them back, and extend loans.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Welcome, Jonas.</p>
+    <section class="panel" aria-labelledby="lend-head">
+        <h2 id="lend-head">Lend a book</h2>
+        <form class="inline-form" method="post" action="/desk/lend">
+            <input type="hidden" name="_token" value="…">
+            <label>Book <input name="title" value="" required list="titles" autocomplete="off"></label>
+            <label>Member <input name="member" value="" required list="names" autocomplete="off"></label>
+            <button>Lend</button>
+        </form>
+        <datalist id="titles">
+            <option value="Adventures of Huckleberry Finn">
+            <option value="All Quiet on the Western Front">
+            <option value="Americanah">
+            <option value="Animal Farm">
+            <option value="Brave New World">
+            <option value="Buddenbrooks">
+            <option value="Crime and Punishment">
+            <option value="Don Quixote">
+            <option value="Dracula">
+            <option value="Frankenstein">
+            <option value="Great Expectations">
+            <option value="Half of a Yellow Sun">
+            <option value="Heart of Darkness">
+            <option value="Invisible Man">
+            <option value="Jane Eyre">
+            <option value="Kafka on the Shore">
+            <option value="Madame Bovary">
+            <option value="Men in the Sun">
+            <option value="Middlemarch">
+            <option value="Midnight&#039;s Children">
+            <option value="Moby-Dick">
+            <option value="Never Let Me Go">
+            <option value="Nineteen Eighty-Four">
+            <option value="Norwegian Wood">
+            <option value="One Hundred Years of Solitude">
+            <option value="Palace Walk">
+            <option value="Parable of the Sower">
+            <option value="Pride and Prejudice">
+            <option value="Siddhartha">
+            <option value="Steppenwolf">
+            <option value="The Brothers Karamazov">
+            <option value="The Color Purple">
+            <option value="The Dispossessed">
+            <option value="The God of Small Things">
+            <option value="The Grapes of Wrath">
+            <option value="The Great Gatsby">
+            <option value="The Left Hand of Darkness">
+            <option value="The Little Prince">
+            <option value="The Metamorphosis">
+            <option value="The Name of the Rose">
+            <option value="The Old Man and the Sea">
+            <option value="The Picture of Dorian Gray">
+            <option value="The Remains of the Day">
+            <option value="The Stranger">
+            <option value="The Trial">
+            <option value="To the Lighthouse">
+            <option value="Ulysses">
+            <option value="War and Peace">
+        </datalist>
+        <datalist id="names">
+            <option value="Amira">
+            <option value="Ana">
+            <option value="Jonas">
+            <option value="Kenji">
+        </datalist>
+    </section>
+    <h2 class="section-head">On loan <span class="count">3</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Due back</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></td>
+                    <td>Kenji</td>
+                    <td>Nov 2, 2026</td>
+                    <td><span class="badge danger">16 days overdue</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="1">
+                            <button class="quiet" aria-label="Things Fall Apart is back from Kenji">Back</button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td><a href="/book?title=Things%20Fall%20Apart">Things Fall Apart</a></td>
+                    <td>Amira</td>
+                    <td>Nov 20, 2026</td>
+                    <td><span class="badge warn">due in 2 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="2">
+                            <button class="quiet" aria-label="Things Fall Apart is back from Amira">Back</button>
+                        </form>
+                        <form method="post" action="/renew">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="2">
+                            <input type="hidden" name="from" value="desk">
+                            <button class="quiet" aria-label="Extend Things Fall Apart for Amira">Extend</button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td><a href="/book?title=Kitchen">Kitchen</a></td>
+                    <td>Ana</td>
+                    <td>Nov 22, 2026</td>
+                    <td><span class="badge ok">due in 4 days</span>
+</td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/desk/return">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="loan" value="3">
+                            <button class="quiet" aria-label="Kitchen is back from Ana">Back</button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/desk" lang="en" aria-current="true">English</a>
+                <a href="/de/desk" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/desk" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /dashboard
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/dashboard">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/dashboard">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <a href="/dashboard" aria-current="page">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="page-head">
+        <div>
+            <h1>Dashboard</h1>
+            <p class="lead">Wednesday, November 18, 2026: what needs doing, and how the library is used.</p>
+        </div>
+        <a class="button" href="/history">Loan history</a>
+    </div>
+    <ul class="stats" aria-label="Today">
+        <li><strong>57</strong> titles</li>
+        <li><strong>76</strong> copies on the shelf</li>
+        <li><strong>3</strong> on loan</li>
+        <li class="warn"><strong>1</strong> overdue</li>
+        <li><strong>1</strong> reservation waiting</li>
+        <li><strong>0</strong> set aside</li>
+        <li><strong>4</strong> members</li>
+    </ul>
+
+    <h2 class="section-head" id="overdue">Overdue <span class="count">1</span></h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Book</th><th scope="col">Member</th><th scope="col">Was due</th><th scope="col">Late</th><th scope="col">Last reminder</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><a href="/history?title=Things%20Fall%20Apart">Things Fall Apart</a></td>
+                    <td><a href="/history?member=Kenji">Kenji</a></td>
+                    <td>Nov 2, 2026</td>
+                    <td><span class="badge danger">16 days overdue</span>
+</td>
+                    <td>none yet</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-head">Set aside <span class="count">0</span></h2>
+<div class="empty">
+    <p class="big" aria-hidden="true">📚</p>
+    <p>No copy waits to be collected.</p>
+</div>
+
+    <div class="report">
+        <section class="panel" aria-labelledby="popular-head">
+            <h2 id="popular-head">Borrowed most, last 90 days</h2>
+            <ol class="tally">
+                <li><a href="/history?title=Things%20Fall%20Apart">Things Fall Apart</a> <span class="count">2×</span></li>
+                <li><a href="/history?title=Frankenstein">Frankenstein</a> <span class="count">1×</span></li>
+                <li><a href="/history?title=Kitchen">Kitchen</a> <span class="count">1×</span></li>
+            </ol>
+        </section>
+        <section class="panel" aria-labelledby="returns-head">
+            <h2 id="returns-head">Back on time, last 12 months</h2>
+            <p class="big-number">0%</p>
+            <p class="aside">1 loan came back, 1 of them late.</p>
+        </section>
+        <section class="panel" aria-labelledby="months-head">
+            <h2 id="months-head">Loans per month</h2>
+            <table class="bars">
+                <thead>
+                    <tr><th scope="col">Month</th><th scope="col">Loans</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">Dec 2025</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jan 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Feb 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Mar 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Apr 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">May 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jun 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Jul 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Aug 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Sep 2026</th>
+                        <td><meter min="0" max="2" value="0"></meter> 0</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Oct 2026</th>
+                        <td><meter min="0" max="2" value="2"></meter> 2</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Nov 2026</th>
+                        <td><meter min="0" max="2" value="2"></meter> 2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="panel" aria-labelledby="unborrowed-head">
+            <h2 id="unborrowed-head">Not borrowed for a year</h2>
+            <ul class="tally">
+                <li><a href="/book?title=Adventures%20of%20Huckleberry%20Finn">Adventures of Huckleberry Finn</a></li>
+                <li><a href="/book?title=All%20Quiet%20on%20the%20Western%20Front">All Quiet on the Western Front</a></li>
+                <li><a href="/book?title=Americanah">Americanah</a></li>
+                <li><a href="/book?title=Animal%20Farm">Animal Farm</a></li>
+                <li><a href="/book?title=Anna%20Karenina">Anna Karenina</a></li>
+                <li><a href="/book?title=Beloved">Beloved</a></li>
+                <li><a href="/book?title=Brave%20New%20World">Brave New World</a></li>
+                <li><a href="/book?title=Buddenbrooks">Buddenbrooks</a></li>
+                <li><a href="/book?title=Crime%20and%20Punishment">Crime and Punishment</a></li>
+                <li><a href="/book?title=Don%20Quixote">Don Quixote</a></li>
+            </ul>
+        </section>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/dashboard" lang="en" aria-current="true">English</a>
+                <a href="/de/dashboard" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/dashboard" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> GET /members
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Members · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/members">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/members">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members" aria-current="page">Members</a>
+                <a href="/dashboard">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="{{token}}">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="page-head">
+        <div>
+            <h1>Members</h1>
+            <p class="lead">Who may borrow, and who runs the desk.</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Amira</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Amira</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Amira</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Ana</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Ana</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Ana</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Jonas</td>
+                    <td>—</td>
+                    <td>Staff</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <small>You</small>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Kenji</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/members" lang="en" aria-current="true">English</a>
+                <a href="/de/members" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/members" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /members/block
+> Content-Type: application/x-www-form-urlencoded
+>
+> member=Amira&blocked=1&_token={{token}}
+
+< HTTP/1.1 403 Forbidden
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Not in the demo · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members">Members</a>
+                <a href="/dashboard">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="problem">
+        <p class="code" aria-hidden="true">403</p>
+        <h1>Not in the demo</h1>
+        <p>In the demo, nobody signs up, gets emails or changes a shared account: everyone logs in as Jonas or Amira. <a href="/login">Log in</a></p>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/" lang="en" aria-current="true">English</a>
+                <a href="/de/" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+> POST /members/block
+> Content-Type: application/x-www-form-urlencoded
+>
+> member=Kenji&blocked=1&_token={{token}}
+
+< HTTP/1.1 303 See Other
+< Location: /members
+< Content-Type: text/html; charset=utf-8
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="refresh" content="0;url='/members'" />
+
+        <title>Redirecting to /members</title>
+    </head>
+    <body>
+        Redirecting to <a href="/members">/members</a>.
+    </body>
+</html>
+
+> GET /members
+
+< HTTP/1.1 200 OK
+< X-Content-Type-Options: nosniff
+< Content-Security-Policy: default-src 'self'; script-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'
+< Referrer-Policy: same-origin
+< Content-Type: text/html; charset=UTF-8
+
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Members · Shelf</title>
+    <meta name="description" content="Shelf, the library: find a book, see what you have on loan.">
+    <link rel="stylesheet" href="/assets/styles/app-Hs092GZ.css">
+    <link rel="alternate" hreflang="de" href="http://localhost:8000/de/members">
+    <link rel="alternate" hreflang="ar" href="http://localhost:8000/ar/members">
+</head>
+<body>
+    <a class="skip" href="#main">Skip to the content</a>
+    <header class="site">
+        <div class="site-inner">
+            <a class="brand" href="/">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h3v18H6a2 2 0 0 1-2-2Z"/><path d="M9 3h4v18H9"/><path d="m14 4.5 3.8-1 3.2 15.5-3.8 1Z"/></svg>
+                Shelf
+            </a>
+            <nav class="nav" aria-label="Main">
+                <a href="/">Books</a>
+                <a href="/loans">My loans</a>
+                <a href="/add">Add a book</a>
+                <a href="/desk">Desk</a>
+                <a href="/members" aria-current="page">Members</a>
+                <a href="/dashboard">Dashboard</a>
+                <form class="account" method="post" action="/logout">
+                    <input type="hidden" name="_token" value="…">
+                    <a class="who" href="/account">Jonas</a> <button class="link">Log out</button>
+                </form>
+            </nav>
+        </div>
+    </header>
+    <main id="main">
+        <p class="notice">A demo: try anything. Every night at 03:00 UTC, it all goes back as it was.</p>
+    <div class="page-head">
+        <div>
+            <h1>Members</h1>
+            <p class="lead">Who may borrow, and who runs the desk.</p>
+        </div>
+    </div>
+    <p class="flash" role="status">Kenji is blocked: they can&#039;t borrow until you unblock them.</p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Role</th><th scope="col">On loan</th><th scope="col">Status</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Amira</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Amira</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Amira">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Amira</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Ana</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="blocked" value="1">
+                            <button class="quiet">Block <span class="visually-hidden">Ana</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Ana">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Ana</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Jonas</td>
+                    <td>—</td>
+                    <td>Staff</td>
+                    <td>0</td>
+                    <td>
+<span class="badge ok">May borrow</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <small>You</small>
+                    </div></td>
+                </tr>
+                <tr>
+                    <td>Kenji</td>
+                    <td>—</td>
+                    <td>Reader</td>
+                    <td>1</td>
+                    <td>
+<span class="badge danger">Blocked</span>
+                    </td>
+                    <td><div class="row-actions">
+                        <form method="post" action="/members/block">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="blocked" value="0">
+                            <button class="quiet">Unblock <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                        <form method="post" action="/members/role">
+                            <input type="hidden" name="_token" value="…">
+                            <input type="hidden" name="member" value="Kenji">
+                            <input type="hidden" name="role" value="staff">
+                            <button class="quiet">Make staff <span class="visually-hidden">Kenji</span></button>
+                        </form>
+                    </div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>Shelf, the library of <em>PHP from Zero to Hero</em>.</p>
+            <nav class="languages" aria-label="Language">
+                <a href="/members" lang="en" aria-current="true">English</a>
+                <a href="/de/members" lang="de" hreflang="de">Deutsch</a>
+                <a href="/ar/members" lang="ar" hreflang="ar">العربية</a>
+            </nav>
+            <p>Code under the MIT licence.</p>
+        </div>
+    </footer>
+</body>
+</html>

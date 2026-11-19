@@ -1,6 +1,9 @@
 # Twig (chapter 73): the templates are in templates/. From chapter 76, app.user is the logged-in member.
 twig:
     file_name_pattern: '*.twig'
+    # Chapter 88: true when Shelf is a demo (SHELF_DEMO=1), in every template.
+    globals:
+        demo: '%env(bool:SHELF_DEMO)%'
 
 when@test:
     twig:

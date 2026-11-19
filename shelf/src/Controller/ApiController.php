@@ -7,6 +7,7 @@ namespace Shelf\Controller;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use JsonException;
+use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
 use Shelf\Accounts;
 use Shelf\ApiTokens;
@@ -18,6 +19,7 @@ use Shelf\Library;
 use Shelf\Loan;
 use Shelf\Member;
 use Shelf\Form\BookData;
+use Shelf\Health;
 use Shelf\Security\ApiTokenFailure;
 use Shelf\Security\BookVoter;
 use Shelf\Web\Covers;
@@ -87,6 +89,24 @@ final readonly class ApiController
         $links[] = $link($found['pages'], 'last');
 
         return Json::response(array_map($this->bookData(...), $found['books']), headers: ['Link' => implode(', ', $links)]);
+    }
+
+    /**
+     * Chapter 88: is Shelf working? For a monitor, which asks every few minutes and warns a person when
+     * the answer isn't 200. Each check is ok or failing, and nothing more: no versions, paths or
+     * error messages, which would help an attacker more than the monitor. Never cached.
+     */
+    #[Route('/health', name: 'health', methods: ['GET'])]
+    public function health(Health $health, ClockInterface $clock): Response
+    {
+        $checks = $health->check($clock->now());
+        $ok = !in_array(false, $checks, true);
+
+        return Json::response(
+            ['status' => $ok ? 'ok' : 'failing', 'checks' => array_map(fn(bool $passed): string => $passed ? 'ok' : 'failing', $checks)],
+            $ok ? 200 : 503,
+            ['Cache-Control' => 'no-store'],
+        );
     }
 
     /** One book (chapter 68), found by its title in any case. */

@@ -47,6 +47,17 @@ docker compose -f compose.prod.yaml exec app php bin/console shelf:import
 Deploying to a server, and CI, are in chapter 79 (`.github/workflows/ci.yml`,
 `deploy/deploy.sh`).
 
+Before you give anyone the address (chapter 88), on the server:
+
+```
+docker compose -f compose.prod.yaml exec app php bin/console shelf:launch
+```
+
+It checks the settings, the worker and the backups, and says what to do about
+each that fails. The worker makes a backup every night (`shelf:backup` makes one
+now), and `/api/health` answers a monitor. With `SHELF_DEMO=1`,
+Shelf is a public demo that resets every night (`shelf:demo` resets it now).
+
 `php shelf/bin/console list shelf` shows its commands. Its settings are in
 `.env` (chapter 65); put changes for your computer into `.env.local`, which
 Git ignores.

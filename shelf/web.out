@@ -101,6 +101,7 @@ $ php bin/console debug:router
   members_role.de       POST       /de/members/role          
   members_role.ar       POST       /ar/members/role          
   api_books             GET        /api/books                
+  api_health            GET        /api/health               
   api_book              GET        /api/book                 
   api_add               POST       /api/books                
   api_login             POST       /api/tokens               
@@ -110,6 +111,8 @@ $ php bin/console debug:router
 
 $ php bin/console shelf:catalogue catalogue.json
 New books added: 53. Already on the shelf: 0.
+$ php bin/console shelf:backup
+Backup 2026-11-18T100000 made and checked; the newest 7 are kept.
 
 > GET /
 
@@ -3989,6 +3992,21 @@ New books added: 53. Already on the shelf: 0.
         "cover": null
     }
 ]
+
+> GET /api/health
+
+< HTTP/1.1 503 Service Unavailable
+< Content-Type: application/json
+< X-Content-Type-Options: nosniff
+
+{
+    "status": "failing",
+    "checks": {
+        "database": "ok",
+        "worker": "failing",
+        "backup": "ok"
+    }
+}
 
 > GET /api/books?per_page=2&page=2
 

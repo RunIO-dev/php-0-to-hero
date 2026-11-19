@@ -1,0 +1,10 @@
+HTTP 503
+{
+    "status": "failing",
+    "checks": {
+        "database": "ok",
+        "worker": "ok",
+        "backup": "failing"
+    }
+}
+The log: health check backup: /srv/shelf/backups: Permission denied

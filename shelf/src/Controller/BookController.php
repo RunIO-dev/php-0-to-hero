@@ -10,11 +10,13 @@ use Shelf\Book;
 use Shelf\BookNotFound;
 use Shelf\BookQuery;
 use Shelf\BookSort;
+use Shelf\Demo;
 use Shelf\Form\BookData;
 use Shelf\Form\BookType;
 use Shelf\Hold;
 use Shelf\Library;
 use Shelf\Member;
+use Shelf\Refused;
 use Shelf\Security\BookVoter;
 use Shelf\Web\Covers;
 use Shelf\Web\Pager;
@@ -41,7 +43,7 @@ use function Symfony\Component\Translation\t;
  */
 final class BookController extends AbstractController
 {
-    public function __construct(private readonly Library $library, private readonly Covers $covers) {}
+    public function __construct(private readonly Library $library, private readonly Covers $covers, private readonly Demo $demo) {}
 
     /** Books per page of the list (chapter 81): four rows of three on a wide screen. */
     public const int PER_PAGE = 12;
@@ -103,6 +105,10 @@ final class BookController extends AbstractController
         $form = $this->createForm(BookType::class, $book, ['action' => $this->generateUrl('add')])->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                if ($book->cover !== null && $this->demo->on) {
+                    // Chapter 88: every visitor would see a picture any other visitor chose.
+                    throw new Refused('The demo takes no covers: everyone would see the pictures anyone uploads.');
+                }
                 if ($book->cover !== null) {
                     $this->covers->check($book->cover); // the content, before the book is added: all or nothing
                 }

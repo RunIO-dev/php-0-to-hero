@@ -15,6 +15,13 @@
 	@assets path /assets/*
 	header @assets Cache-Control "public, max-age=31536000, immutable"
 
+	# Chapter 88: while PHP doesn't answer (a deploy, a crash), a page that says so, not Caddy's empty
+	# 502. A static file, so it needs nothing that may be down. The status stays: monitors see it.
+	handle_errors 502 503 504 {
+		rewrite * /down.html
+		file_server
+	}
+
 	header {
 		# Browsers come back over HTTPS only, for a year.
 		Strict-Transport-Security "max-age=31536000"

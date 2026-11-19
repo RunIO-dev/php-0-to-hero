@@ -1,0 +1,13 @@
+{# Chapter 88: an error nothing caught, with status 500, on a server (ErrorPages). The reference finds
+   the details in the log; the visitor gets nothing else from them. #}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Something went wrong'|trans }} · Shelf{% endblock %}
+
+{% block main %}
+    <div class="problem">
+        <p class="code" aria-hidden="true">500</p>
+        <h1>{{ 'Something went wrong'|trans }}</h1>
+        <p>{{ 'It has been noted, with the reference {reference}. Please try again later.'|trans({reference: reference}) }} <a href="{{ path('books') }}">{{ 'Back to the books'|trans }}</a></p>
+    </div>
+{% endblock %}
