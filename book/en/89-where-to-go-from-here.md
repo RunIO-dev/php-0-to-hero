@@ -17,7 +17,7 @@
 
 ## The idea
 
-*Shelf* is finished, as far as this course goes: a Symfony app with a database, logins, forms, an API, tests, a production image and a deploy. Every chapter answered the questions it raised. From now on, the questions are yours, and nobody has written the chapter for them yet. This chapter is about finding the answers.
+*Shelf* is finished, as far as this course goes: a library app that a real library could run. Readers find books, sign up and reserve them; the librarian lends and takes back at the desk, and reads the dashboard; a worker sends the reminders; every page speaks English, German and Arabic; and it runs online, with backups and a health check, as a demo anyone can try. Every chapter answered the questions it raised. From now on, the questions are yours, and nobody has written the chapter for them yet. This chapter is about finding the answers.
 
 **The manual is the first place to look.** Every function, class and setting of PHP has a page at php.net, in the same order:
 
@@ -32,8 +32,8 @@ The line at the top, "(PHP 8 >= 8.4.0)", says since when the function exists. Be
 
 **Three topics come next for most applications:**
 
-- **Events.** Code says what happened ("a loan was made"), and other code reacts, without the first one knowing who listens. A new reaction, such as a log line or a notice, needs no change to the code that lends. Symfony's `EventDispatcher` is the one *Shelf* already uses for its security headers (chapter 78).
-- **Queues.** Some work is too slow for a request: sending an email, making a report, resizing a cover. The request puts a **message** into a **queue** and answers at once; a **worker**, another process, takes the messages and handles them. If a message fails, it is tried again later. Symfony's Messenger component does this, with a table in the database as the queue, or a message broker.
+- **Events.** Code says what happened ("a loan was made"), and other code reacts, without the first one knowing who listens. A new reaction, such as a log line or a notice, needs no change to the code that lends. Symfony's `EventDispatcher` is the one *Shelf* already listens to, for its security headers and its error pages; its own code doesn't send events of its own yet.
+- **Queues, further.** Some work is too slow for a request: sending an email, making a report, resizing a cover. The request puts a **message** into a **queue** and answers at once; a **worker**, another process, takes the messages and handles them. If a message fails, it is tried again later. *Shelf*'s emails work this way since chapter 85, with Symfony's Messenger and a table in its database as the queue. A busier app meets the next questions: several workers, a message broker instead of the table, and messages between applications.
 - **Performance.** A page is slow for a reason you can measure: too many queries, a slow query, work done on every request that could be done once. Measure first, with a profiler or by counting queries, then change the one thing the measurement shows, and measure again.
 
 **Fibers** come up when you read about asynchronous PHP: a function that can pause in the middle and be resumed later. Libraries that wait for many network answers at once build on them. Application code rarely uses them directly, so they get one example here, not a chapter.
@@ -100,7 +100,7 @@ PHP knows every function's signature itself, through Reflection (`code/89-where-
 
 ✗ A queue delivers each message **at least once**. If the worker stops between sending the email and marking the message as done, the message comes again, and Amira gets the same reminder twice. With a payment instead of an email, she pays twice.
 
-**Fix:** make each handler **idempotent**, safe to run again: give each message an id, store the ids that are done, and check that first. The advanced exercise does this.
+**Fix:** make each handler **idempotent**, safe to run again: give each message an id, store the ids that are done, and check that first. The advanced exercise does this. *Shelf*'s reminders do the same with the database (chapter 85): each one is claimed, in one query, before it is sent.
 
 ### Optimising without measuring
 
@@ -116,7 +116,7 @@ An answer from a forum or a generator uses `utf8_encode()`, deprecated since PHP
 
 ## Principle check
 
-**KISS:** a queue, an event or a cache each adds a moving part; add one when a measurement or a requirement asks for it, not before. **YAGNI:** *Shelf* sends no emails yet, so it has no queue yet. **Secure by default:** what you learn from a forum or a library's issue is checked against the manual and the tests before it goes into your code.
+**KISS:** a queue, an event or a cache each adds a moving part; add one when a measurement or a requirement asks for it, not before. **YAGNI:** *Shelf* got its queue in chapter 85, when the reminders needed one, and no message broker: a table in its database is enough for one library. **Secure by default:** what you learn from a forum or a library's issue is checked against the manual and the tests before it goes into your code.
 
 ## Security
 
@@ -126,13 +126,14 @@ An answer from a forum or a generator uses `utf8_encode()`, deprecated since PHP
 
 ## Shelf
 
-*Shelf* gets no new code in this chapter: everything it needs, it has. Where each next topic would fit, when it is needed:
+*Shelf* gets no new code in this chapter: since chapter 88, it is complete and online. Where each next topic would fit, when it is needed:
 
 - **Events:** a `LoanMade` event when a book is lent, for a log line or a notice to the librarian, without changing `Library`.
-- **A queue:** reminder emails, a day before a loan is due, sent by a worker that a scheduled command fills.
-- **Performance:** the books page with a hundred thousand books, an index on the columns it searches, and its queries counted in the profiler.
+- **Queues:** a second worker, when one can't keep up with the emails of a large library; then a message broker, when the table is too slow. Messenger changes the transport in `messenger.yaml`; the messages and their handlers stay as they are.
+- **Performance:** the books page with a hundred thousand books, an index on the columns it searches, and its queries counted in the profiler; SQLite's full-text search (FTS5) when `LIKE` over every title gets slow.
+- **A real library:** a database server instead of SQLite once several servers share it (chapter 59), and the demo mode switched off.
 
-How to run every part of it is in `shelf/README.md`: development, the tests and the checks, and the production containers.
+How to run every part of it is in `shelf/README.md`: development, the tests and the checks, the production containers, and the launch checks of chapter 88.
 
 ## Exercises
 
