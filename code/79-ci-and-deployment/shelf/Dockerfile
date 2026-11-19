@@ -5,7 +5,7 @@
 #   release: build, without the tests
 #   app:     PHP-FPM with production settings, the release and its warmed cache
 #   web:     Caddy, the web server: HTTPS, the public files, and every other request to app
-ARG PHP=8.6-rc-fpm
+ARG PHP=8.6-fpm
 
 FROM php:${PHP} AS base
 RUN apt-get update \

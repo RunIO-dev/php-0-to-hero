@@ -33,7 +33,7 @@ This is how the book checks itself: `composer verify` runs every example in exac
 
 <!-- include: Dockerfile -->
 
-- `ARG PHP=8.6-rc-cli` is a setting with a default; `compose.yaml` passes `8.5-cli` for the second image. `FROM php:${PHP}` starts from the official PHP image of that version, the `cli` variant, which has PHP for the command line and its built-in server, nothing more.
+- `ARG PHP=8.6-cli` is a setting with a default; `compose.yaml` passes `8.5-cli` for the second image. `FROM php:${PHP}` starts from the official PHP image of that version, the `cli` variant, which has PHP for the command line and its built-in server, nothing more.
 - `RUN` runs commands while the image is built: here, it installs `git` and `unzip` for Composer, and the `mbstring` extension, then removes the package lists to keep the image small.
 - `COPY --from=composer:2.11 ...` copies the `composer` program out of Composer's own official image.
 - `WORKDIR /app` is the folder where commands run inside the container.

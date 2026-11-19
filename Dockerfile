@@ -1,5 +1,5 @@
 # The PHP the course uses. compose.yaml builds it once per PHP version.
-ARG PHP=8.6-rc-cli
+ARG PHP=8.6-cli
 FROM php:${PHP}
 
 # mbstring for text in any language; pdo_mysql for MariaDB and MySQL (chapter 59); intl for languages,

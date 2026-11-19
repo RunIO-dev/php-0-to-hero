@@ -6,7 +6,7 @@ These standards apply to the book, the code and the exercises. Where a rule can 
 
 ```
 README.md  LICENSE (CC BY 4.0 for text)  LICENSE-CODE (MIT)  ATTRIBUTION.md  CONTRIBUTING.md
-Dockerfile, compose.yaml  php:8.6 and php:8.5 images (8.6-rc-cli until the 8.6 release), plus web (Part 7) and db, MariaDB (chapter 59)
+Dockerfile, compose.yaml  php:8.6 and php:8.5 images, plus web (Part 7) and db, MariaDB (chapter 59)
 docker/db/users.sh      the database users for chapter 59
 composer.json           "php": ">=8.5"; dev: phpunit 13, phpstan 2, php-cs-fixer 3
 tools/check.php         setup check: PHP version, extensions, Composer; prints the exact fix

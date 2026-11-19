@@ -22,7 +22,7 @@ x-php: &php
 services:
   php:
     <<: *php
-    build: { context: ., args: { PHP: 8.6-rc-cli } }   # 8.6-cli from 19 Nov 2026
+    build: { context: ., args: { PHP: 8.6-cli } }
     image: php-0-to-hero:8.6
   php85:
     <<: *php
@@ -34,7 +34,7 @@ services:
   # stylesheet from assets/ while you work, under its versioned name.
   web:
     <<: *php
-    build: { context: ., args: { PHP: 8.6-rc-cli } }
+    build: { context: ., args: { PHP: 8.6-cli } }
     image: php-0-to-hero:8.6
     command: php -S 0.0.0.0:8000 -t shelf/public shelf/public/index.php
     ports: ["127.0.0.1:8000:8000"]
@@ -44,7 +44,7 @@ services:
   # stops after an hour, and Docker starts a new one, which reads any changed code and settings.
   worker:
     <<: *php
-    build: { context: ., args: { PHP: 8.6-rc-cli } }
+    build: { context: ., args: { PHP: 8.6-cli } }
     image: php-0-to-hero:8.6
     command: php shelf/bin/console messenger:consume async scheduler_shelf --time-limit=3600 -vv
     restart: unless-stopped

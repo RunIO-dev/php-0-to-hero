@@ -2,7 +2,7 @@
 #   vendor: the packages, without the tools for development
 #   app:    PHP-FPM with production settings, Shelf's code and its warmed cache
 #   web:    Caddy, the web server: HTTPS, the public files, and every other request to app
-ARG PHP=8.6-rc-fpm
+ARG PHP=8.6-fpm
 
 FROM php:${PHP} AS vendor
 # git and unzip for Composer, only in this stage: the image that runs Shelf doesn't need them.
