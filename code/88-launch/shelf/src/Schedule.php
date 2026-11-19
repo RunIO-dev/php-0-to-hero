@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Shelf;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Shelf\Message\Backup;
 use Shelf\Message\ExpireHolds;
 use Shelf\Message\Heartbeat;
@@ -23,7 +24,7 @@ use Symfony\Contracts\Cache\CacheInterface;
  *   php bin/console messenger:consume async scheduler_shelf
  * Stateful: the cache remembers the last run, so after a restart a missed run is made up, once.
  * Chapter 88: a heartbeat for the health check, a backup every night, and, in a demo, the reset.
- * The times are the server's time zone: UTC in the official PHP images.
+ * Its own times are UTC, whatever the server's time zone: the demo's note says 03:00 UTC.
  */
 #[AsSchedule('shelf')]
 final readonly class Schedule implements ScheduleProviderInterface
@@ -41,11 +42,11 @@ final readonly class Schedule implements ScheduleProviderInterface
             ->add(RecurringMessage::every('1 day', new ExpireHolds(), from: new DateTimeImmutable('03:00')))
             ->add(RecurringMessage::every('5 minutes', new Heartbeat()))
             // Before the demo's reset: a backup of the day's library, not of the fresh one.
-            ->add(RecurringMessage::every('1 day', new Backup(), from: new DateTimeImmutable('02:30')))
+            ->add(RecurringMessage::every('1 day', new Backup(), from: new DateTimeImmutable('02:30', new DateTimeZone('UTC'))))
             ->stateful($this->cache)
             ->processOnlyLastMissedRun(true);
         if ($this->demo) {
-            $schedule->add(RecurringMessage::every('1 day', new ResetDemo(), from: new DateTimeImmutable('03:00')));
+            $schedule->add(RecurringMessage::every('1 day', new ResetDemo(), from: new DateTimeImmutable('03:00', new DateTimeZone('UTC'))));
         }
 
         return $schedule;

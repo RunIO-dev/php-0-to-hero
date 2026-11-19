@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace Shelf\Tests\Web;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Shelf\Accounts;
 use Shelf\BookRepository;
 use Shelf\Demo;
 use Shelf\Library;
 use Shelf\Loan;
 use Shelf\MemberRepository;
+use Shelf\Message\ResetDemo;
+use Shelf\Schedule;
+use Symfony\Component\Scheduler\Generator\MessageContext;
+use Symfony\Component\Scheduler\RecurringMessage;
 
 /**
  * Shelf as a demo (chapter 88): SHELF_DEMO=1, set before the kernel starts, so its container reads it.
@@ -70,6 +75,23 @@ final class DemoTest extends ShelfWebTestCase
 
         self::assertSelectorTextContains('.error', 'The demo takes no covers');
         self::assertNull(self::service(BookRepository::class)->find('Sula'));
+    }
+
+    public function testTheResetIsAt3UtcOnAServerInAnyTimeZone(): void
+    {
+        $zone = date_default_timezone_get();
+        date_default_timezone_set('Europe/Berlin'); // as on a server that runs on Berlin's time
+        try {
+            $reset = array_values(array_filter(
+                self::service(Schedule::class)->getSchedule()->getRecurringMessages(),
+                fn(RecurringMessage $message): bool => iterator_to_array($message->getMessages(new MessageContext('shelf', 'x', $message->getTrigger(), new DateTimeImmutable())))[0] instanceof ResetDemo,
+            ))[0];
+            $next = $reset->getTrigger()->getNextRunDate(new DateTimeImmutable());
+        } finally {
+            date_default_timezone_set($zone);
+        }
+
+        self::assertSame('03:00 UTC', $next?->setTimezone(new DateTimeZone('UTC'))->format('H:i T'), 'Not 03:00 in Berlin, which is 02:00 UTC');
     }
 
     public function testTheResetPutsTheLibraryBack(): void

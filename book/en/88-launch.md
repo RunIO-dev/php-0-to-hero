@@ -126,7 +126,7 @@ The worker makes a backup every night, says it is alive every five minutes, and,
 
 <!-- include: code/88-launch/shelf/src/Schedule.php -->
 
-The backup runs at 02:30, before the demo's reset at 03:00: if a visitor finds something worth keeping during the day, it is in that night's backup. Each message has a small handler in `src/MessageHandler/` that calls `Backups`, `Heartbeat` or `Demo`.
+Both times are UTC, given with their zone: `new DateTimeImmutable('03:00')` would be 03:00 in the server's time zone, and a server in Berlin would reset the demo an hour before the note on every page says. The backup runs at 02:30, before the demo's reset at 03:00: if a visitor finds something worth keeping during the day, it is in that night's backup. Each message has a small handler in `src/MessageHandler/` that calls `Backups`, `Heartbeat` or `Demo`.
 
 ### The health check
 
