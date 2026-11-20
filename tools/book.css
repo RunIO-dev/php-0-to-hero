@@ -173,8 +173,11 @@ figure.listing {
     overflow: hidden;
     background: var(--code-bg);
     box-shadow: 0 6px 18px rgba(20, 24, 60, 0.18);
-    break-inside: avoid;
 }
+/* in print, a short listing stays on one page; a long one continues on the next, without leaving a gap */
+figure.listing.short { break-inside: avoid; }
+figure.listing figcaption, .out-h { break-after: avoid; }
+pre { orphans: 3; widows: 3; }
 figure.listing figcaption {
     display: flex;
     align-items: center;
@@ -184,6 +187,7 @@ figure.listing figcaption {
     color: #94a3b8;
     font: 500 0.74rem var(--mono);
 }
+.since { margin-left: auto; color: #64748b; font-style: italic; }
 .dots { display: inline-flex; gap: 6px; margin-right: 0.3rem; }
 .dots i { width: 9px; height: 9px; border-radius: 50%; background: #334155; }
 .dots i:nth-child(1) { background: #f87171; } .dots i:nth-child(2) { background: #fbbf24; } .dots i:nth-child(3) { background: #34d399; }

@@ -11,7 +11,8 @@ docker/db/users.sh      the database users for chapter 59
 composer.json           "php": ">=8.5"; dev: phpunit 13, phpstan 2, php-cs-fixer 3
 tools/check.php         setup check: PHP version, extensions, Composer; prints the exact fix
 tools/verify            the one script CI and we run: every check in §6
-tools/book, tools/pdf   the HTML book into site/, then the PDF with Chrome
+tools/book, tools/pdf   the HTML book into site/, then with Chrome the PDF (A4, colour) and the paperback for KDP
+                        (two volumes, 7 × 10 in, black and white, tools/kdp.css; fails above 828 pages)
 book/en/NN-slug.md      one chapter = one file (later book/de/, book/ar/)
 code/NN-slug/           the chapter's examples: example.php + example.out (expected output)
 exercises/NN-slug/      starter files + tests (tests fail on the starter)

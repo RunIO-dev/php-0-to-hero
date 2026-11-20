@@ -6,10 +6,14 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 use Tools\Book;
+use Tools\Run;
 
 final class BookTest extends TestCase
 {
     private string $root;
+
+    /** @var list<string> folders a test made below code/ */
+    private array $extra = [];
 
     protected function setUp(): void
     {
@@ -22,6 +26,7 @@ final class BookTest extends TestCase
 
     protected function tearDown(): void
     {
+        array_map(Run::remove(...), $this->extra);
         array_map('unlink', glob($this->root . '/code/06-variables/*') ?: []);
         rmdir($this->root . '/code/06-variables');
         rmdir($this->root . '/code');
@@ -70,9 +75,9 @@ final class BookTest extends TestCase
         self::assertStringContainsString('<header class="opener"><div class="opener-num">6</div><div class="opener-t"><div class="opener-k">Chapter</div><h1>Variables</h1></div></header>', $html);
         self::assertStringContainsString('<section class="s-goals"><h2>Goals</h2>', $html);
         self::assertStringContainsString('<section class="s-before-you-start">', $html);
-        self::assertStringContainsString('<figure class="listing ok"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">code/06-variables/name.php</span></figcaption><pre', $html);
+        self::assertStringContainsString('<figure class="listing ok short"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">code/06-variables/name.php</span></figcaption><pre', $html);
         self::assertStringContainsString('<div class="out"><div class="out-h">Output</div><pre data-lang="txt"', $html);
-        self::assertStringContainsString('<figure class="listing bad">', $html);
+        self::assertStringContainsString('<figure class="listing bad short">', $html);
         self::assertStringContainsString('<span class="badge">✗ Don\'t do this</span>', $html);
     }
 
@@ -86,5 +91,66 @@ final class BookTest extends TestCase
     public function testArabicPageIsRightToLeft(): void
     {
         self::assertStringContainsString('<html lang="ar" dir="rtl">', Book::page('عنوان', '', 'ar'));
+    }
+
+    public function testAShelfFileShownAgainShowsOnlyItsChanges(): void
+    {
+        $lines = array_map(static fn(int $i): string => "\$line$i = $i;", range(1, 40));
+        $this->shelfFile('41-first-tests', "<?php\n" . implode("\n", $lines));
+        $lines[19] = '$line20 = 2000;';
+        $this->shelfFile('42-testing-well', "<?php\n" . implode("\n", $lines));
+
+        $shown = [];
+        $first = Book::expand($this->root, '<!-- include: code/41-first-tests/shelf/src/Loan.php -->', 'en', $shown);
+        $again = Book::expand($this->root, '<!-- include: code/42-testing-well/shelf/src/Loan.php -->', 'en', $shown);
+
+        self::assertStringContainsString('$line1 = 1;', $first, 'the first time, the whole file');
+        self::assertStringStartsWith('`code/42-testing-well/shelf/src/Loan.php` · changes since chapter 41', $again);
+        self::assertStringContainsString("// ⋯ 17 unchanged lines\n\$line17 = 17;", $again);
+        self::assertStringContainsString("\$line20 = 2000;", $again);
+        self::assertStringContainsString("\$line23 = 23;\n// ⋯ 17 unchanged lines\n```", $again);
+        self::assertStringNotContainsString('$line1 = 1;', $again);
+    }
+
+    public function testWithoutAMemoryEveryFileIsShownWhole(): void
+    {
+        $this->shelfFile('41-first-tests', "<?php\n" . str_repeat("echo 1;\n", 40));
+        self::assertStringNotContainsString('changes since', Book::expand($this->root, '<!-- include: code/41-first-tests/shelf/src/Loan.php -->'));
+    }
+
+    public function testShortFilesAndBigChangesAreShownWhole(): void
+    {
+        $short = array_map('strval', range(1, 20));
+        self::assertNull(Book::changes($short, array_reverse($short), 'php'), 'under 25 lines');
+        $long = array_map('strval', range(1, 40));
+        $changed = array_map(static fn(string $l): string => $l . '!', $long);
+        self::assertNull(Book::changes($long, $changed, 'php'), 'more than 80% changed');
+    }
+
+    public function testAnUnchangedFileBecomesOneLineAndOneLineGapsStay(): void
+    {
+        $lines = array_map('strval', range(1, 30));
+        self::assertSame(['# ⋯ 30 unchanged lines'], Book::changes($lines, $lines, 'yaml'));
+
+        $new = $lines;
+        $new[3] = 'four';
+        $new[11] = 'twelve'; // the contexts end at line 7 and start at line 9: line 8 is shown, not a marker
+        self::assertSame(
+            ['1', '2', '3', 'four', '5', '6', '7', '8', '9', '10', '11', 'twelve', '13', '14', '15', '<!-- ⋯ 15 unchanged lines -->'],
+            Book::changes($lines, $new, 'html'),
+        );
+    }
+
+    public function testTheVolumeIsNamedOnTheTitlePage(): void
+    {
+        $front = Book::front('en', '8.6', [[61, 'Passwords'], [62, 'Login']], ['name' => 'A', 'homepage' => 'https://example.org'], '2026-11-19', 2);
+        self::assertStringContainsString('PHP 8.6 · Volume 2 · chapters 61–62</p>', $front);
+    }
+
+    private function shelfFile(string $chapter, string $code): void
+    {
+        mkdir("$this->root/code/$chapter/shelf/src", 0777, true);
+        file_put_contents("$this->root/code/$chapter/shelf/src/Loan.php", $code);
+        $this->extra[] = "$this->root/code/$chapter";
     }
 }
