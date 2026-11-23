@@ -111,6 +111,12 @@ Every `book/en/NN-slug.md` has these headings, in this order. A heading may say 
   - *Shelf*'s tests run with `APP_ENV=test` (`.env.test`), against their own SQLite database in `var/`, migrated once by `tests/bootstrap.php`; each test runs in a transaction that is rolled back.
 - **Removed files:** a *Shelf* file that a chapter deletes gets an empty `X.removed` in that chapter's snapshot; from then on, `Shelf::state` leaves it out, and the check refuses it in `shelf/`.
 - **Scripts:** a file that starts with `#!` is stored as executable in Git (mode `100755`), or it fails in a fresh checkout. `tools/verify` checks it (`tools/src/Scripts.php`); fix one with `git update-index --chmod=+x <file>`.
+- **Two editions from the same chapters** (`Book::expand`): the book (the HTML pages, the PDF and the paperback) and the extended edition (`php-0-to-hero-extended.pdf`, every file and every answer in full). The book shows what a chapter is about:
+  - an excerpt where the include asks for one: `<!-- include: path lines 40-75, 90 -->` (lines of the file), or `<!-- include: path.http requests 2-4 -->` (the requests of a web check; `0` is the output of its `# run` commands). A range outside the file stops the build;
+  - a *Shelf* file that an earlier chapter showed: its changes only, 3 lines around each (`Book::changes`);
+  - a web check as one block: the transcript, with each request's comment from the `.http` file above it, and each HTML page cut to the start of its `<main>` (8 lines); a page with its own `.http` file shows no output, as that file's listing shows it.
+
+  Every cut is a marker line (`⋯ 12 lines left out`), and the caption says "excerpt" or "changes since chapter N" and links to the whole file. A listing over 80 lines (code and output) fails the build (`Book::MAX_LINES`): give it an excerpt. Write the sentence before an excerpt so it is true in both editions: say what changes ("`Isbn` takes the place of `isbnDigits`"), not what the excerpt shows ("here are two requests").
 - **Course files in the text:** `compose.yaml`, `Dockerfile` and `docker/db/users.sh` may be included like code (`Chapters::COURSE_FILES`); they always show their current state.
 
 ## 5. Exercises

@@ -98,7 +98,7 @@ Books can now get a cover when they are added: a PNG or JPEG of up to 2 MB, show
 
 **The covers.** `shelf/src/Web/Covers.php` follows the five rules:
 
-<!-- include: code/52-file-uploads/shelf/src/Web/Covers.php -->
+<!-- include: code/52-file-uploads/shelf/src/Web/Covers.php lines 12-89 -->
 
 - The file name is a SHA-256 hash of the title, in lower case and tidied: any title gives a safe name of 64 hexadecimal characters, and the same title always gives the same file. A new cover replaces the old one, even when one is a PNG and the other a JPEG.
 - The folder is `shelf/storage/covers/`, outside `public/`. It is made when the first cover arrives. Covers are data, not code, so `shelf/.gitignore` leaves them out:
@@ -107,7 +107,7 @@ Books can now get a cover when they are added: a PNG or JPEG of up to 2 MB, show
 
 **The app.** `shelf/src/Web/App.php`:
 
-<!-- include: code/52-file-uploads/shelf/src/Web/App.php -->
+<!-- include: code/52-file-uploads/shelf/src/Web/App.php lines 28-51, 66-107 -->
 
 - The cover is checked *before* the book is added. A wrong cover refuses the whole form with `422`, and nothing is half saved.
 - `GET /cover?title=...` sends the cover, with its type and `nosniff`, or `404`.
@@ -144,7 +144,7 @@ The list shows the cover. Its address is built with `urlencode()` for the value,
 
 `shelf/web.http` adds *Sula* with the code file as a cover, which is refused, then with the real cover, and asks for both covers:
 
-<!-- include: code/52-file-uploads/shelf/web.http -->
+<!-- include: code/52-file-uploads/shelf/web.http requests 8, 11-12 -->
 
 ## Exercises
 

@@ -144,7 +144,7 @@ The repository can find a member by address and by number, save a change, and re
 
 `Accounts` checks a sign-up and a change of password, `shelf/src/Accounts.php`:
 
-<!-- include: code/82-accounts/shelf/src/Accounts.php -->
+<!-- include: code/82-accounts/shelf/src/Accounts.php lines 43-94 -->
 
 `Library` refuses to delete a member who has books, `shelf/src/Library.php`:
 
@@ -154,7 +154,7 @@ The repository can find a member by address and by number, save a change, and re
 
 `shelf/src/Web/AccountLinks.php`:
 
-<!-- include: code/82-accounts/shelf/src/Web/AccountLinks.php -->
+<!-- include: code/82-accounts/shelf/src/Web/AccountLinks.php lines 23-82 -->
 
 `shelf/src/Web/AccountMail.php`:
 
@@ -184,7 +184,7 @@ The limit, `shelf/config/packages/rate_limiter.yaml`:
 
 `shelf/src/Controller/AccountController.php`:
 
-<!-- include: code/82-accounts/shelf/src/Controller/AccountController.php -->
+<!-- include: code/82-accounts/shelf/src/Controller/AccountController.php lines 102-168, 239-246 -->
 
 - The pages of a link (`confirm`, `reset`) post their form to the same signed address, `app.request.requestUri`, so the POST is checked like the GET.
 - After a new password, Symfony ends the member's sessions. `$security->login()` starts this one again.
@@ -199,7 +199,7 @@ The account page, `shelf/templates/account.html.twig`:
 
 `shelf/tests/Web/AccountsTest.php`:
 
-<!-- include: code/82-accounts/shelf/tests/Web/AccountsTest.php -->
+<!-- include: code/82-accounts/shelf/tests/Web/AccountsTest.php lines 26-60, 76-115 -->
 
 The tests' rate limit has its own pool, which `ShelfWebTestCase` empties before each test. `AccountsTest` and `LibraryTest` test the rules without a browser, and `AccessibilityTest` checks the new pages.
 

@@ -124,11 +124,11 @@ Loans are stored and read with their book and member, `shelf/src/LoanRepository.
 
 **The rules.** `Library` gets a repository for each kind of thing, stores each loan, lists a member's loans, and refuses to remove a book that is on loan, with a clear message rather than the database's error. `shelf/src/Library.php`:
 
-<!-- include: code/56-relations-and-joins/shelf/src/Library.php -->
+<!-- include: code/56-relations-and-joins/shelf/src/Library.php lines 14-25, 58-102 -->
 
 **The command line** imports members too, and gets `loans <member>`. A loan's due date depends on the day you lend, so the session below doesn't lend: the tests do, with a fixed date. `shelf/shelf.php`:
 
-<!-- include: code/56-relations-and-joins/shelf/shelf.php -->
+<!-- include: code/56-relations-and-joins/shelf/shelf.php lines 76-135 -->
 
 The front controller makes the three repositories from one connection, `shelf/public/index.php`:
 

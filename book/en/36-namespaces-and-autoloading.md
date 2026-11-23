@@ -148,9 +148,9 @@ Create `shelf/composer.json` as shown above. Then create the folder `shelf/src/`
 
 <!-- include: code/36-namespaces-and-autoloading/shelf/src/BookRepository.php -->
 
-`shelf/src/Library.php`:
+`shelf/src/Library.php`, the class `Library` from `library.php`, unchanged, with its namespace and `use` lines:
 
-<!-- include: code/36-namespaces-and-autoloading/shelf/src/Library.php -->
+<!-- include: code/36-namespaces-and-autoloading/shelf/src/Library.php lines 1-14 -->
 
 `shelf/src/JsonBookRepository.php`:
 

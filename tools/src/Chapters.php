@@ -16,7 +16,8 @@ final class Chapters
             'Security', 'Shelf', 'Exercises', 'Summary', 'Further reading'],
     ];
 
-    public const INCLUDE = '/<!--\s*include:\s*(\S+)\s*-->/';
+    /** <!-- include: path -->, or with an excerpt: <!-- include: path lines 40-75 -->, <!-- include: x.http requests 2-4 --> */
+    public const INCLUDE = '/<!--\s*include:\s*(\S+)(?:\s+(lines|requests)\s+([0-9][0-9,\s-]*?))?\s*-->/';
 
     /** @return list<string> */
     public static function check(string $root): array

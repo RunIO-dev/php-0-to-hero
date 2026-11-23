@@ -103,9 +103,9 @@ Value objects are a good way to keep input checks honest. Once input is turned i
 
 `json_encode` would now write the ISBN as an object, `{"digits": "978..."}`, and `loadBooks` expects a string. So `saveBooks` builds each row of the file itself: the format of the file is written in one place, next to `loadBooks`, and no longer depends on how the classes look. `$book->isbn?->digits` uses the **nullsafe operator** `?->`: if `isbn` is `null`, the result is `null`, instead of an error.
 
-Change `shelf/library.php` to:
+Change `shelf/library.php`: `Isbn` takes the place of `isbnDigits` and `isIsbn13`, and `Book`, `Member`, `Loan` and `addBook` change like this:
 
-<!-- include: code/30-readonly-and-value-objects/shelf/library.php -->
+<!-- include: code/30-readonly-and-value-objects/shelf/library.php lines 15-28, 51-91, 196-214 -->
 
 Change `shelf/data.php` to:
 

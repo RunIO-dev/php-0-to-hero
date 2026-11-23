@@ -52,7 +52,7 @@ The example is a small site of three pages. They share `code/62-login/account.ph
 
 Here are the requests, in order:
 
-<!-- include: code/62-login/login.http -->
+<!-- include: code/62-login/login.http requests 3-8 -->
 
 - A wrong password and an unknown name get the same answer, `422`, with the same message.
 - The good login answers `303` with a new `Set-Cookie`: the session's new ID. The browser sends that one from now on.
@@ -113,7 +113,7 @@ The test session counts how often it got a new ID, so the tests can check it, `s
 
 **The pages.** `App` gets the `Accounts` of chapter 61, and three routes: `GET /login` shows the form, `POST /login` logs in, `POST /logout` logs out. Its new `page()` method gives the layout the member's name, and the token for the logout form. A visitor who isn't logged in gets no token there, so a visitor who only reads still gets no session cookie. `shelf/src/Web/App.php`:
 
-<!-- include: code/62-login/shelf/src/Web/App.php -->
+<!-- include: code/62-login/shelf/src/Web/App.php lines 19-32, 45-50, 158-198 -->
 
 `Templates::page()` passes those extra values to the layout, `shelf/src/Web/Templates.php`:
 
@@ -135,11 +135,11 @@ The front controller makes the `Accounts`, `shelf/public/index.php`:
 
 **The tests.** `AppTest` gives Amira a password, with the low cost of chapter 61, and checks the login, the new session ID, the one message, the untrimmed password, the bar and the logout. `shelf/tests/Web/AppTest.php`:
 
-<!-- include: code/62-login/shelf/tests/Web/AppTest.php -->
+<!-- include: code/62-login/shelf/tests/Web/AppTest.php lines 31-42, 218-272 -->
 
 `shelf/web.http` opens the login form and sends a login. Its database is new, without passwords, so the login fails, with the usual message; then a `GET /logout`, which is refused:
 
-<!-- include: code/62-login/shelf/web.http -->
+<!-- include: code/62-login/shelf/web.http requests 23-25 -->
 
 To log in yourself, give a member a password (chapter 61), then start the web server, and open `http://localhost:8000/login`:
 

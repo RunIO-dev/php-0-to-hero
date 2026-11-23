@@ -54,7 +54,7 @@ Each member's loans come from the session's name, `code/63-roles/loans.php`:
 
 `code/63-roles/login.php` and `code/63-roles/logout.php` are those of chapter 62. The requests:
 
-<!-- include: code/63-roles/books.http -->
+<!-- include: code/63-roles/books.http requests 2, 4-6, 9-11 -->
 
 - The visitor is sent to the login when they try to remove a book.
 - Amira sees no button, and sends the form anyway: `403`, nothing removed.
@@ -113,7 +113,7 @@ Readers borrow; staff change books. Visitors may look; for anything else, they l
 
 **The check,** in `App`. `MEMBERS_ONLY` lists the paths a visitor can't use, and `STAFF_ONLY` the ones that change books. `refused()` runs for every request, after the route is found and before it runs: a visitor goes to the login, with the message "Log in first."; a reader gets the page "Not allowed", with `403`. The new route `/loans` shows the member's own loans. `shelf/src/Web/App.php`:
 
-<!-- include: code/63-roles/shelf/src/Web/App.php -->
+<!-- include: code/63-roles/shelf/src/Web/App.php lines 24-27, 64-70, 201-246 -->
 
 **The templates.** The bar shows "Add a book" to staff only, and "My loans" to every member, `shelf/templates/layout.php`:
 
@@ -137,7 +137,7 @@ Two new templates, `shelf/templates/forbidden.php`:
 
 **The tests.** Each `AppTest` starts with Jonas, staff, logged in, so the tests of earlier chapters keep working; the new ones log in as Amira, or as nobody, and check the refusals, the hidden forms and the loans page. `shelf/tests/Web/AppTest.php`:
 
-<!-- include: code/63-roles/shelf/tests/Web/AppTest.php -->
+<!-- include: code/63-roles/shelf/tests/Web/AppTest.php lines 31-42, 276-328 -->
 
 `TemplatesTest` passes `mayChange`, `shelf/tests/Web/TemplatesTest.php`:
 
@@ -145,7 +145,7 @@ Two new templates, `shelf/templates/forbidden.php`:
 
 **The web check** now needs members with passwords. A `# run` line at the top of `shelf/web.http` runs a command before the server starts, as you would: it imports the books and members, and sets Amira's and Jonas's passwords from two files, `amira-password.txt` and the new `jonas-password.txt`. The requests then try every page as a visitor, as Amira and as Jonas:
 
-<!-- include: code/63-roles/shelf/web.http -->
+<!-- include: code/63-roles/shelf/web.http requests 0, 2, 5, 7, 10-11 -->
 
 To try it yourself, give Jonas a password too, then log in as each of them:
 

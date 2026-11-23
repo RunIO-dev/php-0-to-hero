@@ -60,7 +60,7 @@ One book, `code/67-rest-and-json/book.php`:
 
 The requests, as a program sends them:
 
-<!-- include: code/67-rest-and-json/books.http -->
+<!-- include: code/67-rest-and-json/books.http requests 2-7 -->
 
 ## Common mistakes
 
@@ -118,7 +118,7 @@ Reading the books needs no login, like the list page. The API sends no cookie, s
 
 `shelf/web.http` asks for `/api/books` after a book with a cover was added:
 
-<!-- include: code/67-rest-and-json/shelf/web.http -->
+<!-- include: code/67-rest-and-json/shelf/web.http requests 22 -->
 
 Start the web server, and open `http://localhost:8000/api/books` in a browser: most browsers show JSON readably.
 

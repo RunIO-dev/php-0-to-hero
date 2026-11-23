@@ -54,7 +54,7 @@ The list, `code/70-pagination/books.php`:
 
 The requests:
 
-<!-- include: code/70-pagination/books.http -->
+<!-- include: code/70-pagination/books.http requests 1, 3, 5, 7 -->
 
 ## Common mistakes
 
@@ -118,7 +118,7 @@ The repository for the tests, `shelf/tests/InMemoryBookRepository.php`:
 
 **The route.** `apiBooks()` reads `page`, `per_page`, `author` and `available`, answers `400` for anything wrong, and sends the `Link` header. The body is the list of chapter 67, so nothing breaks. `shelf/src/Web/App.php`:
 
-<!-- include: code/70-pagination/shelf/src/Web/App.php -->
+<!-- include: code/70-pagination/shelf/src/Web/App.php lines 247-287 -->
 
 **The tests.** Both repositories must page and filter alike, `shelf/tests/BookRepositoryContract.php`:
 

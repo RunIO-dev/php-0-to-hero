@@ -115,7 +115,7 @@ The page for a refused form, `shelf/templates/expired.php`, explains what to do.
 
 `shelf/web.http` takes the token from the form with `# capture`, sends it with every `POST`, and sends one `POST` from another site without it:
 
-<!-- include: code/51-csrf/shelf/web.http -->
+<!-- include: code/51-csrf/shelf/web.http requests 2, 6-7 -->
 
 ## Exercises
 

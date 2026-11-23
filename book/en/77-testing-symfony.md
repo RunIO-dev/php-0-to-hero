@@ -145,7 +145,7 @@ What every browser test needs, `shelf/tests/Web/ShelfWebTestCase.php`:
 
 The tests, `shelf/tests/Web/PagesTest.php`:
 
-<!-- include: code/77-testing-symfony/shelf/tests/Web/PagesTest.php -->
+<!-- include: code/77-testing-symfony/shelf/tests/Web/PagesTest.php lines 15-65, 95-105 -->
 
 - `assertResponseRedirects()`, `assertSelectorTextSame()` and `assertInputValueSame()` come with `WebTestCase`; when one fails, it says what it found.
 - `submitForm()` sends the token the page put into the form; a request sent with `request()` alone has none, which is how the tests check the refusals.
@@ -155,7 +155,7 @@ The tests, `shelf/tests/Web/PagesTest.php`:
 
 Chapter 71's contract, through the kernel, `shelf/tests/Web/ApiContractTest.php`:
 
-<!-- include: code/77-testing-symfony/shelf/tests/Web/ApiContractTest.php -->
+<!-- include: code/77-testing-symfony/shelf/tests/Web/ApiContractTest.php lines 18-30, 67-88, 135-166 -->
 
 The shapes, the mistakes and the addresses that need a token are chapter 71's. `send()` issues each member's token through `ApiTokens` once, and the token test also uses the one that `POST /api/tokens` returns. The browser's cookie jar stays empty: the API never starts a session.
 

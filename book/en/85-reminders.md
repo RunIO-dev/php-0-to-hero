@@ -149,7 +149,7 @@ In production, the worker is a third container from the same image, `shelf/compo
 
 In the tests, the queue is handled at once (`sync://`), so each email is there when `dispatch()` returns. The reminders as the worker handles them, `shelf/tests/Messenger/RemindersTest.php`:
 
-<!-- include: code/85-reminders/shelf/tests/Messenger/RemindersTest.php -->
+<!-- include: code/85-reminders/shelf/tests/Messenger/RemindersTest.php lines 25-96 -->
 
 `LoanTest` tests the rule day by day, and both repository contracts test that a claim works once.
 

@@ -103,7 +103,7 @@ The repository finds a loan, lists the ones that are out, takes one back, and fo
 
 `shelf/src/Doctrine/DoctrineLoanRepository.php`:
 
-<!-- include: code/83-the-lending-desk/shelf/src/Doctrine/DoctrineLoanRepository.php -->
+<!-- include: code/83-the-lending-desk/shelf/src/Doctrine/DoctrineLoanRepository.php lines 53-106 -->
 
 - `giveBack()` adds the copy in SQL, inside the transaction, like `add()` takes it.
 - `forget()` and `forgetBook()` use `remove()` for each loan. A `DELETE` query would leave the loans Doctrine has already loaded in its memory.
@@ -116,13 +116,13 @@ The migration adds the columns in place, as in chapter 82, `shelf/migrations/Ver
 
 `shelf/src/Library.php`:
 
-<!-- include: code/83-the-lending-desk/shelf/src/Library.php -->
+<!-- include: code/83-the-lending-desk/shelf/src/Library.php lines 90-156 -->
 
 ### The desk
 
 `shelf/src/Controller/DeskController.php`:
 
-<!-- include: code/83-the-lending-desk/shelf/src/Controller/DeskController.php -->
+<!-- include: code/83-the-lending-desk/shelf/src/Controller/DeskController.php lines 31-99 -->
 
 `shelf/templates/desk.html.twig`:
 
@@ -141,7 +141,7 @@ The repository contract, for both repositories, `shelf/tests/LoanRepositoryContr
 
 The desk in the browser, `shelf/tests/Web/DeskTest.php`:
 
-<!-- include: code/83-the-lending-desk/shelf/tests/Web/DeskTest.php -->
+<!-- include: code/83-the-lending-desk/shelf/tests/Web/DeskTest.php lines 17-66, 80-99 -->
 
 `LoanTest` and `LibraryTest` test the rules without a browser, and `AccessibilityTest` checks both new pages.
 

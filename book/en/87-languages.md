@@ -166,7 +166,7 @@ A page that doesn't exist has no route, and so no locale: `ErrorPages` reads `/d
 
 `shelf/tests/TranslationsTest.php` finds every text in the templates (`'…'|trans`) and in `src/` (`t()`, `TranslatableMessage`, and the classes that are `TranslatableInterface`), and checks that each catalog has it, with the same placeholders, and that ICU can read it. A new text without its German and Arabic fails here, not on a page. `LanguagesTest` checks the pages, `shelf/tests/Web/LanguagesTest.php`:
 
-<!-- include: code/87-languages/shelf/tests/Web/LanguagesTest.php -->
+<!-- include: code/87-languages/shelf/tests/Web/LanguagesTest.php lines 20-95 -->
 
 `AccessibilityTest` checks German and Arabic pages too: `lang`, `dir`, and a name for each menu. English dates now follow ICU's English order, "Monday, March 16, 2026", and the tests that read them were updated.
 

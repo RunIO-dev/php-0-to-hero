@@ -145,13 +145,13 @@ A **form theme** changes how Symfony draws a part of every form. *Shelf*'s chang
 
 `POST /api/books` fills a `BookData` from the JSON, notes fields of the wrong JSON type, and has the validator check the rest: one mistake per field, all at once, `shelf/src/Controller/ApiController.php`:
 
-<!-- include: code/75-forms/shelf/src/Controller/ApiController.php -->
+<!-- include: code/75-forms/shelf/src/Controller/ApiController.php lines 99-136, 194-218 -->
 
 ### The tests
 
 The rules, `shelf/tests/Form/BookDataTest.php`:
 
-<!-- include: code/75-forms/shelf/tests/Form/BookDataTest.php -->
+<!-- include: code/75-forms/shelf/tests/Form/BookDataTest.php lines 14-60 -->
 
 The constraint, with Symfony's own test case for validators, `shelf/tests/Validator/ValidIsbnValidatorTest.php`:
 
@@ -161,7 +161,7 @@ The constraint, with Symfony's own test case for validators, `shelf/tests/Valida
 
 `shelf/web.http` sends the add form's requests as before, and one more to the API, with three mistakes:
 
-<!-- include: code/75-forms/shelf/web.http -->
+<!-- include: code/75-forms/shelf/web.http requests 12, 38 -->
 
 The empty form now names all three missing fields, each next to its field; the year 10000 gets "The year is from 1 to 2100."; the cover that is PHP code is refused by `Assert\Image`, before `Covers` sees it.
 

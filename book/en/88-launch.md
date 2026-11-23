@@ -101,7 +101,7 @@ The 500 page extends `base.html.twig`, which asks for the logged-in member, the 
 
 `shelf/src/Backups.php`:
 
-<!-- include: code/88-launch/shelf/src/Backups.php -->
+<!-- include: code/88-launch/shelf/src/Backups.php lines 23-88 -->
 
 Each backup is a folder in `SHELF_DATA/backups/`, named by its time, with `shelf.sqlite` and a copy of the covers. `SHELF_DATA` is a new setting, `var` on your computer and `data` on a server (`shelf/compose.prod.yaml`), the folder that also holds the database. Try it:
 
@@ -170,7 +170,7 @@ When PHP doesn't answer, Caddy shows `shelf/public/down.html`, a page in all thr
 
 `shelf/src/Demo.php`:
 
-<!-- include: code/88-launch/shelf/src/Demo.php -->
+<!-- include: code/88-launch/shelf/src/Demo.php lines 20-92 -->
 
 The reset deletes the rows, children first because of the foreign keys, and loads `books.json`, `catalogue.json` and `members.json` again, in one transaction. Its loans are dated from the reset's day, so the desk always shows one overdue book, one due soon, and a reservation. `shelf/src/EventSubscriber/DemoGuard.php` (in the snapshot) answers the closed routes with `shelf/templates/demo.html.twig` and 403: sign-up, the confirmation and password links, and the account's password, email and deletion. On the members page, Jonas and Amira can't be blocked or given another role. The login page shows the accounts, and every page a note:
 
@@ -225,7 +225,7 @@ It fails with status 1, so a deployment script can stop on it, as on a failing t
 
 `BackupsTest` makes backups and checks that the newest seven stay, and that a folder that isn't a backup does too. `HealthTest` asks `/api/health` with a heartbeat that is fresh and one that is late. `DemoTest` sets `SHELF_DEMO=1` before the kernel starts, and checks the login page, the closed routes, the shared accounts and the reset, `shelf/tests/Web/DemoTest.php`:
 
-<!-- include: code/88-launch/shelf/tests/Web/DemoTest.php -->
+<!-- include: code/88-launch/shelf/tests/Web/DemoTest.php lines 24-79, 97-111 -->
 
 `ErrorPagesTest` answers an exception as a server does, with debug off: the German page with its reference, and plain HTML when the templates fail. `CommandsTest` runs `shelf:launch` with the tests' settings, where most answers are no.
 

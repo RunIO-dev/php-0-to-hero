@@ -210,7 +210,7 @@ This is a common way to move an app to a framework without stopping it: the fram
 
 **The check.** `shelf/web.http` sends the same requests as in chapter 71, and lists Symfony's routes first:
 
-<!-- include: code/72-symfony/shelf/web.http -->
+<!-- include: code/72-symfony/shelf/web.http requests 0, 12, 38 -->
 
 The answers are the same, with two differences: Symfony writes every header name the same way (`Content-Type`, where PHP wrote `Content-type`), and it knows the name of `422`, `Unprocessable Content`, which PHP's built-in server didn't. The `204` after logging out has no `Content-Type` now: there is no body, so there is no type.
 

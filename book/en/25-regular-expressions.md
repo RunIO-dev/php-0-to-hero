@@ -114,9 +114,9 @@ Two rules for patterns:
 
 ## Shelf
 
-*Shelf* gets an `add` command: `add <title> <author> <year> [<isbn>]`. Every field is checked before the book is saved: `tidy` cleans the spaces in the title and author with `preg_replace`, `filter_var` checks the year, `isIsbn13` the optional ISBN, and a title that is already on the shelf is refused. A book now has an `isbn`, which is `null` when it's unknown; the books in your `books.json` don't need one. Change `shelf/shelf.php` to:
+*Shelf* gets an `add` command: `add <title> <author> <year> [<isbn>]`. Every field is checked before the book is saved: `tidy` cleans the spaces in the title and author with `preg_replace`, `filter_var` checks the year, `isIsbn13` the optional ISBN, and a title that is already on the shelf is refused. A book now has an `isbn`, which is `null` when it's unknown; the books in your `books.json` don't need one. Change `shelf/shelf.php`: `toBook` reads the `isbn`; `isIsbn13`, `tidy`, `addBook` and `addAndSave` are new, after `lendAndSave`; the usage text and `run` know the `add` command; and the book's type in every docblock gets `isbn: ?string`:
 
-<!-- include: code/25-regular-expressions/shelf/shelf.php -->
+<!-- include: code/25-regular-expressions/shelf/shelf.php lines 41-47, 160-218, 224, 236, 248 -->
 
 Try it:
 

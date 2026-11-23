@@ -101,9 +101,9 @@ The rules of *Shelf* were loose functions that each got the list of books passed
 
 `Library` doesn't extend `JsonBookRepository`: a library is not a file. Because it only knows the `BookRepository` interface, Part 8 can give it a database instead.
 
-Change `shelf/library.php` to:
+Change `shelf/library.php`. Below are the new family of exceptions and `Library`'s public methods; its private helpers `newBook`, `find` and `member` are the checks of the old `addBook`, `findBook` and `findMember`, moved into the class, and the old functions go:
 
-<!-- include: code/34-inheritance-and-composition/shelf/library.php -->
+<!-- include: code/34-inheritance-and-composition/shelf/library.php lines 8-15, 185-244 -->
 
 And change `shelf/shelf.php` to:
 

@@ -128,11 +128,11 @@ Programs log in with a token. Members read their own loans; staff add books.
 
 **The request** gets its headers and its body, so the API can read the token and the JSON, `shelf/src/Web/Request.php`:
 
-<!-- include: code/69-tokens/shelf/src/Web/Request.php -->
+<!-- include: code/69-tokens/shelf/src/Web/Request.php lines 13-79 -->
 
 **The routes.** `App` gets the `ApiTokens`, and four routes: `POST /api/tokens` logs in and answers the token, with `expires_in`, its lifetime in seconds, as OAuth names it; `DELETE /api/tokens` ends it; `GET /api/loans` answers the member's loans; `POST /api/books` adds a book, for staff. `caller()` reads the member from the token, and only from the token. The CSRF check now skips `/api/`, where no cookie counts. `shelf/src/Web/App.php`:
 
-<!-- include: code/69-tokens/shelf/src/Web/App.php -->
+<!-- include: code/69-tokens/shelf/src/Web/App.php lines 252-299, 349-360 -->
 
 The front controller makes the `ApiTokens`, `shelf/public/index.php`:
 
@@ -156,11 +156,11 @@ The front controller makes the `ApiTokens`, `shelf/public/index.php`:
 
 `AppTest` checks the login, the loans, the refusals, that the session doesn't count, and the logout, `shelf/tests/Web/AppTest.php`:
 
-<!-- include: code/69-tokens/shelf/tests/Web/AppTest.php -->
+<!-- include: code/69-tokens/shelf/tests/Web/AppTest.php lines 409-460, 497-506 -->
 
 `shelf/web.http` logs in as Amira and as Jonas through the API. Each token is new every time, so the check captures it, and the `.out` shows `{{amiratoken}}`:
 
-<!-- include: code/69-tokens/shelf/web.http -->
+<!-- include: code/69-tokens/shelf/web.http requests 27-29, 33-34 -->
 
 ## Exercises
 

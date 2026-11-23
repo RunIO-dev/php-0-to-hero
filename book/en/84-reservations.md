@@ -92,7 +92,7 @@ The states, `shelf/src/HoldStatus.php`:
 
 The reservation and its rules, `shelf/src/Hold.php`:
 
-<!-- include: code/84-reservations/shelf/src/Hold.php -->
+<!-- include: code/84-reservations/shelf/src/Hold.php lines 20-36, 56-103 -->
 
 - `placedOn` isn't `readonly`: `refresh()` sets every column again, with a new date object, as for the ISBN in chapter 77.
 - `readyUntil` stays after the reservation ends, so `hadACopy()` knows whether a copy must go on.
@@ -103,7 +103,7 @@ Where they are kept, `shelf/src/HoldRepository.php`:
 
 `shelf/src/Doctrine/DoctrineHoldRepository.php`:
 
-<!-- include: code/84-reservations/shelf/src/Doctrine/DoctrineHoldRepository.php -->
+<!-- include: code/84-reservations/shelf/src/Doctrine/DoctrineHoldRepository.php lines 68-120, 137-146 -->
 
 - `passOn()` claims the first in the queue with a DQL `UPDATE ... WHERE h.status = :waiting`, and tries the next if no row changed.
 - `release()` stores a cancelled or expired reservation and passes its copy on, in one transaction.
@@ -120,7 +120,7 @@ The migration creates the table with Doctrine's own SQL: a new table changes not
 
 `reserve()`, `cancelHold()` and `expireHolds()`; `lend()` takes a copy set aside, `renew()` refuses while someone waits, and `changeCopies()` gives new copies to the queue first, `shelf/src/Library.php`:
 
-<!-- include: code/84-reservations/shelf/src/Library.php -->
+<!-- include: code/84-reservations/shelf/src/Library.php lines 122-139, 152-178, 199-210, 222-233 -->
 
 The daily job, `shelf/src/Command/HoldsCommand.php`:
 
@@ -136,11 +136,11 @@ A book's page offers "Reserve" while every copy is out, and shows the member's p
 
 The repository contract, for both repositories, `shelf/tests/HoldRepositoryContract.php`:
 
-<!-- include: code/84-reservations/shelf/tests/HoldRepositoryContract.php -->
+<!-- include: code/84-reservations/shelf/tests/HoldRepositoryContract.php lines 40-112 -->
 
 Reservations in the browser, `shelf/tests/Web/HoldsTest.php`:
 
-<!-- include: code/84-reservations/shelf/tests/Web/HoldsTest.php -->
+<!-- include: code/84-reservations/shelf/tests/Web/HoldsTest.php lines 26-92 -->
 
 `HoldTest` tests the steps between states, `LibraryTest` the rules, `DoctrineHoldRepositoryTest` that the queue is read from the database, and `CommandsTest` the daily job.
 

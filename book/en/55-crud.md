@@ -108,7 +108,7 @@ The test version keeps its books in an array, `shelf/tests/InMemoryBookRepositor
 
 **The pages.** `App` gets three routes: `GET /book` shows a book, `POST /copies` changes its copies, and `POST /remove` removes it, with its cover. Both changes redirect after success (chapter 47), and set a message for the next page (chapter 50). `shelf/src/Web/App.php`:
 
-<!-- include: code/55-crud/shelf/src/Web/App.php -->
+<!-- include: code/55-crud/shelf/src/Web/App.php lines 30-56, 101-147 -->
 
 `Covers` can now delete a cover, `shelf/src/Web/Covers.php`:
 
@@ -142,7 +142,7 @@ The stylesheet gets a few rules for the book's page and the remove button. Copy 
 
 The whole round in the browser, `shelf/web.http`:
 
-<!-- include: code/55-crud/shelf/web.http -->
+<!-- include: code/55-crud/shelf/web.http requests 14-16, 19-20 -->
 
 ## Exercises
 

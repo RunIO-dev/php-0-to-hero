@@ -111,9 +111,9 @@ Create `shelf/members.json`:
 
 <!-- include: code/28-constructors/shelf/members.json -->
 
-Change `shelf/library.php` to:
+Change `shelf/library.php`: `MemberNotFound`, `Member`, `Loan` and `findMember` are new, `Book` gets its constructor, `lend` takes a member and returns a `Loan`, and `addBook` makes the book in one line:
 
-<!-- include: code/28-constructors/shelf/library.php -->
+<!-- include: code/28-constructors/shelf/library.php lines 7-11, 15-58, 108-118, 130-139, 190 -->
 
 And change `shelf/shelf.php` to:
 

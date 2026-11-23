@@ -106,7 +106,7 @@ The first real change adds the indexes for a member's loans and a book's loans, 
 
 **The runner.** `shelf/src/Migrations.php`:
 
-<!-- include: code/58-migrations/shelf/src/Migrations.php -->
+<!-- include: code/58-migrations/shelf/src/Migrations.php lines 13-83 -->
 
 - `apply()` makes its own table, `migrations`, if it isn't there, then runs every file that has no row in it, in order of name.
 - Each file runs in `inTransaction()` (chapter 57), together with its row. A failing migration leaves no table half made and no note that it ran; the next try starts it again.
@@ -120,7 +120,7 @@ The first real change adds the indexes for a member's loans and a book's loans, 
 
 **The tests** use migrations of their own, in a temporary folder. They check the order, that each runs once, that a failing one changes nothing, and that a changed one is refused. `shelf/tests/MigrationsTest.php`:
 
-<!-- include: code/58-migrations/shelf/tests/MigrationsTest.php -->
+<!-- include: code/58-migrations/shelf/tests/MigrationsTest.php lines 13-33, 45-85 -->
 
 **The command line** gets `migrations`, which lists what this database has run. `shelf/shelf.php`:
 

@@ -103,7 +103,7 @@ Doctrine's SQL (`doctrine:schema:update --dump-sql`) builds the table again, and
 
 `shelf/src/Report/Statistics.php`:
 
-<!-- include: code/86-dashboard/shelf/src/Report/Statistics.php -->
+<!-- include: code/86-dashboard/shelf/src/Report/Statistics.php lines 19-84 -->
 
 Its answers are small read-only classes: `Overview`, `Tally` (a label and a number), `Returns` and `PastLoan`, in `shelf/src/Report/`. `Returns` works out the percent on time, `shelf/src/Report/Returns.php`:
 
@@ -119,7 +119,7 @@ Its answers are small read-only classes: `Overview`, `Tally` (a label and a numb
 
 The dashboard, `shelf/templates/dashboard.html.twig`. The loans per month are a table with a `<meter>` in each row: a chart that a screen reader reads as a table, without JavaScript or inline styles, which the CSP refuses.
 
-<!-- include: code/86-dashboard/shelf/templates/dashboard.html.twig -->
+<!-- include: code/86-dashboard/shelf/templates/dashboard.html.twig lines 1-51, 97-112 -->
 
 The history, `shelf/templates/history.html.twig`, uses chapter 81's pager, which now takes the route of its list (`shelf/templates/components/_pager.html.twig`, in the snapshot). Its variables are `by_title` and `by_member`: every page already has `member`, the member who is logged in.
 
@@ -129,7 +129,7 @@ The pages' transcript, `shelf/web.http`, now starts with `# today 2026-11-18 10:
 
 The report on a real SQLite database, `shelf/tests/Database/StatisticsTest.php`:
 
-<!-- include: code/86-dashboard/shelf/tests/Database/StatisticsTest.php -->
+<!-- include: code/86-dashboard/shelf/tests/Database/StatisticsTest.php lines 29-102 -->
 
 `DashboardTest` checks the pages: what is overdue, the history narrowed to a book or a member, a page after the last, and that a reader gets 403.
 

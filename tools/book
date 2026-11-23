@@ -3,8 +3,10 @@
 
 declare(strict_types=1);
 
-// Builds the book into site/: one HTML page per chapter, a contents page, and
-// book.html with every chapter for printing.
+// Builds the book into site/: one HTML page per chapter, a contents page, book.html with
+// every chapter for printing, book-kdp-N.html (the paperback's volumes), and book-extended.html
+// (the extended edition: every file and every answer in full). It fails when a listing of the
+// book is longer than Book::MAX_LINES.
 //   composer book    the HTML; then tools/pdf prints book.html to a PDF with Chrome
 
 use Tools\Book;
@@ -32,6 +34,7 @@ $author = $composer['authors'][0] ?? throw new RuntimeException('composer.json n
 $date = trim(Run::capture(['git', '-c', "safe.directory=$root", '-C', $root, 'log', '-1', '--format=%cs'])['out']) ?: date('Y-m-d');
 
 $built = [];
+$long = [];
 foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     $lang = basename($dir);
     $out = "$site/$lang";
@@ -39,13 +42,19 @@ foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     $chapters = [];
     $contents = [];
     $all = '';
+    $extended = '';
     $articles = []; // chapter number → its <article>, for the paperback's volumes
-    $shown = []; // the files each chapter showed, so a later chapter shows its changes only
+    $shown = []; // the short edition: the files each chapter showed, so a later chapter shows its changes only
     foreach (glob($dir . '/*.md') ?: [] as $file) {
         $source = (string) file_get_contents($file);
         $heading = preg_match('/^# (.+)$/m', $source, $m) === 1 ? trim($m[1]) : basename($file, '.md');
         $title = (string) preg_replace('/^\d+\.\s*/', '', $heading);
         $html = Book::structure(Book::html(Book::expand($root, $source, $lang, $shown)), $lang);
+        foreach (Book::tooLong($html) as $listing) {
+            $long[] = "book/$lang/" . basename($file) . ": $listing (at most " . Book::MAX_LINES . ': show an excerpt, `lines 40-75` or `requests 2-4`)';
+        }
+        // the extended edition: every file and every answer in full
+        $extended .= "<article class=\"chapter\">\n" . Book::structure(Book::html(Book::expand($root, $source, $lang)), $lang) . "</article>\n";
         $page = basename($file, '.md') . '.html';
         file_put_contents("$out/$page", Book::page("$title · " . Book::TITLE, $html, $lang));
         $chapters[] = [(int) basename($file), $title];
@@ -56,6 +65,7 @@ foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     file_put_contents("$out/index.html", Book::page(Book::TITLE, '<h1>' . Book::TITLE . "</h1>\n<ol>\n" . implode("\n", $contents) . "\n</ol>", $lang));
     $book = Book::front($lang, '8.6', $chapters, $author, $date) . $all;
     file_put_contents("$out/book.html", Book::page(Book::TITLE, $book, $lang, 'print'));
+    file_put_contents("$out/book-extended.html", Book::page(Book::TITLE, Book::front($lang, '8.6', $chapters, $author, $date, null, true) . $extended, $lang, 'print'));
     // the paperback's interior for KDP: the same chapters, with kdp.css for 7 × 10 in, black and white,
     // in two volumes (KDP prints at most 828 pages)
     foreach (Book::VOLUMES as $volume => [$first, $last]) {
@@ -70,4 +80,8 @@ foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     $built[] = "$lang: " . count($chapters) . ' chapter(s)';
 }
 
+if ($long !== []) {
+    fwrite(STDERR, "Listings too long for the book:\n  " . implode("\n  ", $long) . "\n");
+    exit(1);
+}
 echo 'Book built in site/ (' . ($built === [] ? 'no chapters yet' : implode('; ', $built)) . ")\n";

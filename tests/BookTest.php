@@ -75,9 +75,9 @@ final class BookTest extends TestCase
         self::assertStringContainsString('<header class="opener"><div class="opener-num">6</div><div class="opener-t"><div class="opener-k">Chapter</div><h1>Variables</h1></div></header>', $html);
         self::assertStringContainsString('<section class="s-goals"><h2>Goals</h2>', $html);
         self::assertStringContainsString('<section class="s-before-you-start">', $html);
-        self::assertStringContainsString('<figure class="listing ok short"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">code/06-variables/name.php</span></figcaption><pre', $html);
+        self::assertStringContainsString('<figure class="listing ok short" data-lines="4"><figcaption><span class="dots"><i></i><i></i><i></i></span><span class="path">code/06-variables/name.php</span></figcaption><pre', $html);
         self::assertStringContainsString('<div class="out"><div class="out-h">Output</div><pre data-lang="txt"', $html);
-        self::assertStringContainsString('<figure class="listing bad short">', $html);
+        self::assertStringContainsString('<figure class="listing bad short" data-lines="2">', $html);
         self::assertStringContainsString('<span class="badge">✗ Don\'t do this</span>', $html);
     }
 
@@ -145,6 +145,61 @@ final class BookTest extends TestCase
     {
         $front = Book::front('en', '8.6', [[61, 'Passwords'], [62, 'Login']], ['name' => 'A', 'homepage' => 'https://example.org'], '2026-11-19', 2);
         self::assertStringContainsString('PHP 8.6 · Volume 2 · chapters 61–62</p>', $front);
+    }
+
+    public function testAnExcerptShowsItsLinesAndMarksTheRest(): void
+    {
+        $lines = array_map(static fn(int $i): string => "line $i", range(1, 10));
+        self::assertSame(['// ⋯ 3 lines left out', 'line 4', 'line 5', '// ⋯ 2 lines left out', 'line 8', '// ⋯ 2 lines left out'], Book::excerpt($lines, Book::ranges('4-5, 8'), 'php'));
+    }
+
+    public function testABadRangeStopsTheBuild(): void
+    {
+        $this->expectExceptionMessage('the file has 10 lines');
+        Book::excerpt(array_fill(0, 10, 'x'), Book::ranges('8-12'), 'php');
+    }
+
+    public function testRequestsKeepTheFilesCommentsAndTheChosenRequests(): void
+    {
+        $http = ['# the setup', '# run php shelf.php import', 'GET /', '', '###', '# two', 'GET /add', '', '###', '# three', 'GET /login'];
+        self::assertSame(
+            ['# the setup', '# run php shelf.php import', '# ⋯ requests left out: 2', '', '# three', 'GET /login'],
+            Book::requests($http, Book::ranges('3'), 'en'),
+        );
+    }
+
+    public function testExchangesKeepTheChosenAnswers(): void
+    {
+        $out = ['$ php shelf.php import', 'Imported 4 books', '', '> GET /', '', '< HTTP/1.1 200 OK', '', '> GET /add', '', '< HTTP/1.1 303 See Other', ''];
+        self::assertSame(
+            ['⋯ 3 lines left out', '⋯ requests left out: 1', '', '> GET /add', '', '< HTTP/1.1 303 See Other', ''],
+            Book::exchanges($out, Book::ranges('2'), 'en'),
+        );
+    }
+
+    public function testAWebPageShowsTheStartOfItsMainOnly(): void
+    {
+        $page = ['> GET /', '', '< HTTP/1.1 200 OK', '', '<!doctype html>', '<html>', '<head><title>Shelf</title></head>', '<body>', '<nav>…</nav>', '<main>', '<h1>Books</h1>', '</main>', '<footer>…</footer>', '</body>', '</html>'];
+        self::assertSame(
+            "> GET /\n\n< HTTP/1.1 200 OK\n\n⋯ 5 lines of the page left out\n<main>\n<h1>Books</h1>\n</main>\n⋯ 3 lines of the page left out",
+            Book::mainOnly(implode("\n", $page)),
+        );
+    }
+
+    public function testTheShortEditionRefusesLongListingsAndTheExtendedShowsThemWhole(): void
+    {
+        $this->shelfFile('41-first-tests', "<?php\n" . str_repeat("echo 1;\n", 90));
+        $shown = [];
+        $short = Book::structure(Book::html(Book::expand($this->root, '<!-- include: code/41-first-tests/shelf/src/Loan.php -->', 'en', $shown)), 'en');
+        self::assertSame(['code/41-first-tests/shelf/src/Loan.php: 91 lines'], Book::tooLong($short));
+
+        $shown = [];
+        $cut = Book::expand($this->root, '<!-- include: code/41-first-tests/shelf/src/Loan.php lines 1-5 -->', 'en', $shown);
+        self::assertStringContainsString('`code/41-first-tests/shelf/src/Loan.php` · excerpt', $cut);
+        self::assertSame([], Book::tooLong(Book::structure(Book::html($cut), 'en')));
+
+        $whole = Book::expand($this->root, '<!-- include: code/41-first-tests/shelf/src/Loan.php lines 1-5 -->');
+        self::assertSame(90, substr_count($whole, 'echo 1;'), 'the extended edition ignores the excerpt');
     }
 
     private function shelfFile(string $chapter, string $code): void

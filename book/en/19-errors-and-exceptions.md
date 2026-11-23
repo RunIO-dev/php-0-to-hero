@@ -106,9 +106,9 @@ What an exception message says is shown to whoever sees the output. In the comma
 
 ## Shelf
 
-*Shelf* can now lend a book. `findBook` throws `BookNotFound` for a title that isn't there, and `lend` throws `NoCopyLeft` when all copies are out. The loop catches both, so every request gets an answer. Change `shelf/shelf.php` to:
+*Shelf* can now lend a book. `findBook` throws `BookNotFound` for a title that isn't there, and `lend` throws `NoCopyLeft` when all copies are out. The loop catches both, so every request gets an answer. In `shelf/shelf.php`, the two exceptions are new, and `findBook`, `lend` and the loop take the place of `searchTitles`, `searchLine` and the searches; the books, `statusOf` and `bookLine` stay as they are:
 
-<!-- include: code/19-errors-and-exceptions/shelf/shelf.php -->
+<!-- include: code/19-errors-and-exceptions/shelf/shelf.php lines 1-10, 30-75 -->
 
 Run it with `php shelf/shelf.php`. Kitchen had one copy, and now shows as on loan. Kindred was asked for in small letters and found, because `findBook` compares in any case.
 

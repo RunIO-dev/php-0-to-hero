@@ -188,6 +188,8 @@ figure.listing figcaption {
     font: 500 0.74rem var(--mono);
 }
 .since { margin-left: auto; color: #64748b; font-style: italic; }
+.full { color: #94a3b8; }
+@media print { .full { display: none; } }
 .dots { display: inline-flex; gap: 6px; margin-right: 0.3rem; }
 .dots i { width: 9px; height: 9px; border-radius: 50%; background: #334155; }
 .dots i:nth-child(1) { background: #f87171; } .dots i:nth-child(2) { background: #fbbf24; } .dots i:nth-child(3) { background: #34d399; }

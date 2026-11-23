@@ -137,7 +137,7 @@ The session, with chapter 62's cookie, and CSRF tokens, `shelf/config/packages/f
 
 The pages about books, `shelf/src/Controller/BookController.php`:
 
-<!-- include: code/73-routing-and-twig/shelf/src/Controller/BookController.php -->
+<!-- include: code/73-routing-and-twig/shelf/src/Controller/BookController.php lines 27-90 -->
 
 - `AbstractController` gives `render()`, `redirectToRoute()`, `addFlash()` and `createNotFoundException()`.
 - `#[MapQueryParameter] string $title` is `$_GET['title']`, as a string; a title sent as an array answers `404`.
@@ -152,7 +152,7 @@ The session is Symfony's: `migrate(true)` gives it a new ID, as `regenerate()` d
 
 The API, `shelf/src/Controller/ApiController.php`:
 
-<!-- include: code/73-routing-and-twig/shelf/src/Controller/ApiController.php -->
+<!-- include: code/73-routing-and-twig/shelf/src/Controller/ApiController.php lines 33-95 -->
 
 `#[Route('/api', name: 'api_')]` on the class puts `/api` before every path and `api_` before every name. The class doesn't extend `AbstractController`, which it doesn't need; `#[AsController]` tells Symfony it is one. The JSON and problem details come from `shelf/src/Web/Json.php`, which takes over `Response::json()` and `Response::problem()`:
 
@@ -184,7 +184,7 @@ Chapter 64's headers, on every answer, `shelf/src/EventSubscriber/SecurityHeader
 
 What an exception ends in, `shelf/src/EventSubscriber/ErrorPages.php`:
 
-<!-- include: code/73-routing-and-twig/shelf/src/EventSubscriber/ErrorPages.php -->
+<!-- include: code/73-routing-and-twig/shelf/src/EventSubscriber/ErrorPages.php lines 27-83 -->
 
 ### The templates
 
@@ -222,7 +222,7 @@ PHPStan has no PHP templates left to check, `shelf/phpstan.neon.dist`:
 
 `shelf/web.http` sends the same requests:
 
-<!-- include: code/73-routing-and-twig/shelf/web.http -->
+<!-- include: code/73-routing-and-twig/shelf/web.http requests 0-1, 5 -->
 
 The answers are the pages of chapter 72, with these differences:
 

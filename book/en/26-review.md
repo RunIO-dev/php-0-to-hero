@@ -98,13 +98,13 @@ One repetition stays: the shape of a book, written in every PHPDoc comment. Part
 
 <!-- include: code/26-review/shelf/books.php -->
 
-Create `shelf/library.php`:
+Create `shelf/library.php`, and move into it the rules from `shelf/shelf.php`: `LOAN_DAYS` and the functions from `statusOf` to `addBook`. New are `sameTitle` and `isbnDigits`; `findBook`, `isIsbn13` and `addBook` use them, and `addBook` no longer mentions `USAGE`:
 
-<!-- include: code/26-review/shelf/library.php -->
+<!-- include: code/26-review/shelf/library.php lines 1-17, 61-71, 95-114, 129-147 -->
 
-And change `shelf/shelf.php` to:
+And change `shelf/shelf.php`, which keeps only the commands: it loads the two files, `required` is new, `lendAndSave` prints the book's real title, and `run` lists the commands once, in its `match`. `listText`, `searchLine` and `addAndSave` stay as they are:
 
-<!-- include: code/26-review/shelf/shelf.php -->
+<!-- include: code/26-review/shelf/shelf.php lines 1-31, 50-58, 77-89 -->
 
 Run `php shelf/shelf.php` and every command from chapters 24 and 25. Everything prints what it printed before, except the fixed bug.
 

@@ -101,7 +101,7 @@ A front controller is one door instead of many: checks that every request needs,
 
 **The app.** `shelf/src/Web/App.php` holds the routes and the pages:
 
-<!-- include: code/48-front-controller/shelf/src/Web/App.php -->
+<!-- include: code/48-front-controller/shelf/src/Web/App.php lines 1-40, 59-86, 106-110 -->
 
 - `handle()` is `front.php`'s table, with `Request` in and `Response` out.
 - The list and the form are the pages of chapters 46 and 47, unchanged, inside `ob_start()` and `ob_get_clean()`, which catch what is printed as a string instead of sending it.
@@ -119,9 +119,9 @@ Delete `shelf/public/add.php`: `App` answers `/add` now.
 
 <!-- include: code/48-front-controller/shelf/tests/Web/AppTest.php -->
 
-`shelf/web.http` uses the new addresses, and checks that `/add.php` is gone and that `DELETE /add` is refused:
+`shelf/web.http` sends the requests of chapter 47 to the new addresses, and checks that `/add.php` is gone and that `DELETE /add` is refused:
 
-<!-- include: code/48-front-controller/shelf/web.http -->
+<!-- include: code/48-front-controller/shelf/web.http requests 2, 6, 8-9 -->
 
 ## Exercises
 

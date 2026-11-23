@@ -69,7 +69,7 @@ Adding a book, `code/68-errors/books.php`:
 
 The requests:
 
-<!-- include: code/68-errors/books.http -->
+<!-- include: code/68-errors/books.http requests 2, 4-5, 7 -->
 
 ## Common mistakes
 

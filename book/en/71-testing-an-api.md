@@ -42,7 +42,7 @@ A small helper names what is wrong with an object, compared with its shape, `cod
 
 The tests, `code/71-testing-an-api/ApiTest.php`:
 
-<!-- include: code/71-testing-an-api/ApiTest.php -->
+<!-- include: code/71-testing-an-api/ApiTest.php lines 11-17, 31-70 -->
 
 - `BOOK` and `PROBLEM` write the contract down, once.
 - `testEveryMistakeIsAProblem()` runs for every case of the data provider (chapter 42): one test, six requests, and adding a seventh is one line.
@@ -90,7 +90,7 @@ A test that calls `https://shelf.example/api/books` fails when the network does,
 
 **The contract,** `shelf/tests/Web/ApiContractTest.php`:
 
-<!-- include: code/71-testing-an-api/shelf/tests/Web/ApiContractTest.php -->
+<!-- include: code/71-testing-an-api/shelf/tests/Web/ApiContractTest.php lines 33-77, 103-131 -->
 
 - The shapes of a book, a loan, a token and a problem, written once.
 - A book has the same shape in the list, alone, and after `POST`.

@@ -219,7 +219,7 @@ The token handler, `shelf/tests/Security/ApiTokenHandlerTest.php`:
 
 `shelf/web.http` sends the same requests as before. Symfony's CSRF tokens change at every login and logout, so it reads the token again after each:
 
-<!-- include: code/76-symfony-security/shelf/web.http -->
+<!-- include: code/76-symfony-security/shelf/web.http requests 4-5, 8, 52 -->
 
 `/add` without a session goes to the login; a wrong password comes back to the form with the name kept; Amira, a reader, gets `403` for `/add`; a `GET /logout`, without a token, logs nobody out.
 

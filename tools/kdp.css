@@ -29,6 +29,8 @@
     @page cover { margin: 0.75in 0.6in 0.8in 0.875in; }
 
     body { font-size: 10pt; }
+    /* a box as wide as the page area lost half its right border to the page clip: keep everything 1.5pt inside */
+    main { padding: 0 1.5pt; }
     h2 { font-size: 1.3em; }
 
     /* the title page */
@@ -49,16 +51,19 @@
     .opener-k { color: var(--muted); }
 
     /* code: light, with a thin frame; the output a little darker, so code and output stay apart */
-    figure.listing, :not(figure):not(.out) > pre { border: 0.6pt solid #9a9a9a; border-radius: 4px; }
+    figure.listing, :not(figure):not(.out) > pre { border: 0.9pt solid #6e6e6e; border-radius: 4px; }
     .out pre { margin: 0; border: 0; border-radius: 0; }
-    figure.listing figcaption { color: #333333; border-bottom: 0.6pt solid #b5b5b5; }
+    figure.listing figcaption { color: #333333; border-bottom: 0.75pt solid #8c8c8c; }
     .dots { display: none; }
     pre { font-size: 7.6pt; line-height: 1.45; }
-    .out { border-top: 0.6pt dashed #9a9a9a; }
+    .out { border-top: 0.75pt dashed #8c8c8c; }
     .out-h { color: #555555; }
     .out pre { color: #111111; background: #e9e9e9; }
     .since { color: #555555; }
     figure.bad { outline: 1.5pt solid #111111; }
+    /* the badges' pale colours were made for a dark bar: in print, white on black and black on white */
+    figure.bad .badge { background: #111111; color: #ffffff; }
+    figure.error .badge { background: #ffffff; color: #111111; border: 0.8pt solid #111111; }
 
     .hl-keyword { color: #000000; font-weight: 700; }
     .hl-value, .hl-literal { color: #3a3a3a; }

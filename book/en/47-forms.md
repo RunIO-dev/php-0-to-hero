@@ -104,7 +104,7 @@ The list links to the form. Change the `<p>` at the end of `shelf/public/index.p
 
 `shelf/web.http` sends the requests a visitor's browser would: the empty form, three refused books and one good one, then the list with it:
 
-<!-- include: code/47-forms/shelf/web.http -->
+<!-- include: code/47-forms/shelf/web.http requests 3, 5-7 -->
 
 The book's checks run these requests on a copy of *Shelf*, so the real `books.json` stays as it is. In your browser, the books you add are saved for real.
 

@@ -102,9 +102,9 @@ A book in *Shelf* is now an object of the class `Book`. Its properties replace t
 
 Because the books are objects, `lend` changes the book in the list itself, and returns the book, so "Lent:" shows its title without searching again.
 
-Change `shelf/library.php` to:
+Change `shelf/library.php`: the class `Book` takes the place of `statusOf` and `bookLine`, every PHPDoc comment says `list<Book>`, and the functions read `$book->title` where they read `$book['title']`:
 
-<!-- include: code/27-why-objects/shelf/library.php -->
+<!-- include: code/27-why-objects/shelf/library.php lines 13-33, 64-81, 88-102, 150-162 -->
 
 Change `shelf/books.php` to:
 

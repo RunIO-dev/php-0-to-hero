@@ -113,7 +113,7 @@ Members get passwords. *Shelf* stores each one's hash in the members table, and 
 
 **The tests,** with the members in memory, `shelf/tests/AccountsTest.php`:
 
-<!-- include: code/61-passwords/shelf/tests/AccountsTest.php -->
+<!-- include: code/61-passwords/shelf/tests/AccountsTest.php lines 14-67, 75-87 -->
 
 `shelf/tests/InMemoryMemberRepository.php` keeps the hashes in an array:
 

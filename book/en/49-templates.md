@@ -146,7 +146,7 @@ Add `templates` to PHPStan's paths in `shelf/phpstan.neon.dist`:
 
 `shelf/web.http` sends the same requests as in chapter 48. The answers have the same statuses and the same data, in the new layout:
 
-<!-- include: code/49-templates/shelf/web.http -->
+<!-- include: code/49-templates/shelf/web.http requests 1, 3 -->
 
 Start the server (`docker compose up web`) and open `http://localhost:8000`: *Shelf* now looks like an app. Try it on a phone-sized window too: the cards move into one column.
 

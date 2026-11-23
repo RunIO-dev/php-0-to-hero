@@ -103,7 +103,7 @@ The one in the database, with a new SQLite database in memory for each test, mad
 
 **The contract for loans.** Lending takes a copy, the last copy goes once, and a member's loans come back in order. `shelf/tests/LoanRepositoryContract.php`:
 
-<!-- include: code/60-testing-databases/shelf/tests/LoanRepositoryContract.php -->
+<!-- include: code/60-testing-databases/shelf/tests/LoanRepositoryContract.php lines 18-81, 89 -->
 
 `shelf/tests/InMemoryLoanRepositoryTest.php`:
 

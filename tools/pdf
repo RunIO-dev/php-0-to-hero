@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Prints each edition's book from the same chapters, as the digital edition and as the paperback:
 #   site/<lang>/book.html     → site/<lang>/php-0-to-hero.pdf      the digital edition (A4, colour)
+#   site/<lang>/book-extended.html → site/<lang>/php-0-to-hero-extended.pdf  the same, every file in full
 #   site/<lang>/book-kdp-N.html → site/<lang>/php-0-to-hero-kdp-N.pdf  the paperback's interior for KDP,
 #                               volume N (7 × 10 in, black and white, margins for the binding; tools/kdp.css)
 # Run after `composer book`, on a computer with Chrome (the Docker image has none).
@@ -16,7 +17,7 @@ too_long=0
 for html in site/*/book.html; do
   [ -e "$html" ] || { echo "No book built yet: run composer book first." >&2; exit 1; }
   dir="$(dirname "$html")"
-  for src in "$dir"/book.html "$dir"/book-kdp-*.html; do
+  for src in "$dir"/book.html "$dir"/book-extended.html "$dir"/book-kdp-*.html; do
     [ -e "$src" ] || continue
     name="$(basename "$src" .html)"; pdf="$dir/php-0-to-hero${name#book}.pdf"
     rm -f "$pdf"
