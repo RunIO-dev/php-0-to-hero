@@ -1,0 +1,95 @@
+/* The paperback's cover for KDP (Book::cover, printed by tools/pdf): one wrap, back + spine + front,
+   with 0.125 in of bleed on the outer edges. The trim is 7 × 10 in; the spine's width (--spine) comes
+   from the volume's page count. KDP's rules kept here:
+   - text at least 0.125 in inside the trim (here 0.375 in), and 0.0625 in from the spine's folds;
+   - the barcode goes on the back, bottom right, about 2 × 1.2 in: that corner stays empty. */
+
+@font-face { font-family: "Inter"; src: url("fonts/Inter-400.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-600.ttf") format("truetype"); font-weight: 600; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-700.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "Inter"; src: url("fonts/Inter-800.ttf") format("truetype"); font-weight: 800; }
+@font-face { font-family: "Source Serif 4"; src: url("fonts/SourceSerif4-400.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-800.ttf") format("truetype"); font-weight: 800; }
+
+:root {
+    --bleed: 0.125in;
+    --trim-w: 7in;
+    --trim-h: 10in;
+    --safe: 0.375in;              /* inside the trim */
+    --sans: "Inter", system-ui, sans-serif;
+    --serif: "Source Serif 4", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+    --pale: #d7dbf0;
+    --dim: #9ea6cf;
+    --amber: #e8a33d;
+}
+
+@page { margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.wrap {
+    display: grid;
+    grid-template-columns: calc(var(--bleed) + var(--trim-w)) var(--spine) calc(var(--trim-w) + var(--bleed));
+    width: calc(2 * var(--bleed) + 2 * var(--trim-w) + var(--spine));
+    height: calc(2 * var(--bleed) + var(--trim-h));
+    overflow: hidden;
+    background:
+        radial-gradient(60% 70% at 100% 0%, rgba(136, 146, 191, 0.55) 0%, rgba(136, 146, 191, 0) 60%),
+        radial-gradient(45% 60% at 0% 100%, rgba(232, 163, 61, 0.22) 0%, rgba(232, 163, 61, 0) 65%),
+        linear-gradient(160deg, #262d52 0%, #151935 100%);
+}
+.wrap > section { position: relative; height: 100%; }
+
+/* the back: text from the outer edge to the spine; the barcode's corner stays empty */
+.back {
+    padding: calc(var(--bleed) + var(--safe) + 0.2in) var(--safe) calc(var(--bleed) + var(--safe)) calc(var(--bleed) + var(--safe));
+    font: 400 13pt/1.55 var(--serif);
+    color: var(--pale);
+}
+.back h2 { margin: 0 0 0.3in; font: 800 24pt/1.2 var(--sans); letter-spacing: -0.01em; color: #fff; }
+.back p { margin: 0 0 0.14in; }
+.back h3 { margin: 0.4in 0 0.14in; font: 700 9.5pt var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); }
+.back ul { margin: 0; padding: 0; list-style: none; }
+.back li { position: relative; margin: 0 0 0.08in; padding-left: 0.22in; }
+.back li::before { content: "›"; position: absolute; left: 0; font: 700 11pt var(--mono); color: var(--amber); }
+.back .next { margin-top: 0.4in; font-style: italic; color: var(--dim); }
+.back-foot {
+    position: absolute;
+    left: calc(var(--bleed) + var(--safe));
+    bottom: calc(var(--bleed) + var(--safe));
+    max-width: calc(var(--trim-w) - 2 * var(--safe) - 2.4in); /* clear of the barcode */
+    margin: 0;
+    font: 400 8pt/1.5 var(--sans);
+    color: var(--dim);
+}
+
+/* the spine: read from top to bottom, as on English books */
+.spine {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--bleed) + var(--safe)) 0;
+    writing-mode: vertical-rl;
+    background: rgba(0, 0, 0, 0.18);
+    font-family: var(--sans);
+}
+.spine-title { font-size: 17pt; font-weight: 800; letter-spacing: -0.01em; }
+.spine-vol { font-size: 10pt; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); }
+.spine-author { font-size: 10pt; font-weight: 600; color: var(--pale); }
+
+/* the front: the same title page as the digital edition */
+.front {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: calc(var(--bleed) + var(--safe)) calc(var(--bleed) + var(--safe)) calc(var(--bleed) + var(--safe)) 0.6in;
+}
+.cover-code { position: absolute; right: calc(var(--bleed) - 0.15in); top: 0.55in; font: 800 2.45in/1 var(--mono); letter-spacing: -0.05em; color: rgba(255, 255, 255, 0.07); }
+.front h1 { margin: 0; font: 800 1.3in/0.95 var(--sans); letter-spacing: -0.04em; }
+.cover-sub { max-width: 4.6in; margin: 0.4in 0 0; font: 400 15pt/1.4 var(--serif); color: var(--pale); }
+.cover-meta { margin: 0.3in 0 0; font: 700 9.5pt var(--sans); letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber); }
+.cover-title { max-width: 4.8in; margin: 0.12in 0 0; font: 600 13pt/1.35 var(--sans); color: #fff; }
+.cover-author { position: absolute; left: 0.6in; bottom: calc(var(--bleed) + var(--safe) + 0.1in); margin: 0; font: 700 16pt var(--sans); }
+.cover-author span { display: block; margin-bottom: 0.04in; font-size: 9pt; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--dim); }

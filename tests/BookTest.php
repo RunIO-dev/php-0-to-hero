@@ -202,6 +202,22 @@ final class BookTest extends TestCase
         self::assertSame(90, substr_count($whole, 'echo 1;'), 'the extended edition ignores the excerpt');
     }
 
+    public function testTheCoverHasBackSpineAndFrontAndLeavesItsSizeToThePrintedPages(): void
+    {
+        $text = ['title' => 'Tests & tools', 'back' => ['Starts at zero.'], 'points' => ['arrays', 'loops'], 'next' => 'Volume 2 goes on.'];
+        $cover = Book::cover('en', '8.6', 1, 1, 60, ['name' => 'A. Author', 'homepage' => 'https://example.org'], $text);
+
+        foreach (['{{WIDTH}}', '{{HEIGHT}}', '{{SPINE}}'] as $placeholder) {
+            self::assertStringContainsString($placeholder, $cover, 'tools/pdf sets the size from the page count');
+        }
+        self::assertStringContainsString('<span class="spine-vol">Volume 1</span>', $cover);
+        self::assertStringContainsString('Volume 1 · chapters 1–60 · PHP 8.6', $cover);
+        self::assertStringContainsString('<li>arrays</li><li>loops</li>', $cover);
+        self::assertStringContainsString('<h2>Tests &amp; tools</h2>', $cover, 'the texts are escaped');
+        self::assertStringContainsString('A. Author · example.org', $cover);
+        self::assertStringContainsString('<span class="spine-vol">Band 1</span>', Book::cover('de', '8.6', 1, 1, 60, ['name' => 'A', 'homepage' => 'https://a.b'], $text));
+    }
+
     private function shelfFile(string $chapter, string $code): void
     {
         mkdir("$this->root/code/$chapter/shelf/src", 0777, true);

@@ -604,6 +604,60 @@ final class Book
             . '<section class="toc"><h2>' . self::word('contents', $lang) . '</h2><ol>' . $items . '</ol></section>';
     }
 
+    /**
+     * The paperback's cover for KDP, as one wrap: back, spine and front, with bleed around (tools/cover.css).
+     * The spine's width depends on the page count, which only the printed volume knows, so the page
+     * has {{WIDTH}}, {{HEIGHT}} and {{SPINE}} (inches) for tools/pdf to fill in, which knows KDP's numbers.
+     *
+     * @param array{name: string, homepage: string} $author from composer.json "authors"
+     * @param array{title: string, back: list<string>, points: list<string>, next: string} $text book/<lang>/cover.json
+     */
+    public static function cover(string $lang, string $version, int $volume, int $first, int $last, array $author, array $text): string
+    {
+        $e = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES);
+        $name = $e($author['name']);
+        $site = $e((string) preg_replace('~^https?://~', '', $author['homepage']));
+        $back = implode('', array_map(static fn(string $p): string => '<p>' . $e($p) . '</p>', $text['back']));
+        $points = implode('', array_map(static fn(string $p): string => '<li>' . $e($p) . '</li>', $text['points']));
+        $dir = $lang === 'ar' ? 'rtl' : 'ltr';
+        $vol = $e(sprintf(self::word('vol', $lang), $volume));
+        $meta = $e(sprintf(self::word('volume', $lang), $volume, $first, $last) . ' · PHP ' . $version);
+
+        return <<<HTML
+            <!doctype html>
+            <html lang="$lang" dir="$dir">
+            <head>
+            <meta charset="utf-8">
+            <title>PHP 0 to Hero · $vol · cover</title>
+            <link rel="stylesheet" href="../cover.css">
+            <style>@page { size: {{WIDTH}}in {{HEIGHT}}in; } :root { --spine: {{SPINE}}in; }</style>
+            </head>
+            <body>
+            <div class="wrap">
+            <section class="back">
+            <h2>{$e($text['title'])}</h2>
+            $back
+            <h3>{$e(self::word('inside', $lang))}</h3>
+            <ul>$points</ul>
+            <p class="next">{$e($text['next'])}</p>
+            <p class="back-foot">$name · $site<br>github.com/RunIO-dev/php-0-to-hero · {$e(self::word('licence', $lang))}</p>
+            </section>
+            <section class="spine"><span class="spine-title">PHP 0 to Hero</span><span class="spine-vol">$vol</span><span class="spine-author">$name</span></section>
+            <section class="front">
+            <div class="cover-code">&lt;?php</div>
+            <h1>PHP<br>0 to Hero</h1>
+            <p class="cover-sub">{$e(self::word('subtitle', $lang))}</p>
+            <p class="cover-meta">$meta</p>
+            <p class="cover-title">{$e($text['title'])}</p>
+            <p class="cover-author"><span>{$e(self::word('by', $lang))}</span> $name</p>
+            </section>
+            </div>
+            </body>
+            </html>
+
+            HTML;
+    }
+
     /** @param list<string> $css stylesheets, relative to the page */
     public static function page(string $title, string $body, string $lang, string $class = 'web', array $css = ['../book.css']): string
     {
@@ -640,6 +694,7 @@ final class Book
                 'since' => 'changes since chapter %d', 'unchanged' => '⋯ %d unchanged lines',
                 'volume' => 'Volume %d · chapters %d–%d', 'omitted' => '⋯ %d lines of the page left out',
                 'extended' => 'Extended edition: every file in full', 'full' => 'whole file', 'excerpt' => 'excerpt', 'skipped' => '⋯ %d lines left out', 'requests' => '⋯ requests left out: %d',
+                'vol' => 'Volume %d', 'inside' => 'In this volume',
                 'imprint' => '<p><strong>PHP 0 to Hero</strong>, %4$s, PHP %5$s.<br>© %1$s %2$s · <a href="%3$s">%6$s</a></p>'
                     . '<p>The text of this book is licensed under the Creative Commons Attribution 4.0 International licence (CC BY 4.0): you may share and adapt it for any purpose, also commercially, as long as you credit the author. The code is licensed under the MIT licence.</p>'
                     . '<p>To credit this book, you can write:<br><em>“PHP 0 to Hero” by %2$s, %3$s, licensed under CC BY 4.0.</em></p>'
@@ -649,13 +704,15 @@ final class Book
                 'edition' => 'Deutsche Ausgabe', 'licence' => 'Text CC BY 4.0 · Code MIT', 'by' => 'von',
                 'since' => 'Änderungen seit Kapitel %d', 'unchanged' => '⋯ %d unveränderte Zeilen',
                 'volume' => 'Band %d · Kapitel %d–%d', 'omitted' => '⋯ %d Zeilen der Seite ausgelassen',
-                'extended' => 'Erweiterte Ausgabe: alle Dateien vollständig', 'full' => 'ganze Datei', 'excerpt' => 'Auszug', 'skipped' => '⋯ %d Zeilen ausgelassen', 'requests' => '⋯ Anfragen ausgelassen: %d'],
+                'extended' => 'Erweiterte Ausgabe: alle Dateien vollständig', 'full' => 'ganze Datei', 'excerpt' => 'Auszug', 'skipped' => '⋯ %d Zeilen ausgelassen', 'requests' => '⋯ Anfragen ausgelassen: %d',
+                'vol' => 'Band %d', 'inside' => 'In diesem Band'],
             'ar' => ['output' => 'الناتج', 'wrong' => 'لا تفعل هذا', 'error' => 'هذا يُظهر خطأً', 'chapter' => 'الفصل',
                 'contents' => 'المحتويات', 'subtitle' => 'من أول سطر برمجي إلى تطبيق ويب آمن',
                 'edition' => 'الطبعة العربية', 'licence' => 'النص CC BY 4.0 · الشيفرة MIT', 'by' => 'تأليف',
                 'since' => 'التغييرات منذ الفصل %d', 'unchanged' => '⋯ أسطر لم تتغير: %d',
                 'volume' => 'الجزء %d · الفصول %d–%d', 'omitted' => '⋯ أسطر محذوفة من الصفحة: %d',
-                'extended' => 'الطبعة الموسّعة: كل الملفات كاملة', 'full' => 'الملف كاملًا', 'excerpt' => 'مقتطف', 'skipped' => '⋯ أسطر محذوفة: %d', 'requests' => '⋯ طلبات محذوفة: %d'],
+                'extended' => 'الطبعة الموسّعة: كل الملفات كاملة', 'full' => 'الملف كاملًا', 'excerpt' => 'مقتطف', 'skipped' => '⋯ أسطر محذوفة: %d', 'requests' => '⋯ طلبات محذوفة: %d',
+                'vol' => 'الجزء %d', 'inside' => 'في هذا الجزء'],
         ];
 
         return $words[$lang][$key] ?? $words['en'][$key];

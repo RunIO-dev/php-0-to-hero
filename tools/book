@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 // Builds the book into site/: one HTML page per chapter, a contents page, book.html with
-// every chapter for printing, book-kdp-N.html (the paperback's volumes), and book-extended.html
+// every chapter for printing, book-kdp-N.html (the paperback's volumes) with cover-kdp-N.html, and book-extended.html
 // (the extended edition: every file and every answer in full). It fails when a listing of the
 // book is longer than Book::MAX_LINES.
 //   composer book    the HTML; then tools/pdf prints book.html to a PDF with Chrome
@@ -23,6 +23,7 @@ Run::remove($site);
 mkdir($site);
 copy($root . '/tools/book.css', $site . '/book.css');
 copy($root . '/tools/kdp.css', $site . '/kdp.css');
+copy($root . '/tools/cover.css', $site . '/cover.css');
 mkdir($site . '/fonts');
 foreach (glob($root . '/tools/fonts/*') ?: [] as $font) {
     copy($font, $site . '/fonts/' . basename($font));
@@ -67,7 +68,8 @@ foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
     file_put_contents("$out/book.html", Book::page(Book::TITLE, $book, $lang, 'print'));
     file_put_contents("$out/book-extended.html", Book::page(Book::TITLE, Book::front($lang, '8.6', $chapters, $author, $date, null, true) . $extended, $lang, 'print'));
     // the paperback's interior for KDP: the same chapters, with kdp.css for 7 × 10 in, black and white,
-    // in two volumes (KDP prints at most 828 pages)
+    // in two volumes (KDP prints at most 828 pages); and each volume's cover, from book/<lang>/cover.json
+    $covers = is_file("$dir/cover.json") ? json_decode((string) file_get_contents("$dir/cover.json"), true, 512, JSON_THROW_ON_ERROR) : [];
     foreach (Book::VOLUMES as $volume => [$first, $last]) {
         $in = array_filter($chapters, static fn(array $c): bool => $c[0] >= $first && $c[0] <= $last);
         if ($in === []) {
@@ -76,6 +78,9 @@ foreach (glob($root . '/book/*', GLOB_ONLYDIR) ?: [] as $dir) {
         $body = Book::front($lang, '8.6', array_values($in), $author, $date, $volume)
             . implode('', array_filter($articles, static fn(int $n): bool => $n >= $first && $n <= $last, ARRAY_FILTER_USE_KEY));
         file_put_contents("$out/book-kdp-$volume.html", Book::page(Book::TITLE, $body, $lang, 'print kdp', ['../book.css', '../kdp.css']));
+        if (isset($covers[(string) $volume])) {
+            file_put_contents("$out/cover-kdp-$volume.html", Book::cover($lang, '8.6', $volume, $first, $last, $author, $covers[(string) $volume]));
+        }
     }
     $built[] = "$lang: " . count($chapters) . ' chapter(s)';
 }

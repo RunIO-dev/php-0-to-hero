@@ -1,0 +1,32 @@
+{
+    "1": {
+        "title": "The language, the tools and the first web app",
+        "back": [
+            "This book starts at zero: no programming before, only a computer. Chapter by chapter, you write PHP that runs, and you see what it prints.",
+            "Every example in the book is a real file, tested on every change, with the output it really gives. Each chapter adds to one project, Shelf, a small library app, so what you learn is used at once."
+        ],
+        "points": [
+            "the language: variables, arrays, functions, types and errors",
+            "objects: classes, interfaces, enums and value objects",
+            "the tools: Composer, tests, static analysis, Git and Docker",
+            "the web: forms, sessions, CSRF and file uploads",
+            "databases: SQL, PDO, transactions and migrations"
+        ],
+        "next": "Volume 2 makes Shelf secure, gives it an API, moves it to Symfony and puts it online."
+    },
+    "2": {
+        "title": "Secure web applications, from Symfony to production",
+        "back": [
+            "This book goes on where Volume 1 ends: Shelf is a working web app with a database. Now it gets the things a real application needs.",
+            "Every example in the book is a real file, tested on every change, with the output it really gives. At the end, Shelf is finished: a library app that a real library could run."
+        ],
+        "points": [
+            "security: passwords, login, roles, and the common attacks",
+            "a REST API with tokens, pagination and tests",
+            "Symfony: routing, Twig, Doctrine, forms and security",
+            "production: configuration, logging, CI and deployment",
+            "the finished app: search, accounts, lending, reminders, three languages"
+        ],
+        "next": "Volume 1 covers the language, the tools and the first web app, from zero."
+    }
+}

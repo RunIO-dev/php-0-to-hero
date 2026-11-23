@@ -12,7 +12,9 @@ composer.json           "php": ">=8.5"; dev: phpunit 13, phpstan 2, php-cs-fixer
 tools/check.php         setup check: PHP version, extensions, Composer; prints the exact fix
 tools/verify            the one script CI and we run: every check in §6
 tools/book, tools/pdf   the HTML book into site/, then with Chrome the PDF (A4, colour) and the paperback for KDP
-                        (two volumes, 7 × 10 in, black and white, tools/kdp.css; fails above 828 pages)
+                        (two volumes, 7 × 10 in, black and white, tools/kdp.css; fails above 828 pages),
+                        and each volume's cover: back, spine and front, the spine from the page count
+book/en/cover.json      the covers' texts per volume: title, back, points, next (tools/cover.css)
 book/en/NN-slug.md      one chapter = one file (later book/de/, book/ar/)
 code/NN-slug/           the chapter's examples: example.php + example.out (expected output)
 exercises/NN-slug/      starter files + tests (tests fail on the starter)

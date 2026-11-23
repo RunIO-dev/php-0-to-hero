@@ -4,6 +4,7 @@
 #   site/<lang>/book-extended.html → site/<lang>/php-0-to-hero-extended.pdf  the same, every file in full
 #   site/<lang>/book-kdp-N.html → site/<lang>/php-0-to-hero-kdp-N.pdf  the paperback's interior for KDP,
 #                               volume N (7 × 10 in, black and white, margins for the binding; tools/kdp.css)
+#   site/<lang>/cover-kdp-N.html → site/<lang>/php-0-to-hero-kdp-N-cover.pdf  its cover: back, spine, front
 # Run after `composer book`, on a computer with Chrome (the Docker image has none).
 # Set CHROME=/path/to/chrome if it is not found. With pdfinfo (poppler-utils) it checks KDP's page limit.
 set -euo pipefail
@@ -13,6 +14,8 @@ if [ -z "$chrome" ]; then echo "No Chrome found. Set CHROME=/path/to/chrome." >&
 if ! ls book/*/*.md >/dev/null 2>&1; then echo "No chapters yet, so no PDF."; exit 0; fi
 # KDP's largest paperback, with white paper; above 700 pages the inside margin must be 0.875 in (tools/kdp.css)
 KDP_MAX=828
+# KDP's cover: 0.125 in of bleed around the 7 × 10 in trim, and the spine per page on white paper
+BLEED=0.125; TRIM_W=7; TRIM_H=10; SPINE_PER_PAGE=0.002252
 too_long=0
 # CI must check the limit, so there a missing pdfinfo is an error, not a skipped check
 if [ "${CI:-}" = true ] && ! command -v pdfinfo >/dev/null; then echo "No pdfinfo: install poppler-utils." >&2; exit 1; fi
@@ -31,6 +34,21 @@ for html in site/*/book.html; do
     if [[ "$pdf" == *-kdp-*.pdf && -n "$pages" && "$pages" -gt $KDP_MAX ]]; then
       echo "  too long for a KDP paperback: at most $KDP_MAX pages (Book::VOLUMES)" >&2
       too_long=1
+    fi
+    # the volume's cover (cover-kdp-N.html): its spine is as wide as the printed pages are thick
+    volume="${name#book-kdp-}"
+    if [[ "$name" == book-kdp-* && -e "$dir/cover-kdp-$volume.html" ]]; then
+      if [ -z "$pages" ]; then echo "  no cover for volume $volume: its width needs pdfinfo" >&2; continue; fi
+      read -r spine width height < <(awk -v p="$pages" -v s="$SPINE_PER_PAGE" -v b="$BLEED" -v w="$TRIM_W" -v h="$TRIM_H" \
+        'BEGIN { printf "%.4f %.4f %.4f\n", p * s, 2 * b + 2 * w + p * s, h + 2 * b }')
+      sized="$dir/.cover-kdp-$volume.html"
+      sed -e "s/{{SPINE}}/$spine/; s/{{WIDTH}}/$width/; s/{{HEIGHT}}/$height/" "$dir/cover-kdp-$volume.html" > "$sized"
+      cover="$dir/php-0-to-hero-kdp-$volume-cover.pdf"
+      rm -f "$cover"
+      "$chrome" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="$cover" "$(realpath "$sized")" 2>/dev/null || true
+      rm -f "$sized"
+      [ -s "$cover" ] || { echo "Chrome made no PDF from $dir/cover-kdp-$volume.html" >&2; exit 1; }
+      echo "$cover ($width × $height in, spine $spine in)"
     fi
   done
 done
