@@ -14,6 +14,8 @@ if ! ls book/*/*.md >/dev/null 2>&1; then echo "No chapters yet, so no PDF."; ex
 # KDP's largest paperback, with white paper; above 700 pages the inside margin must be 0.875 in (tools/kdp.css)
 KDP_MAX=828
 too_long=0
+# CI must check the limit, so there a missing pdfinfo is an error, not a skipped check
+if [ "${CI:-}" = true ] && ! command -v pdfinfo >/dev/null; then echo "No pdfinfo: install poppler-utils." >&2; exit 1; fi
 for html in site/*/book.html; do
   [ -e "$html" ] || { echo "No book built yet: run composer book first." >&2; exit 1; }
   dir="$(dirname "$html")"

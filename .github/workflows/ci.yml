@@ -70,4 +70,5 @@ jobs:
       - run: docker compose build php
       - run: docker compose run --rm php composer install --no-interaction --no-progress
       - run: docker compose run --rm php composer book
+      - run: sudo apt-get update -q && sudo apt-get install -y -q poppler-utils # pdfinfo, for the KDP page limit
       - run: tools/pdf # Chrome is preinstalled on GitHub's Ubuntu runners
